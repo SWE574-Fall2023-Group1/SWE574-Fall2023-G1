@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+    volumes:
+      - ./backend/profile_photos:/backend/profile_photos
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/backend/.env
+    depends_on:
+      - db
+
+  frontend:
+    build: ./backend/frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/frontend/.env
+    depends_on:
+      - backend
+
+  db:
+    image: "postgres:15"
+    env_file:
+      - ./backend/backend/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+  profile-photos-data:

@@ -1,0 +1,189 @@
+.profile-photo {
+    width: 200px; 
+    height: auto; 
+  }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination button {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+}
+
+.pagination button:hover {
+  background-color: #f1f1f1;
+}
+
+.pagination button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination .active {
+  background-color: #4caf50;
+  color: white;
+}
+
+input[type="file"] {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.profile-photo-button {
+  display: inline-block;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profile-photo-button:hover {
+  background-color: #3e8e41;
+}
+
+.profile-photo-button:focus {
+  outline: none;
+}
+
+.profile-photo-delete-button {
+  display: inline-block;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #ff5100;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profile-photo-delete-button:hover {
+  background-color: #b33f09;
+}
+
+.profile-photo-delete-button:focus {
+  outline: none;
+}
+
+.story-box {
+  width: 500px;
+  height: 55px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.story-author-photo {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.story-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.story-title {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: #1e88e5;
+  text-align: left;
+  transition: color 0.2s ease-in-out;
+}
+
+.story-title:hover {
+  color: #0056b3;
+}
+
+
+
+.story-author {
+  margin-bottom: 10;
+  text-align: left;
+  font-family: "Comic Sans MS"
+}
+
+.custom-bio {
+  padding: spacing(2);
+  margin: 'auto';
+  width: fit-content;
+  padding: 0 30px;
+  text-align: 'center';
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding-bottom: 35px;
+}
+
+.custom-bio p {
+  margin-bottom: 5px;
+  padding-bottom: 15px;
+  text-align: left;
+  white-space: pre-line;
+}
+
+.custom-followers {
+  padding: spacing(2);
+  margin: 'auto';
+  max-width: 100px;
+  text-align: 'center';
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.custom-followers p {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+
+.edit-box {
+  margin: 'auto';
+  width: 400px;
+  height: fit-content;
+  padding: 0 30px;
+  text-align: 'center';
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 25px;
+}
+
+.edit-box .MuiOutlinedInput-root {
+  background-color: white; 
+}
+
+.edit-buttons {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
