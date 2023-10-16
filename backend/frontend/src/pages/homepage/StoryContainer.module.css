@@ -4,13 +4,13 @@
     margin-top: 20px;
     margin-right: 20px;
   }
-  
+
   .storyButtons button {
     margin-left: 10px;
     cursor: pointer;
   }
-  
+
   .storyButtons .active {
     font-weight: bold;
   }
-  
+

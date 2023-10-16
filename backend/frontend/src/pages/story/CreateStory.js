@@ -170,7 +170,7 @@ function CreateStory() {
                   variant="outlined"
                   placeholder="Title"
                   className='long-boxes'
-                  label="Title" 
+                  label="Title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
@@ -202,7 +202,7 @@ function CreateStory() {
               />
             </div>
             <div style={{ marginTop: '1rem' }}>
-            <FormControl variant="outlined" > 
+            <FormControl variant="outlined" >
                 <InputLabel id="date-type-label">Date Type</InputLabel>
                 <Select
                   labelId="date-type-label"
@@ -366,28 +366,28 @@ function CreateStory() {
                         </Select>
                     </FormControl>
                 </div>
-            }                             
-          
-          <Autocomplete 
+            }
+
+          <Autocomplete
             className='date-type'
             onLoad={(autocomplete) => {
               autocompleteRef.current = autocomplete;
             }}
             onPlaceChanged={handleLocationSelect}
           >
-            <TextField 
+            <TextField
               className='date-box'
-              type="search" 
-              label="Locations" 
-              variant="outlined" 
-              inputRef={inputRef} 
+              type="search"
+              label="Locations"
+              variant="outlined"
+              inputRef={inputRef}
             />
           </Autocomplete>
           <br/>
           <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Create Story</Button>
           </form>
           </div>
-          
+
           <div className='create-story-map'>
             <GoogleMap
               mapContainerStyle={{ height: '400px', width: '400px' }}
@@ -418,9 +418,9 @@ function CreateStory() {
             </div>
           </div>
           </div>
-          
+
         </div>
-      
+
     </div>
   );
 }

@@ -20,7 +20,7 @@ function Login({ onLoginSuccess }) {
       password: password
     },{ withCredentials: true }).then(response => {
       if (response.status == 200) {
-        
+
         onLoginSuccess();
         toast.success('Login successful!');
         navigate('/homepage');
@@ -53,7 +53,7 @@ function Login({ onLoginSuccess }) {
         </div>
         <br/>
         <Button variant="contained" onClick={handleSubmit} className="login-button">Login</Button>
-        
+
         {/* <button type="submit" className="btn btn-primary">Login</button> */}
         <ToastContainer position="bottom-right" autoClose={5000} />
         <br/>

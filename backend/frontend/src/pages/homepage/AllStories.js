@@ -15,7 +15,7 @@ function StoriesByFollowingsUsers() {
   const [totalPages, setTotalPages] = useState(0);
   const [profilePhotos, setProfilePhotos] = useState({});
   const [loadingProfilePhotos, setLoadingProfilePhotos] = useState({});
-  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png'); 
+  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png');
 
   const navigate = useNavigate();
 
@@ -23,12 +23,12 @@ function StoriesByFollowingsUsers() {
     if (loadingProfilePhotos[userId]) {
       return;
     }
-  
+
     setLoadingProfilePhotos((prevState) => ({
       ...prevState,
       [userId]: true,
     }));
-  
+
     try {
       const profilePhotoResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto/${userId}`, {
         headers: {},
@@ -36,10 +36,10 @@ function StoriesByFollowingsUsers() {
         responseType: 'arraybuffer',
       });
       const base64Image = Buffer.from(profilePhotoResponse.data, 'binary').toString('base64');
-  
+
       const contentType = profilePhotoResponse.headers['content-type'];
       const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-  
+
       return `${dataUrlPrefix}${base64Image}`;
     } catch (error) {
       if (error.response && error.response.status === 404) {

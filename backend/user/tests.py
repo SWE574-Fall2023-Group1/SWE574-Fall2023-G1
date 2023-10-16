@@ -165,7 +165,7 @@ class CreateStoryViewTestCase(TestCase):
         self.factory = RequestFactory()
         self.view = CreateStoryView.as_view()
         self.user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpassword')
-        
+
     def test_create_story_view(self):
     # Assuming 'location_ids' is a list of locations,
     # and each location only contains a 'name' field.
@@ -259,7 +259,7 @@ class CreateCommentViewTestCase(TestCase):
         comment_data = {
             'text': 'This is a test comment.'
         }
-        
+
         request = self.factory.post(reverse('comment', args=[self.story.pk]), data=comment_data)
         request.user = self.user
         refresh_token = create_refresh_token(self.user.id)
@@ -270,4 +270,3 @@ class CreateCommentViewTestCase(TestCase):
 
         self.client = APIClient()
         self.client.login(username='testuser', password='testpassword')
-

@@ -11,7 +11,7 @@ urlpatterns = [
     path('storyUpdate/<int:pk>', UpdateStoryView.as_view(),name="storyUpdate"),
     path('like/<int:pk>',LikeStoryView.as_view()),
     path('storyGet/<int:pk>', StoryDetailView.as_view()),
-    path('storyGetbyAuthor/<int:user_id>', StoryAuthorView.as_view()), 
+    path('storyGetbyAuthor/<int:user_id>', StoryAuthorView.as_view()),
     path('comment/<int:id>',CreateCommentView.as_view(),name="comment"),
     path('commentsByStory/<int:id>',StoryCommentsView.as_view()),
     path('followByUser/<int:id>',FollowUserView.as_view()),
@@ -34,6 +34,6 @@ urlpatterns = [
     path("passwordReset", SendPasswordResetEmail.as_view()),
     path("passwordReset/<token>/<uidb64>", ResetPassword.as_view()),
     # path("storyDelete", StoryDeleteAPIView.as_view()), #unused
-    
+
     # path('photoForStory/<int:story_id>', StoryPhotoAPIView.as_view()),
 ]

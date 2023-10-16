@@ -79,7 +79,7 @@ function StoryDetails() {
     navigate(`/user-profile/${id}`);
   };
 
-  
+
 
   const formatDate = () => {
 
@@ -91,7 +91,7 @@ function StoryDetails() {
     };
 
     const dateOptions = story.include_time ? options : optionsWithoutTime;
-  
+
     switch (story.date_type) {
       case "decade":
         dateString = `Decade: ${story.decade}s`;
@@ -131,7 +131,7 @@ function StoryDetails() {
         }}
       />
     ));
-  
+
     return <>{markers}</>;
   }
 
@@ -214,7 +214,7 @@ function StoryDetails() {
                     />
                 <div className="save-button-container">
                     <Button onClick={handleSaveButtonClick}>Save</Button>
-                  </div>                  
+                  </div>
                   </Box>
                 </Modal>
                 {userId === story.author && (
@@ -315,8 +315,7 @@ function StoryDetails() {
         </Typography>
       )}
     </div>
-  );  
+  );
 }
 
 export default withAuth(StoryDetails);
-

@@ -23,9 +23,9 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedUser = await fetchUserDetails(); 
+      const fetchedUser = await fetchUserDetails();
       fetchProfilePhoto();
-      fetchUserStories(fetchedUser); 
+      fetchUserStories(fetchedUser);
     };
     fetchData();
   }, [currentPage]);
@@ -54,20 +54,20 @@ const UserProfile = () => {
         responseType: 'arraybuffer',
       });
       const base64Image = Buffer.from(response.data, 'binary').toString('base64');
-      
+
       const contentType = response.headers['content-type'];
       const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-      
+
       setProfilePhotoUrl(`${dataUrlPrefix}${base64Image}`);
 
     } catch (error) {
       console.error('Error fetching profile photo:', error);
     }
-    
+
   };
 
   const fetchUserStories = async (user) => {
-    
+
     try {
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${user.id}?page=${currentPage}&size=5`, {
         withCredentials: true,
@@ -97,10 +97,10 @@ const UserProfile = () => {
   const handleProfilePhotoChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     const formData = new FormData();
     formData.append('profile_photo', file);
-  
+
     try {
       await axios.put(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, formData, {
         headers: {
@@ -169,20 +169,20 @@ const UserProfile = () => {
       </div>
       <br/>
       <div>
-        <button 
+        <button
         type="button"
         className="profile-photo-delete-button"
         onClick={handleRemoveProfilePhoto}>
         Remove Profile Photo
         </button>
       </div>
-      
+
       {isEditingBio ? (
           <div>
           <div className='edit-box'>
-            <TextField 
-            value={updatedBio} 
-            onChange={(e) => setUpdatedBio(e.target.value)} 
+            <TextField
+            value={updatedBio}
+            onChange={(e) => setUpdatedBio(e.target.value)}
             multiline={true}
             rowsMax={100}
             onKeyDown={(e) => {
@@ -193,12 +193,12 @@ const UserProfile = () => {
             }}
             InputProps={{ className: 'edit-box' }}
             />
-            </div>  
+            </div>
             <div className='edit-buttons'>
             <Button variant="contained" color='success' type="button" onClick={handleProfileBioChange}>Save</Button>
             <Button variant="contained" type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
-            </div> 
-          </div> 
+            </div>
+          </div>
         ) : (
           <div>
             <br/>
@@ -255,5 +255,3 @@ const UserProfile = () => {
 
 
 export default withAuth(UserProfile);
-
-

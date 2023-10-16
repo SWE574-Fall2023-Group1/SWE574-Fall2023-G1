@@ -17,7 +17,7 @@ def auth_check(request):
 
         #deneme = User.objects.filter(user=user).first()
         return user.id
-            
+
     return Response({'error': 'Authentication failed.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 def decode_location_name(location):

@@ -1,6 +1,6 @@
 .profile-photo {
-    width: 200px; 
-    height: auto; 
+    width: 200px;
+    height: auto;
   }
 
 .pagination {
@@ -177,7 +177,7 @@ input[type="file"] {
 }
 
 .edit-box .MuiOutlinedInput-root {
-  background-color: white; 
+  background-color: white;
 }
 
 .edit-buttons {

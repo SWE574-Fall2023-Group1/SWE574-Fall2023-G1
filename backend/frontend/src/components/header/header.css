@@ -1,12 +1,12 @@
 .App {
     text-align: center;
   }
-  
+
   .App-logo {
     height: 40vmin;
     pointer-events: none;
   }
-  
+
   .App-header {
     background-color: #282c34;
     min-height: 100vh;
@@ -17,17 +17,17 @@
     font-size: calc(10px + 2vmin);
     color: white;
   }
-  
+
   .App-link {
     color: #61dafb;
   }
-  
+
   .container {
     width: 100%;
     margin: 0 auto;
     text-align: center;
   }
-  
+
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -37,13 +37,13 @@
     width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   .navbar-nav {
     display: flex;
     justify-content: center;
   }
-  
-  
+
+
 .nav-link {
     position: relative;
     margin-right: 1rem;
@@ -56,7 +56,7 @@
     display: flex;
     align-items: center;
   }
-  
+
   .nav-link::before {
   content: '';
   position: absolute;
@@ -78,27 +78,27 @@
 .nav-link:hover::before {
   width: 100%;
 }
-  
+
   .home-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-  
+
   .custombg {
 
     box-sizing: border-box;
-    
+
     position: relative;
     width: 985px;
     height: 1011px;
-    
+
     background: #363636;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     }
-    
+
 
   body {
     /* background-image: url('https://media.tenor.com/NH_dhrT0B6MAAAAC/white-aesthetic.gif'); */

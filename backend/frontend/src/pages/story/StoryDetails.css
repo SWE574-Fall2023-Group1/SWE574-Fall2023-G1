@@ -3,21 +3,21 @@
     color: #007bff;
     transition: color 0.2s ease-in-out;
   }
-  
+
   .authorStoryDetail:hover {
     color: #0056b3;
   }
-  
+
   .authorStoryDetail:active {
     transform: scale(0.95);
   }
-  
+
   .pagination {
     display: flex;
     justify-content: center;
     margin: 20px 0;
   }
-  
+
   .pagination button {
     background-color: white;
     border: 1px solid #ccc;
@@ -29,16 +29,16 @@
     text-decoration: none;
     user-select: none;
   }
-  
+
   .pagination button:hover {
     background-color: #f1f1f1;
   }
-  
+
   .pagination button.disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
-  
+
   .pagination .active {
     background-color: #4caf50;
     color: white;
@@ -51,7 +51,7 @@
     margin: 0;
     outline: none;
   }
-  
+
   @keyframes grow-up {
     0% {
       transform: scale(1);
@@ -63,11 +63,11 @@
       transform: scale(1);
     }
   }
-  
+
   .heart-clicked:active {
     transform: scale(3.1)
   }
-  
+
   .storydetail-story-map {
     width: '400px';
     height: '400px';
@@ -94,7 +94,7 @@
     align-items: center;
     flex-direction: column;
   }
-  
+
   .quill-container .ql-container .ql-editor img {
     max-width: 100%;
     height: auto;
@@ -122,14 +122,14 @@
     padding: 8px 12px;
     margin: 4px;
   }
-  
+
   .info-text {
     font-size: 14px;
     color: #333;
     text-decoration: none;
   }
-  
-  
+
+
 .tags-container {
   display: flex;
   flex-wrap: wrap;
@@ -197,21 +197,21 @@
 .like-container {
   display: flex;
   align-items: center;
-  margin-left: -4px; 
+  margin-left: -4px;
 }
 
 .heart-container {
   display: flex;
   align-items: center;
-  margin-right: 4px; 
+  margin-right: 4px;
 }
 
 .like-container .MuiChip-root {
-  margin-left: 4px; 
+  margin-left: 4px;
 }
 
 .custom-input .ql-container .ql-editor img {
-  height: 200px; 
+  height: 200px;
   width: 600px;
   align-items: center;
 }

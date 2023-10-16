@@ -64,10 +64,10 @@ const UserProfileOthers = () => {
             responseType: 'arraybuffer',
           });
           const base64Image = Buffer.from(profilePhotoResponse.data, 'binary').toString('base64');
-      
+
           const contentType = profilePhotoResponse.headers['content-type'];
           const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-      
+
           setProfilePhotoUrl(`${dataUrlPrefix}${base64Image}`);
         } catch (error) {
           if (error.response && error.response.status === 404) {
@@ -76,31 +76,31 @@ const UserProfileOthers = () => {
             console.error('Error fetching profile photo:', error);
           }
         }
-        
+
         const followersResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userFollowers/${id}`, {
         headers: {},
         withCredentials: true,
         });
         console.log('Followers response:', followersResponse.data);
-        
+
         console.log(followersResponse.data)
         const isCurrentUserFollowing = followersResponse.data.some(
             (follower) => follower.id === currentUser
         );
         setIsFollowing(isCurrentUserFollowing);
-        
-        
+
+
         setFollowerCount(followersResponse.data.length);
-        setLoading(false); 
-        
-        
+        setLoading(false);
+
+
       } catch (error) {
         console.error('Error fetching user details and profile photo:', error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
-    
+
 
     fetchData();
   }, [id]);
@@ -174,7 +174,7 @@ const UserProfileOthers = () => {
           <Paper elevation={3} className="custom-bio">
             <strong>Biography</strong>
             <p>{user.biography}</p>
-            </Paper>          
+            </Paper>
           <Paper elevation={3} className="custom-followers">
             <strong>Followers</strong>
             <p>{followerCount !== null ? followerCount : 'Loading...'}</p>

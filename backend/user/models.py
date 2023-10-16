@@ -22,8 +22,8 @@ class Location(models.Model):
     longitude = models.DecimalField(max_digits=19, decimal_places=10)
 
     def __str__(self):
-        return self.name    
-    
+        return self.name
+
 
 
 class Story(models.Model):
@@ -32,7 +32,7 @@ class Story(models.Model):
     NORMAL_DATE = 'normal_date'
     INTERVAL_DATE = 'interval_date'
     DECADE = 'decade'
-    
+
     DATE_TYPES = [
         (YEAR_INTERVAL, 'Year Interval'),
         (YEAR, 'year'),
@@ -59,7 +59,7 @@ class Story(models.Model):
     end_date =models.DateTimeField(null=True, blank=True)
     include_time = models.BooleanField(default=False)
     likes = models.ManyToManyField(User, related_name='liked_stories', blank=True)
-    
+
     def clean(self):
         # Custom validation to ensure only one date field is set
 
@@ -75,7 +75,7 @@ class Story(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 class Comment(models.Model):
     comment_author = models.ForeignKey(User, on_delete=models.CASCADE)
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='comments')
@@ -84,7 +84,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.comment_author} on {self.story.title}'
-    
+
 class PasswordResetToken(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=64, unique=True)
@@ -95,4 +95,3 @@ class PasswordResetToken(models.Model):
             self.token = get_random_string(length=64)
             self.expires_at = timezone.now() + timedelta(hours=24)
         super().save(*args, **kwargs)
-

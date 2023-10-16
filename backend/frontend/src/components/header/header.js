@@ -24,7 +24,7 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   //const isLoggedIn = withAuth();
-  
+
   const fetchUserDetails = async () => {
     try {
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/user`, { withCredentials: true });
@@ -94,7 +94,7 @@ function Header() {
             <Route path="/resetPassword/:token/:uidb64" element={<ResetPasswordMain />} />
             </>
             )}
-            
+
             {isLoggedIn && (
               <>
             <Route path="*" element={<Navigate to="/homepage" />} />

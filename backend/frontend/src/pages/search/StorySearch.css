@@ -63,7 +63,7 @@
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  
+
 }
 
 .search-story-content {
@@ -95,10 +95,10 @@
 }
 
 .custom-input-search {
-  width: 500px; 
-  height: 200px; 
-  resize: both; 
-  overflow: auto; 
+  width: 500px;
+  height: 200px;
+  resize: both;
+  overflow: auto;
   resize: none;
   margin: 0 auto;
   border-radius: '4px';
@@ -113,12 +113,12 @@
 }
 
 .date-type-search .MuiOutlinedInput-root {
-  background-color: white; 
+  background-color: white;
 }
 
 .date-box-search {
   width: 200px;
-  background-color: white; 
+  background-color: white;
 }
 
 .long-boxes-search {
@@ -127,7 +127,7 @@
 }
 
 .long-boxes-search .MuiOutlinedInput-root {
-  background-color: white; 
+  background-color: white;
 }
 
 .story-box-search {

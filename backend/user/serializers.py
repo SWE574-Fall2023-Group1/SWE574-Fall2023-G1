@@ -20,7 +20,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if validated_data["password"] != validated_data["password_again"]:
             raise serializers.ValidationError("Passwords do not match!")
-        
+
         validated_data["password"] = make_password(validated_data["password"])
         del validated_data["password_again"]
 
@@ -75,7 +75,7 @@ class UserPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['profile_photo']
-    
+
     def update(self, instance, validated_data):
         instance.profile_photo = validated_data.get('profile_photo', instance.profile_photo)
         instance.save()
@@ -129,7 +129,7 @@ class StorySerializer(serializers.ModelSerializer):
 
         story = Story.objects.create(**validated_data)
         story.location_ids.set(locations)
-        
+
         return story
 
 class CommentSerializer(serializers.ModelSerializer):

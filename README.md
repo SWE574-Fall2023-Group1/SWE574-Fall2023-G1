@@ -11,8 +11,8 @@ Project URL: [Memories Website](http://34.173.225.192:3000/)
 * run the `docker-compose build` command
 * run the `docker-compose up` command
 
-If you are running for the first time the docker will download and install necessary node.js and django packages. 
+If you are running for the first time the docker will download and install necessary node.js and django packages.
 
 Then using [local website link](http://localhost:3000/) you can go to the website that is deployed on your local.
 
-* For .env files both frontend and backend you need to contact with the creator of the project. 
+* For .env files both frontend and backend you need to contact with the creator of the project.

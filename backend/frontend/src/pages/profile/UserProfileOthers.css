@@ -10,7 +10,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
   }
-  
+
   .story-author-photo {
     width: 50px;
     height: 50px;
@@ -19,13 +19,13 @@
     border-radius: 50%;
     margin-right: 1rem;
   }
-  
+
   .story-details {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  
+
   .story-title {
     margin-bottom: 0.5rem;
     cursor: pointer;
@@ -34,13 +34,13 @@
     text-align: left;
     transition: color 0.2s ease-in-out;
   }
-  
+
   .story-title:hover {
     color: #0056b3;
   }
-  
-  
-  
+
+
+
   .story-author {
     margin-bottom: 10;
     text-align: left;

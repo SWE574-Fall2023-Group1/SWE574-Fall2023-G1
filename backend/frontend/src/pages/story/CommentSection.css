@@ -13,14 +13,14 @@
     flex-direction: column;
     width: 400px;
   }
-  
+
   .comment-author-info {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-right: 10px;
   }
-  
+
   .comment-photo {
     width: 50px;
     height: 50px;
@@ -28,7 +28,7 @@
     cursor: pointer;
     margin-right: 10px;
   }
-  
+
   .comment-content {
     display: flex;
     flex-direction: column;
@@ -37,17 +37,17 @@
     text-align: left;
     width: 400px;
   }
-  
+
   .comment-author-name {
     color: #385898;
     cursor: pointer;
     margin-right: 5px;
   }
-  
+
   .comment-text {
     margin-top: 0;
   }
-  
+
   .comment-date {
     color: gray;
     margin-top: 10px;
@@ -58,7 +58,7 @@
     justify-content: center;
     margin: 20px 0;
   }
-  
+
   .pagination button {
     background-color: white;
     border: 1px solid #ccc;
@@ -70,16 +70,16 @@
     text-decoration: none;
     user-select: none;
   }
-  
+
   .pagination button:hover {
     background-color: #f1f1f1;
   }
-  
+
   .pagination button.disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
-  
+
   .pagination .active {
     background-color: #4caf50;
     color: white;

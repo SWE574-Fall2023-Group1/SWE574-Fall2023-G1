@@ -187,7 +187,7 @@ backend_host_ip = env('BACKEND_HOST_IP')
 #CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    f"http://{backend_host_ip}:3000", 
+    f"http://{backend_host_ip}:3000",
 ]
 
 CKEDITOR_CONFIGS = {
@@ -201,7 +201,7 @@ CKEDITOR_CONFIGS = {
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com' 
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env("USER")

@@ -3,15 +3,15 @@
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: flex-start;
-  
+
 }
 
 .create-story-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  flex-grow: 1; 
+
+  flex-grow: 1;
 }
 
 .create-story-form {
@@ -39,9 +39,9 @@
 }
 
 .custom-input {
-  width: 500px; 
-  height: 200px; 
-  resize: both; 
+  width: 500px;
+  height: 200px;
+  resize: both;
   /* overflow: auto;  */
   resize: none;
   margin: 0 auto;
@@ -62,7 +62,7 @@
 
 .date-box {
   width: 200px;
-  background-color: white; 
+  background-color: white;
 }
 
 .long-boxes {
@@ -71,5 +71,5 @@
 }
 
 .long-boxes .MuiOutlinedInput-root {
-  background-color: white; 
+  background-color: white;
 }

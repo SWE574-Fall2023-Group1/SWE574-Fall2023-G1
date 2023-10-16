@@ -14,7 +14,7 @@ function CommentSection({ comments, setComments}) {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [profilePhotos, setProfilePhotos] = useState({});
-  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png'); 
+  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png');
 
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ function CommentSection({ comments, setComments}) {
       setHasNextPage(response.data.has_next);
       setHasPrevPage(response.data.has_prev);
       setTotalPages(response.data.total_pages);
-      
+
 
       const newProfilePhotos = { ...profilePhotos };
       for (const comment of response.data.comments) {
@@ -82,10 +82,10 @@ function CommentSection({ comments, setComments}) {
         responseType: 'arraybuffer',
       });
       const base64Image = Buffer.from(profilePhotoResponse.data, 'binary').toString('base64');
-  
+
       const contentType = profilePhotoResponse.headers['content-type'];
       const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-  
+
       return `${dataUrlPrefix}${base64Image}`;
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -126,7 +126,7 @@ function CommentSection({ comments, setComments}) {
             </div>
           </div>
         ))) : (
-        
+
         <Box sx={{ mt: 2 }}>
           <Typography variant="body1">There are no comments yet.</Typography>
         </Box>

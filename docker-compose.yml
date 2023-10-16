@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   backend:
-    build: 
+    build:
       context: ./backend
     volumes:
       - ./backend/profile_photos:/backend/profile_photos

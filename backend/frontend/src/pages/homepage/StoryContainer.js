@@ -25,7 +25,7 @@ function StoryContainer() {
         >
           Followings Stories
         </Button>
-        
+
       </div>
       <br/>
       {showFollowingsStories ? <StoriesbyFollowingUsers /> : <AllStories />}

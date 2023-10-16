@@ -2,7 +2,7 @@
 from rest_framework import status, views
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework.exceptions import PermissionDenied 
+from rest_framework.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
 from django.core.paginator import Paginator
@@ -41,7 +41,7 @@ class UserRegistrationView(views.APIView):
                                     'username':user.username}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
 
 class UserLoginView(views.APIView):
     queryset = User.objects.all()
@@ -108,17 +108,17 @@ class CreateStoryView(views.APIView):
         print(request.COOKIES)
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
-        
+
         print(request.body)
         request_data = json.loads(request.body)
         print(request_data)
-        
-        request_data['author'] = user_id 
+
+        request_data['author'] = user_id
         serializer = StorySerializer(data=request_data)
         #print(serializer.data)
         #print(request_data)
         #print(request.body)
-        
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -145,7 +145,7 @@ class LikeStoryView(views.APIView):
 
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
-        
+
         story = Story.objects.get(pk=pk)
         # Check if the user has already liked the story
         if user_id in story.likes.all().values_list('id', flat=True):
@@ -158,7 +158,7 @@ class LikeStoryView(views.APIView):
             story.likes.add(user_id)
             story.save()
             return Response({'message': 'Like added successfully.'}, status=status.HTTP_200_OK)
-            
+
 class StoryDetailView(views.APIView): ##need to add auth here?
     def get(self, request, pk):
         cookie_value = request.COOKIES['refreshToken']
@@ -173,10 +173,10 @@ class StoryDetailView(views.APIView): ##need to add auth here?
 
         print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
 class CreateCommentView(views.APIView):
     def post(self, request, id):
-        
+
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
         #user_id = auth_check(request)
@@ -198,7 +198,7 @@ class CreateCommentView(views.APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
 class StoryCommentsView(views.APIView):
     def get(self, request, id):
         try:
@@ -218,7 +218,7 @@ class StoryCommentsView(views.APIView):
 
         serializer = CommentGetSerializer(page, many=True)
 
-        
+
         return Response({
             'comments': serializer.data,
             'has_next': page.has_next(),
@@ -251,10 +251,10 @@ class FollowUserView(views.APIView):
             #serializer = UsersSerializer(user_to_follow)
 
             return Response("followed", status=status.HTTP_200_OK)
-        
+
 class UserFollowersView(views.APIView):
     def get(self, request,user_id=None):
-        
+
 
         if user_id:
             user = get_object_or_404(User, pk=user_id)
@@ -269,7 +269,7 @@ class UserFollowersView(views.APIView):
         print("caner")
         print(serializer.data)
 
-        return Response(serializer.data, status=status.HTTP_200_OK) 
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class StoryAuthorView(views.APIView):
@@ -300,14 +300,14 @@ class StoryAuthorView(views.APIView):
         page_size = int(request.query_params.get('size', 3))
 
         # Paginate the stories
-        
+
         paginator = Paginator(stories, page_size)
         total_pages = ceil(paginator.count / page_size)
         page = paginator.get_page(page_number)
 
         serializer = StorySerializer(page, many=True)
 
-        
+
         return Response({
             'stories': serializer.data,
             'has_next': page.has_next(),
@@ -316,7 +316,7 @@ class StoryAuthorView(views.APIView):
             'prev_page': page.previous_page_number() if page.has_previous() else None,
             'total_pages': total_pages,
         }, status=status.HTTP_200_OK)
-    
+
 class AllStoryView(views.APIView):
     def get(self, request):
 
@@ -335,14 +335,14 @@ class AllStoryView(views.APIView):
         page_size = int(request.query_params.get('size', 3))
 
         # Paginate the stories
-        
+
         paginator = Paginator(stories, page_size)
         total_pages = ceil(paginator.count / page_size)
         page = paginator.get_page(page_number)
 
         serializer = StorySerializer(page, many=True)
 
-        
+
         return Response({
             'stories': serializer.data,
             'has_next': page.has_next(),
@@ -351,10 +351,10 @@ class AllStoryView(views.APIView):
             'prev_page': page.previous_page_number() if page.has_previous() else None,
             'total_pages': total_pages,
         }, status=status.HTTP_200_OK)
-    
+
 
 class UserDetailsView(views.APIView):
-        
+
     def get(self, request, user_id=None):
 
         #user_id = auth_check(request)
@@ -382,8 +382,8 @@ class UserBiographyView(views.APIView):
         return Response(serializer.data)
 
     def put(self, request):
-        
-        
+
+
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
         user = get_object_or_404(User, pk=user_id)
@@ -397,7 +397,7 @@ class UserBiographyView(views.APIView):
 class UserPhotoView(views.APIView):
 
     def get(self, request, user_id=None):
-        
+
         #user_id = auth_check(request)
         if user_id:
             user = get_object_or_404(User, pk=user_id)
@@ -412,7 +412,7 @@ class UserPhotoView(views.APIView):
         serializer = UserPhotoSerializer(user)
         file_ext = os.path.splitext(user.profile_photo.name)[-1].lower()
         print(user.profile_photo)
-        
+
 
         content_type = 'image/jpeg' if file_ext == '.jpg' or file_ext == '.jpeg' else 'image/png'
         # Serve the image file with the proper content type and inline attachment
@@ -422,7 +422,7 @@ class UserPhotoView(views.APIView):
         return response
 
     def put(self, request):
-        
+
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
         user = get_object_or_404(User, pk=user_id)
@@ -434,14 +434,14 @@ class UserPhotoView(views.APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def delete(self, request):
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
         user = get_object_or_404(User, pk=user_id)
 
         if user.profile_photo:
-            # Create a FileSystemStorage object 
+            # Create a FileSystemStorage object
             storage = FileSystemStorage()
             # Delete the file from the storage
             storage.delete(user.profile_photo.name)
@@ -455,7 +455,7 @@ class UserPhotoView(views.APIView):
 
 class SearchUserView(views.APIView):
 
-    
+
 
     def get(self, request, *args, **kwargs):
 
@@ -472,7 +472,7 @@ class SearchUserView(views.APIView):
         return Response({
             "users": users_serializer.data,
         }, status=status.HTTP_200_OK)
-    
+
 class SearchStoryView(views.APIView):
     def get(self, request, *args, **kwargs ):
         cookie_value = request.COOKIES['refreshToken']
@@ -548,15 +548,15 @@ class SearchStoryView(views.APIView):
                 location_ids__latitude__range=(lat - radius / 110.574, lat + radius / 110.574),
                 location_ids__longitude__range=(lng - radius / (111.320 * cos(radians(lat))), lng + radius / (111.320 * cos(radians(lat))))
             )
-        
-        
+
+
         stories = Story.objects.filter(query_filter).order_by('-creation_date')
 
         # Page sizes and numbers
         page_number = int(request.query_params.get('page', 1))
         page_size = int(request.query_params.get('size', 10))
 
-        
+
         paginator = Paginator(stories, page_size)
         total_pages = ceil(paginator.count / page_size)
         page = paginator.get_page(page_number)
@@ -571,7 +571,7 @@ class SearchStoryView(views.APIView):
             'prev_page': page.previous_page_number() if page.has_previous() else None,
             'total_pages': total_pages,
         }, status=status.HTTP_200_OK)
-    
+
 
 class SendPasswordResetEmail(views.APIView):
     def post(self, request):

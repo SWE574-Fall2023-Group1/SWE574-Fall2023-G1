@@ -38,14 +38,14 @@ const StorySearch = () => {
   const handleStoryClick = async (id) => {
     navigate(`/story/${id}`);
   };
-  
+
   const handleUserClick = async (id) => {
     navigate(`/user-profile/${id}`);
   };
 
   const handleSearch = async (e,pageNumber = 1) => {
     e.preventDefault();
-    
+
     let timeValueObj = {};
 
     switch (timeType) {
@@ -67,13 +67,13 @@ const StorySearch = () => {
         default:
         break;
     }
-    
+
     try {
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearch`, {
         params: {
             title: titleSearch,
             author: authorSearch,
-            tag: tagSearch, 
+            tag: tagSearch,
             page: pageNumber,
             size: pageSize,
             time_type: timeType,
@@ -90,7 +90,7 @@ const StorySearch = () => {
       console.log(radiusDiff)
     } catch (error) {
       console.error('Error fetching stories:', error);
-    } 
+    }
   };
 
   const handlePageChange = (newPage) => {
@@ -258,19 +258,19 @@ const StorySearch = () => {
     if (!autocompleteRef.current) {
       return;
     }
-  
+
     const place = autocompleteRef.current.getPlace();
-  
+
     if (!place || !place.geometry || !place.geometry.location) {
       return;
     }
-  
+
     const locationData = {
       name: place.name,
       latitude: Number(place.geometry.location.lat().toFixed(6)),
       longitude: Number(place.geometry.location.lng().toFixed(6)),
     };
-  
+
     setLocationSearch(locationData);
     setMapCenter({ lat: locationData.latitude, lng: locationData.longitude });
   };
@@ -295,7 +295,7 @@ const StorySearch = () => {
     if (timeType === 'normal_date') {
       return (
         <div className='date-type-search'>
-        <TextField 
+        <TextField
           className='date-box-search'
           variant="outlined"
           label="Date Difference (days):"
@@ -318,7 +318,7 @@ const StorySearch = () => {
         variant="outlined"
         placeholder="Title"
         className='long-boxes-search'
-        label="Search by Title" 
+        label="Search by Title"
         value={titleSearch}
         onChange={(e) => setTitleSearch(e.target.value)}
       />
@@ -328,7 +328,7 @@ const StorySearch = () => {
         variant="outlined"
         placeholder="Author"
         className='long-boxes-search'
-        label="Search by Author" 
+        label="Search by Author"
         value={authorSearch}
         onChange={(e) => setAuthorSearch(e.target.value)}
       />
@@ -338,13 +338,13 @@ const StorySearch = () => {
         variant="outlined"
         placeholder="Tag"
         className='long-boxes-search'
-        label="Search by Tag" 
+        label="Search by Tag"
         value={tagSearch}
         onChange={(e) => setTagSearch(e.target.value)}
       />
       <br />
       <div style={{ marginTop: '1rem' }}>
-        <FormControl variant="outlined" > 
+        <FormControl variant="outlined" >
             <InputLabel id="date-type-label">Date Type</InputLabel>
             <Select
               labelId="date-type-label"
@@ -367,7 +367,7 @@ const StorySearch = () => {
       {renderTimeInput()}
       {renderDateDiffInput()}
         <div>
-            <Autocomplete 
+            <Autocomplete
             className='date-type-search'
             onLoad={(autocomplete) => {
               autocompleteRef.current = autocomplete;
@@ -375,11 +375,11 @@ const StorySearch = () => {
             onPlaceChanged={handleLocationSelect}
 
           >
-            <TextField 
+            <TextField
               className='date-box-search'
-              type="search" 
-              label="Location" 
-              variant="outlined" 
+              type="search"
+              label="Location"
+              variant="outlined"
             />
           </Autocomplete>
           <br/>
@@ -399,11 +399,11 @@ const StorySearch = () => {
         <br/>
             <div className='search-story-map' >
                 <GoogleMap
-                
+
                 mapContainerStyle={{
                   width: '400px',
                   height: '400px',
-                  
+
                 }}
                 zoom={2}
                 center={markerPosition}
@@ -420,7 +420,7 @@ const StorySearch = () => {
             </div>
             <br/>
             <Button variant="contained" type="submit" className="btn btn-primary middle">Search Story</Button>
-            </form> 
+            </form>
             {stories.length > 0 && (
   <>
     <h3>Search Results:</h3>
