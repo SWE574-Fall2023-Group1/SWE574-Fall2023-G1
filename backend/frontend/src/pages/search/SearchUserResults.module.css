@@ -1,0 +1,13 @@
+  .searchedUser {
+    cursor: pointer;
+    color: #007bff;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .searchedUser:hover {
+    color: #0056b3;
+  }
+
+  .searchedUser:active {
+    transform: scale(0.95);
+  }

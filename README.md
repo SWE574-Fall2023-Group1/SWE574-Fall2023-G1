@@ -1,5 +1,18 @@
-# SWE574-Fall2023-G1
+# SWE573_SPRING_2023 Project for Memories Web App Platform
+This repository is a project for the class SWE573 - Software Development Practices in Boğaziçi University SWE Deparment.
 
-Project for SWE 574 - Group 1
+# URL of Deployed Website
+Project URL: [Memories Website](http://34.173.225.192:3000/)
 
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/main.svg)](https://results.pre-commit.ci/latest/github/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/main)
+## To run with docker at local machine:
+* Clone the repository or fork.
+* Run the docker in your local.
+* After that go inside the **SWE573_SPRING_2023** folder.
+* run the `docker-compose build` command
+* run the `docker-compose up` command
+
+If you are running for the first time the docker will download and install necessary node.js and django packages.
+
+Then using [local website link](http://localhost:3000/) you can go to the website that is deployed on your local.
+
+* For .env files both frontend and backend you need to contact with the creator of the project.

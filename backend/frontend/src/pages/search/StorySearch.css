@@ -1,0 +1,180 @@
+.title-search {
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.2s ease-in-out;
+}
+
+.title-search:hover {
+  color: #0056b3;
+}
+
+.title-search:active {
+  transform: scale(0.95);
+}
+
+.author-search {
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.2s ease-in-out;
+}
+
+.author-search:hover {
+  color: #0056b3;
+}
+
+.author-search:active {
+  transform: scale(0.95);
+}
+
+.pagination-search {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination-search button {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+}
+
+.pagination-search button:hover {
+  background-color: #f1f1f1;
+}
+
+.pagination-search button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-search .active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.search-story-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+.search-story-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.search-story-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.search-story-map {
+  width: '400px';
+  height: '400px';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.google-map {
+  width: '400px';
+  height: '400px';
+}
+
+.custom-input-search {
+  width: 500px;
+  height: 200px;
+  resize: both;
+  overflow: auto;
+  resize: none;
+  margin: 0 auto;
+  border-radius: '4px';
+}
+
+.date-type-search {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.date-type-search .MuiOutlinedInput-root {
+  background-color: white;
+}
+
+.date-box-search {
+  width: 200px;
+  background-color: white;
+}
+
+.long-boxes-search {
+  width: 200px;
+  border-radius: '20px'
+}
+
+.long-boxes-search .MuiOutlinedInput-root {
+  background-color: white;
+}
+
+.story-box-search {
+  width: 500px;
+  height: 55px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.story-author-photo-search {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.story-details-search {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.story-title-search {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: #1e88e5;
+  text-align: left;
+  transition: color 0.2s ease-in-out;
+}
+
+.story-title-search:hover {
+  color: #0056b3;
+}
+
+
+
+.story-author-search {
+  margin-bottom: 10;
+  text-align: left;
+  font-family: "Comic Sans MS"
+}

@@ -1,0 +1,75 @@
+.create-story-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+
+}
+
+.create-story-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-grow: 1;
+}
+
+.create-story-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+.location-list-wrapper {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.create-story-map {
+  flex: 1;
+}
+
+.location-list-container {
+  display: flex;
+  justify-content: left;
+}
+.location-list-container ol {
+  text-align: left;
+}
+
+.custom-input {
+  width: 500px;
+  height: 200px;
+  resize: both;
+  /* overflow: auto;  */
+  resize: none;
+  margin: 0 auto;
+  border-radius: '4px';
+}
+
+.ql-editor {
+  background-color: white;
+}
+
+.date-type {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.date-box {
+  width: 200px;
+  background-color: white;
+}
+
+.long-boxes {
+  width: 500px;
+  border-radius: '20px'
+}
+
+.long-boxes .MuiOutlinedInput-root {
+  background-color: white;
+}
