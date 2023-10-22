@@ -2,7 +2,7 @@
 from rest_framework import status, views
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework.exceptions import PermissionDenied
+from django.core.exceptions import RequestDataTooBig
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
 from django.core.paginator import Paginator
@@ -19,11 +19,12 @@ import os,base64
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
-from .models import User,Story,Comment
+from .models import User,Story,Comment,StoryImage
 from .authentication import *
 from .models import PasswordResetToken
 from django.contrib.auth import authenticate
-
+from django.core.files.base import ContentFile
+import re
 
 class UserRegistrationView(views.APIView):
     queryset = User.objects.all()
@@ -35,7 +36,6 @@ class UserRegistrationView(views.APIView):
         if serializer.is_valid():
             user = serializer.save()
 
-            #token = Token.objects.create(user=user)
             user.save()
             return Response({'message':'Successfully registered!', 'email':user.email,
                                     'username':user.username}, status=status.HTTP_201_CREATED)
@@ -104,25 +104,47 @@ class LogoutAPIView(views.APIView):
 class CreateStoryView(views.APIView):
     def post(self, request):
 
-        #user_id = auth_check(request) #when using postman
-        print(request.COOKIES)
-        cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            print(request.COOKIES)
+            cookie_value = request.COOKIES['refreshToken']
+            user_id = decode_refresh_token(cookie_value)
 
-        print(request.body)
-        request_data = json.loads(request.body)
-        print(request_data)
+            print(request.body)
+            request_data = json.loads(request.body)
+            print(request_data)
 
-        request_data['author'] = user_id
-        serializer = StorySerializer(data=request_data)
-        #print(serializer.data)
-        #print(request_data)
-        #print(request.body)
+            backend_host_ip = os.environ.get('BACKEND_HOST_IP', 'localhost')
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            pattern = r'<img src="data:image/(?P<format>\w+);base64,(?P<data>[^"]+)"'
+            for match in re.finditer(pattern, request_data['content']):
+                format, imgstr = match.group('format'), match.group('data')
+                ext = format.lower()
+                data = ContentFile(base64.b64decode(imgstr))
+
+                # Create a new StoryImage and save the decoded image data
+                img = StoryImage()
+                img.save()  # Save the object first so it gets an ID
+
+                filename = f"story_image_{img.id}.{ext}"
+                img.image.save(filename, data, save=True)
+
+                # Construct the absolute image URL
+                absolute_image_url = f"http://{backend_host_ip}:8000/story_images/{filename}"
+
+                # Replace the base64 data inside the <img> tag with the image's absolute URL
+                request_data['content'] = request_data['content'].replace(match.group(0), f'<img src="{absolute_image_url}"')
+
+            request_data['author'] = user_id
+            serializer = StorySerializer(data=request_data)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except RequestDataTooBig:
+            return Response({"detail": "Uploaded data is too large."}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
+
 
 class UpdateStoryView(views.APIView):
     def put(self, request, pk):
@@ -179,7 +201,6 @@ class CreateCommentView(views.APIView):
 
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
-        #user_id = auth_check(request)
 
         try:
             story = Story.objects.get(pk=id)
@@ -230,7 +251,6 @@ class StoryCommentsView(views.APIView):
 
 class FollowUserView(views.APIView):
     def post(self, request, id):
-        #user = auth_check(request)
 
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
@@ -281,7 +301,6 @@ class StoryAuthorView(views.APIView):
         user_id_new = decode_refresh_token(cookie_value)
 
         if user_id:
-            #print("caneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer")
             user = get_object_or_404(User, pk=user_id)
             stories = Story.objects.filter(author=user_id).order_by('-creation_date')
         else:
@@ -292,8 +311,6 @@ class StoryAuthorView(views.APIView):
             stories = Story.objects.filter(author__in=user_ids).order_by('-creation_date')
 
         print(stories)
-        #print(followed_users)
-        #followed_users_ids = followed_users.values_list('id', flat=True)
 
         # Get the page number and size
         page_number = int(request.query_params.get('page', 1))
@@ -326,10 +343,6 @@ class AllStoryView(views.APIView):
 
         stories = Story.objects.exclude(Q(author__id=user_id)).order_by('-creation_date')
 
-        print(stories)
-        #print(followed_users)
-        #followed_users_ids = followed_users.values_list('id', flat=True)
-
         # Get the page number and size
         page_number = int(request.query_params.get('page', 1))
         page_size = int(request.query_params.get('size', 3))
@@ -357,7 +370,6 @@ class UserDetailsView(views.APIView):
 
     def get(self, request, user_id=None):
 
-        #user_id = auth_check(request)
         if user_id:
             user = get_object_or_404(User, pk=user_id)
         else:
@@ -398,7 +410,6 @@ class UserPhotoView(views.APIView):
 
     def get(self, request, user_id=None):
 
-        #user_id = auth_check(request)
         if user_id:
             user = get_object_or_404(User, pk=user_id)
         else:
@@ -496,12 +507,9 @@ class SearchStoryView(views.APIView):
             query_filter &= Q(story_tags__icontains=tag_search)
         if author_search:
             query_filter &= Q(author__username__icontains=author_search)
-        # print(time_type)
-        # print(time_value)
         if time_type and time_value:
 
             time_value = json.loads(time_value)
-            # print(time_value)
             if time_type == 'season':
                 time_value = time_value["seasonName"]
                 query_filter &= Q(season_name__icontains=time_value)
@@ -524,8 +532,6 @@ class SearchStoryView(views.APIView):
                 print(start_date)
                 print(end_date)
                 query_filter &= Q(date__range=(start_date, end_date)) ##I can change the date to get 2 dates for interval on normal_date too
-                #time_value = time_value["date"]
-                ##query_filter &= Q(date=time_value)
             elif time_type == 'interval_date':
                 query_filter &= Q(
                     start_date__gte=time_value['startDate'],

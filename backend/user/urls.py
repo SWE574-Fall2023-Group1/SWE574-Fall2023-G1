@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('register', UserRegistrationView.as_view(), name="register"),
@@ -33,7 +35,4 @@ urlpatterns = [
     path('storySearch', SearchStoryView.as_view()),
     path("passwordReset", SendPasswordResetEmail.as_view()),
     path("passwordReset/<token>/<uidb64>", ResetPassword.as_view()),
-    # path("storyDelete", StoryDeleteAPIView.as_view()), #unused
-
-    # path('photoForStory/<int:story_id>', StoryPhotoAPIView.as_view()),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

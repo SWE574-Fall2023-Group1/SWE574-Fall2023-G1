@@ -24,7 +24,8 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
-
+class StoryImage(models.Model):
+    image = models.ImageField(upload_to='story_images/')
 
 class Story(models.Model):
     YEAR_INTERVAL = 'year_interval'
