@@ -7,7 +7,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
 import {TextField, Select, MenuItem, InputLabel, FormControl, Button, List, ListItem, ListItemText,Checkbox, FormControlLabel } from '@mui/material';
-
+import ImageCompress from 'quill-image-compress';
+import Quill from 'quill'
 function CreateStory() {
 
   const [title, setTitle] = useState('');
@@ -32,14 +33,25 @@ function CreateStory() {
   const autocompleteRef = useRef(null);
   const inputRef = useRef(null);
 
+  Quill.register('modules/imageCompress', ImageCompress);
+
   const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image", "video"]
-    ]
-  };
+    toolbar: {
+      container: [
+        [{ header: [1, 2, false] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image", "video"],
+      ],
+    },
+    imageCompress: {
+      quality: 0.7, // default
+      maxWidth: 1024, // default
+      maxHeight: 1024, // default
+      imageType: 'image/jpeg', // default
+      debug: false, // default
+    }
+};
 
   const formats = [
     "header",

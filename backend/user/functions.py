@@ -48,15 +48,16 @@ def resize_image(image_data, max_size_mb=5):
 def convert_base64_to_url(content):
     backend_host_ip = os.environ.get('BACKEND_HOST_IP', 'localhost')
     pattern = r'<img src="data:image/(?P<format>\w+);base64,(?P<data>[^"]+)"'
-
+    print("test2")
     for match in re.finditer(pattern, content):
         format, imgstr = match.group('format'), match.group('data')
         ext = format.lower()
         image_data = base64.b64decode(imgstr)
-
+        print("imagedata" ,len(image_data))
+        print("test")
         # Resize the image if it's larger than 5 MB
-        if len(image_data) / (1024 * 1024) > 5:
-            image_data = resize_image(image_data)
+        #if len(image_data) / (1024 * 1024) > 5:
+        #    image_data = resize_image(image_data)
 
         data = ContentFile(image_data)
 
