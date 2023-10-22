@@ -40,7 +40,7 @@ ALLOWED_HOSTS = [
     env('BACKEND_HOST_IP', default='127.0.0.1')
 ]
 
-
+DATA_UPLOAD_MAX_MEMORY_SIZE = 31457280
 # Application definition
 
 INSTALLED_APPS = [
