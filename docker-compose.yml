@@ -6,6 +6,7 @@ services:
       context: ./backend
     volumes:
       - ./backend/profile_photos:/backend/profile_photos
+      - ./backend/story_images:/backend/story_images
     ports:
       - "8000:8000"
     env_file:

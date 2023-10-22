@@ -65,7 +65,7 @@ class Story(models.Model):
         # Custom validation to ensure only one date field is set
 
         date_fields = [self.start_year, self.year, self.date, self.end_date, self.decade]
-        print(date_fields)
+        #print(date_fields)
         if date_fields.count(None) != 4:
             raise ValidationError("Only one type of date field should be set.")
 

@@ -12,11 +12,11 @@ def create_access_token(id):
     return  token_new
 
 def decode_access_token(token):
-    print(token)
-    print(type(token))
+    #print(token)
+    #print(type(token))
     try:
         payload = jwt.decode(token, 'access_secret', algorithms= ['HS256'])
-        print(payload)
+        #print(payload)
         return payload['user_id']
 
     except:

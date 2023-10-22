@@ -15,16 +15,15 @@ from django.utils.encoding import force_bytes, smart_str
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 import json
-import os,base64
+import os
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
-from .models import User,Story,Comment,StoryImage
+from .models import User,Story,Comment
 from .authentication import *
 from .models import PasswordResetToken
 from django.contrib.auth import authenticate
-from django.core.files.base import ContentFile
-import re
+from .functions import *
 
 class UserRegistrationView(views.APIView):
     queryset = User.objects.all()
@@ -85,7 +84,7 @@ class RefreshUserAuthAPIView(views.APIView):
         refresh_token = request.COOKIES.get('refreshToken')
 
         id = decode_refresh_token(refresh_token)
-        print(id)
+        #print(id)
         access_token = create_access_token(id)
         return Response({
             'token': access_token
@@ -103,36 +102,16 @@ class LogoutAPIView(views.APIView):
 
 class CreateStoryView(views.APIView):
     def post(self, request):
-
         try:
-            print(request.COOKIES)
+            #print(request.COOKIES)
             cookie_value = request.COOKIES['refreshToken']
             user_id = decode_refresh_token(cookie_value)
 
-            print(request.body)
+            #print(request.body)
             request_data = json.loads(request.body)
-            print(request_data)
+            #print(request_data)
 
-            backend_host_ip = os.environ.get('BACKEND_HOST_IP', 'localhost')
-
-            pattern = r'<img src="data:image/(?P<format>\w+);base64,(?P<data>[^"]+)"'
-            for match in re.finditer(pattern, request_data['content']):
-                format, imgstr = match.group('format'), match.group('data')
-                ext = format.lower()
-                data = ContentFile(base64.b64decode(imgstr))
-
-                # Create a new StoryImage and save the decoded image data
-                img = StoryImage()
-                img.save()  # Save the object first so it gets an ID
-
-                filename = f"story_image_{img.id}.{ext}"
-                img.image.save(filename, data, save=True)
-
-                # Construct the absolute image URL
-                absolute_image_url = f"http://{backend_host_ip}:8000/story_images/{filename}"
-
-                # Replace the base64 data inside the <img> tag with the image's absolute URL
-                request_data['content'] = request_data['content'].replace(match.group(0), f'<img src="{absolute_image_url}"')
+            request_data['content'] = convert_base64_to_url(request_data['content'])
 
             request_data['author'] = user_id
             serializer = StorySerializer(data=request_data)
@@ -156,9 +135,14 @@ class UpdateStoryView(views.APIView):
 
         content = request.data.get("content")
         if content is not None:
-            story.content = content
+            # Convert base64 encoded images in the content to URLs
+            updated_content = convert_base64_to_url(content)
+
+            story.content = updated_content
             story.save()
             return Response("ok")
+
+        return Response({"error": "Content not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -193,7 +177,7 @@ class StoryDetailView(views.APIView): ##need to add auth here?
 
         serializer = StorySerializer(story)
 
-        print(serializer.data)
+        #print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CreateCommentView(views.APIView):
@@ -212,7 +196,7 @@ class CreateCommentView(views.APIView):
             'story': id,
             'text': request.data.get('text')
         }
-        print(data)
+        #print(data)
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -254,7 +238,7 @@ class FollowUserView(views.APIView):
 
         cookie_value = request.COOKIES['refreshToken']
         user_id = decode_refresh_token(cookie_value)
-        print(user_id)
+        #print(user_id)
         try:
             user_to_follow = User.objects.get(pk=id)
         except User.DoesNotExist:
@@ -286,8 +270,8 @@ class UserFollowersView(views.APIView):
         followers = user.followers.all()
         serializer = UserFollowerSerializer(followers, many=True)
 
-        print("caner")
-        print(serializer.data)
+        #print("caner")
+        #print(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -295,8 +279,8 @@ class UserFollowersView(views.APIView):
 class StoryAuthorView(views.APIView):
     def get(self, request, user_id=None):
 
-        print(request.COOKIES)
-        print(user_id)
+        #print(request.COOKIES)
+        #print(user_id)
         cookie_value = request.COOKIES['refreshToken']
         user_id_new = decode_refresh_token(cookie_value)
 
@@ -310,7 +294,7 @@ class StoryAuthorView(views.APIView):
             user_ids = user.following.values_list('id', flat=True)
             stories = Story.objects.filter(author__in=user_ids).order_by('-creation_date')
 
-        print(stories)
+        #print(stories)
 
         # Get the page number and size
         page_number = int(request.query_params.get('page', 1))
@@ -422,7 +406,7 @@ class UserPhotoView(views.APIView):
 
         serializer = UserPhotoSerializer(user)
         file_ext = os.path.splitext(user.profile_photo.name)[-1].lower()
-        print(user.profile_photo)
+        #print(user.profile_photo)
 
 
         content_type = 'image/jpeg' if file_ext == '.jpg' or file_ext == '.jpeg' else 'image/png'
@@ -499,7 +483,7 @@ class SearchStoryView(views.APIView):
         date_diff = float(request.query_params.get('date_diff', ''))
         tag_search = request.query_params.get('tag', '')
 
-        print(tag_search)
+        #print(tag_search)
         query_filter = Q()
         if title_search:
             query_filter &= Q(title__icontains=title_search)
@@ -529,8 +513,8 @@ class SearchStoryView(views.APIView):
                 # Calculate the date range
                 start_date = given_date - timedelta(days=date_diff+1)
                 end_date = given_date + timedelta(days=date_diff+1)
-                print(start_date)
-                print(end_date)
+                #print(start_date)
+                #print(end_date)
                 query_filter &= Q(date__range=(start_date, end_date)) ##I can change the date to get 2 dates for interval on normal_date too
             elif time_type == 'interval_date':
                 query_filter &= Q(
@@ -603,9 +587,9 @@ class SendPasswordResetEmail(views.APIView):
 
 class ResetPassword(views.APIView):
     def post(self, request, token, uidb64):
-        print("caner")
-        print(uidb64)
-        print(token)
+        #print("caner")
+        #print(uidb64)
+        #print(token)
 
         user_id = smart_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=int(user_id))

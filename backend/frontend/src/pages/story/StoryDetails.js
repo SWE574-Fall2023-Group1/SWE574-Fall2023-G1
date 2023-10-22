@@ -4,9 +4,10 @@ import { useParams,useNavigate  } from 'react-router-dom';
 import './StoryDetails.css';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import withAuth from '../../authCheck';
-import Heart from "react-animated-heart";
 import CommentSection from './CommentSection';
 import ReactQuill from 'react-quill';
+import ImageCompress from 'quill-image-compress';
+import Quill from 'quill'
 import 'react-quill/dist/quill.snow.css';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -172,14 +173,25 @@ function StoryDetails() {
     setOpen(false)
   };
 
+  Quill.register('modules/imageCompress', ImageCompress);
+
   const modules = {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image", "video"]
-    ]
-  };
+    toolbar: {
+      container: [
+        [{ header: [1, 2, false] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image", "video"],
+      ],
+    },
+    imageCompress: {
+      quality: 0.7, // default
+      maxWidth: 1024, // default
+      maxHeight: 1024, // default
+      imageType: 'image/jpeg', // default
+      debug: false, // default
+    }
+};
 
 
   return (
