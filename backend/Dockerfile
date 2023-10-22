@@ -11,8 +11,6 @@ COPY backend/ ./backend
 
 COPY user/ ./user
 
-COPY profile_photos/ ./profile_photos
-
 EXPOSE 8000
 
 

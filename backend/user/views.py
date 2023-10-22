@@ -15,16 +15,15 @@ from django.utils.encoding import force_bytes, smart_str
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 import json
-import os,base64
+import os
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
-from .models import User,Story,Comment,StoryImage
+from .models import User,Story,Comment
 from .authentication import *
 from .models import PasswordResetToken
 from django.contrib.auth import authenticate
-from django.core.files.base import ContentFile
-import re
+from .functions import *
 
 class UserRegistrationView(views.APIView):
     queryset = User.objects.all()
@@ -103,7 +102,6 @@ class LogoutAPIView(views.APIView):
 
 class CreateStoryView(views.APIView):
     def post(self, request):
-
         try:
             print(request.COOKIES)
             cookie_value = request.COOKIES['refreshToken']
@@ -113,26 +111,7 @@ class CreateStoryView(views.APIView):
             request_data = json.loads(request.body)
             print(request_data)
 
-            backend_host_ip = os.environ.get('BACKEND_HOST_IP', 'localhost')
-
-            pattern = r'<img src="data:image/(?P<format>\w+);base64,(?P<data>[^"]+)"'
-            for match in re.finditer(pattern, request_data['content']):
-                format, imgstr = match.group('format'), match.group('data')
-                ext = format.lower()
-                data = ContentFile(base64.b64decode(imgstr))
-
-                # Create a new StoryImage and save the decoded image data
-                img = StoryImage()
-                img.save()  # Save the object first so it gets an ID
-
-                filename = f"story_image_{img.id}.{ext}"
-                img.image.save(filename, data, save=True)
-
-                # Construct the absolute image URL
-                absolute_image_url = f"http://{backend_host_ip}:8000/story_images/{filename}"
-
-                # Replace the base64 data inside the <img> tag with the image's absolute URL
-                request_data['content'] = request_data['content'].replace(match.group(0), f'<img src="{absolute_image_url}"')
+            request_data['content'] = convert_base64_to_url(request_data['content'])
 
             request_data['author'] = user_id
             serializer = StorySerializer(data=request_data)
@@ -156,9 +135,14 @@ class UpdateStoryView(views.APIView):
 
         content = request.data.get("content")
         if content is not None:
-            story.content = content
+            # Convert base64 encoded images in the content to URLs
+            updated_content = convert_base64_to_url(content)
+
+            story.content = updated_content
             story.save()
             return Response("ok")
+
+        return Response({"error": "Content not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
