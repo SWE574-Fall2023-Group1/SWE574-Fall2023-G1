@@ -38,10 +38,10 @@ class UserRegistrationView(views.APIView):
             user = serializer.save()
 
             user.save()
-            return Response({'message':'Successfully registered!', 'email':user.email,
+            return Response({'success':True ,'msg':'Successfully registered!', 'email':user.email,
                                     'username':user.username}, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False ,'msg':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 custom_schema_login = openapi.Schema(
@@ -66,14 +66,16 @@ class UserLoginView(views.APIView):
         user = authenticate(request, username=username, password=password)
 
         if user is None:
-            return Response({'error': 'Invalid username or password'}, status=400)
+            return Response({'success':False ,'msg': 'Invalid username or password'}, status=400)
 
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)
-        response = Response()
+        response = Response(status=status.HTTP_201_CREATED)
 
         response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
         response.data = {
+            'success':True ,
+            'msg': 'Login success',
             'access': access_token,
             'refresh': refresh_token
         }
@@ -84,29 +86,38 @@ class AuthUserAPIView(views.APIView):
     def get(self, request):
         try:
             cookie_value = request.COOKIES['refreshToken']
-            user_id = decode_refresh_token(cookie_value)
-            return Response(user_id, status=status.HTTP_200_OK)
+            try:
+                user_id = decode_refresh_token(cookie_value)
+            except:
+                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'success':True ,'msg': 'User is authed'}, user_id, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'user_id': None, 'is_authenticated': False}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'success':False ,'msg': 'Unauthenticated','user_id': None, 'is_authenticated': False}, status=status.HTTP_401_UNAUTHORIZED)
 
 class RefreshUserAuthAPIView(views.APIView):
     def post(self,request):
         refresh_token = request.COOKIES.get('refreshToken')
 
-        id = decode_refresh_token(refresh_token)
+        try:
+            id = decode_refresh_token(refresh_token)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         #print(id)
         access_token = create_access_token(id)
         return Response({
+            'success':True ,
+            'msg': 'Access token refreshed',
             'token': access_token
-        })
+        },status=status.HTTP_201_CREATED)
 
 class LogoutAPIView(views.APIView):
     def post(self, request):
 
-        response = Response()
+        response = Response(status=status.HTTP_201_CREATED)
         response.delete_cookie('refreshToken')
         response.data = {
-            'message': 'success'
+            'success':True ,
+            'msg': 'Logout Success'
         }
         return response
 
@@ -116,7 +127,10 @@ class CreateStoryView(views.APIView):
         try:
             #print(request.COOKIES)
             cookie_value = request.COOKIES['refreshToken']
-            user_id = decode_refresh_token(cookie_value)
+            try:
+                user_id = decode_refresh_token(cookie_value)
+            except:
+                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
             #print(request.body)
             request_data = json.loads(request.body)
@@ -129,11 +143,11 @@ class CreateStoryView(views.APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'success':True ,'msg': 'Story Created'},serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         except RequestDataTooBig:
-            return Response({"detail": "Uploaded data is too large."}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
+            return Response({'success':False ,'msg': 'Uploaded data is too large.'}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
 
 custom_schema_update_story = openapi.Schema(
     type=openapi.TYPE_OBJECT,
@@ -147,7 +161,10 @@ class UpdateStoryView(views.APIView):
     def put(self, request, pk):
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         story = get_object_or_404(Story, pk=pk)
 
@@ -158,18 +175,20 @@ class UpdateStoryView(views.APIView):
 
             story.content = updated_content
             story.save()
-            return Response("ok")
+            return Response({'success':True ,'msg': 'Update story content successfull.'}, status=status.HTTP_201_CREATED)
 
-        return Response({"error": "Content not provided"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success':False ,'msg': 'Update content failed.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 class LikeStoryView(views.APIView):
-
     def post(self, request, pk):
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         story = Story.objects.get(pk=pk)
         # Check if the user has already liked the story
@@ -177,39 +196,45 @@ class LikeStoryView(views.APIView):
             # If the user has already liked the story, remove the like
             story.likes.remove(user_id)
             story.save()
-            return Response({'message': 'Like removed successfully.'}, status=status.HTTP_200_OK)
+            return Response({'success':True ,'msg': 'Disliked.'}, status=status.HTTP_201_CREATED)
         else:
             # If the user has not liked the story, add a new like
             story.likes.add(user_id)
             story.save()
-            return Response({'message': 'Like added successfully.'}, status=status.HTTP_200_OK)
+            return Response({'success':True ,'msg': 'Liked.'}, status=status.HTTP_201_CREATED)
 
 class StoryDetailView(views.APIView): ##need to add auth here?
     def get(self, request, pk):
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
             story = Story.objects.get(pk=pk)
         except Story.DoesNotExist:
-            return Response({'message': 'Story not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = StorySerializer(story)
 
         #print(serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'success':True ,'msg': 'Story detail got.'}, serializer.data, status=status.HTTP_200_OK)
 
 class CreateCommentView(views.APIView):
     @swagger_auto_schema(request_body=CommentSerializer)
     def post(self, request, id):
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
             story = Story.objects.get(pk=id)
         except Story.DoesNotExist:
-            return Response({'error': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         data = {
             'comment_author': user_id,
@@ -220,16 +245,16 @@ class CreateCommentView(views.APIView):
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'success':True ,'msg': 'Comment added.'}, serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class StoryCommentsView(views.APIView):
     def get(self, request, id):
         try:
             story = Story.objects.get(pk=id)
         except Story.DoesNotExist:
-            return Response({'error': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         # Get the page number and size
         page_number = int(request.query_params.get('page', 1))
@@ -245,6 +270,8 @@ class StoryCommentsView(views.APIView):
 
 
         return Response({
+            'success':True ,
+            'msg': 'Story commnents got',
             'comments': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -257,34 +284,38 @@ class FollowUserView(views.APIView):
     def post(self, request, id):
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         #print(user_id)
         try:
             user_to_follow = User.objects.get(pk=id)
         except User.DoesNotExist:
-            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'success':False ,'msg': 'User does not exists.'}, status=status.HTTP_404_NOT_FOUND)
         if user_id == user_to_follow.id:
-            return Response({'error': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False ,'msg': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
 
         if user_to_follow.followers.filter(pk=user_id).exists():
             user_to_follow.followers.remove(user_id)
             #serializer = UsersSerializer(user_to_follow)
-            return Response("unfollowed", status=status.HTTP_200_OK)
+            return Response({'success':True ,'msg': 'Unfollowed'}, status=status.HTTP_201_CREATED)
         else:
             user_to_follow.followers.add(user_id)
             #serializer = UsersSerializer(user_to_follow)
 
-            return Response("followed", status=status.HTTP_200_OK)
+            return Response({'success':True ,'msg': 'Followed'}, status=status.HTTP_201_CREATED)
 
 class UserFollowersView(views.APIView):
     def get(self, request,user_id=None):
-
-
         if user_id:
             user = get_object_or_404(User, pk=user_id)
         else:
             cookie_value = request.COOKIES['refreshToken']
-            user_id = decode_refresh_token(cookie_value)
+            try:
+                user_id = decode_refresh_token(cookie_value)
+            except:
+                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
             user = get_object_or_404(User, pk=user_id)
 
         followers = user.followers.all()
@@ -293,7 +324,7 @@ class UserFollowersView(views.APIView):
         #print("caner")
         #print(serializer.data)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'success':True ,'msg': 'Get user followers.'}, serializer.data, status=status.HTTP_200_OK)
 
 
 class StoryAuthorView(views.APIView):
@@ -302,8 +333,10 @@ class StoryAuthorView(views.APIView):
         #print(request.COOKIES)
         #print(user_id)
         cookie_value = request.COOKIES['refreshToken']
-        user_id_new = decode_refresh_token(cookie_value)
-
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         if user_id:
             user = get_object_or_404(User, pk=user_id)
             stories = Story.objects.filter(author=user_id).order_by('-creation_date')
@@ -330,6 +363,8 @@ class StoryAuthorView(views.APIView):
 
 
         return Response({
+            'success':True ,
+            'msg': 'Show story details by authors itself',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -343,7 +378,10 @@ class AllStoryView(views.APIView):
 
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
         stories = Story.objects.exclude(Q(author__id=user_id)).order_by('-creation_date')
 
@@ -361,6 +399,8 @@ class AllStoryView(views.APIView):
 
 
         return Response({
+            'success':True ,
+            'msg': 'Get all stories',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -378,11 +418,17 @@ class UserDetailsView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
         else:
             cookie_value = request.COOKIES['refreshToken']
-            user_id = decode_refresh_token(cookie_value)
+            try:
+                user_id = decode_refresh_token(cookie_value)
+            except:
+                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UsersSerializer(user)
-        return Response(serializer.data)
+        return Response(
+            {'success':True ,
+            'msg':'Get user details'},
+            serializer.data, status=status.HTTP_200_OK)
 
 class UserBiographyView(views.APIView):
 
@@ -391,24 +437,30 @@ class UserBiographyView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
         else:
             cookie_value = request.COOKIES['refreshToken']
-            user_id = decode_refresh_token(cookie_value)
+            try:
+                user_id = decode_refresh_token(cookie_value)
+            except:
+                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UserBiographySerializer(user)
-        return Response(serializer.data)
+        return Response({'success':True ,'msg': 'Got user bio'},serializer.data, status=status.HTTP_200_OK)
     @swagger_auto_schema(request_body=UserBiographySerializer)
     def put(self, request):
 
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         user = get_object_or_404(User, pk=user_id)
 
         serializer = UserBiographySerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':True ,'msg': 'Update user bio'},serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'success':False ,'msg': 'Update user bio failed'}, serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserPhotoView(views.APIView):
 
@@ -418,20 +470,21 @@ class UserPhotoView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
         else:
             cookie_value = request.COOKIES['refreshToken']
-            user_id = decode_refresh_token(cookie_value)
+            try:
+                user_id = decode_refresh_token(cookie_value)
+            except:
+                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
             user = get_object_or_404(User, pk=user_id)
 
         if not user.profile_photo:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'success':False ,'msg': 'Profile photo not found'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = UserPhotoSerializer(user)
         file_ext = os.path.splitext(user.profile_photo.name)[-1].lower()
-        #print(user.profile_photo)
-
 
         content_type = 'image/jpeg' if file_ext == '.jpg' or file_ext == '.jpeg' else 'image/png'
         # Serve the image file with the proper content type and inline attachment
-        response = HttpResponse(user.profile_photo, content_type=content_type)
+        response = Response({'success':True ,'msg': 'Profile photo get'}, user.profile_photo, content_type=content_type, status=status.HTTP_200_OK)
         response['Content-Disposition'] = f'inline; filename="{user.profile_photo.name}"'
 
         return response
@@ -439,20 +492,26 @@ class UserPhotoView(views.APIView):
     def put(self, request):
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         user = get_object_or_404(User, pk=user_id)
         if not isinstance(request.FILES.get('profile_photo'), InMemoryUploadedFile):
-            return Response({'error': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':False ,'msg': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = UserPhotoSerializer(user, data={'profile_photo': request.FILES['profile_photo']})
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success':True ,'msg': 'Profile photo changed'}, serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         user = get_object_or_404(User, pk=user_id)
 
         if user.profile_photo:
@@ -463,16 +522,19 @@ class UserPhotoView(views.APIView):
             # Update the user model to remove the profile photo
             user.profile_photo = None
             user.save()
-            return Response({'success': 'Profile photo deleted'})
+            return Response({'success':True ,'msg': 'Profile photo deleted'}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Profile photo does not exist'})
+            return Response({'success':False ,'msg': 'Profile photo does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SearchUserView(views.APIView):
     def get(self, request, *args, **kwargs):
 
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         user = get_object_or_404(User, pk=user_id)
 
         search_query = request.query_params.get('search', '')
@@ -482,13 +544,18 @@ class SearchUserView(views.APIView):
         users_serializer = UsersSerializer(user_queryset, many=True)
 
         return Response({
+            'success':True ,
+            'msg': 'Searching user success',
             "users": users_serializer.data,
         }, status=status.HTTP_200_OK)
 
 class SearchStoryView(views.APIView):
     def get(self, request, *args, **kwargs ):
         cookie_value = request.COOKIES['refreshToken']
-        user_id = decode_refresh_token(cookie_value)
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         user = get_object_or_404(User, pk=user_id)
 
         title_search = request.query_params.get('title', '')
@@ -571,6 +638,8 @@ class SearchStoryView(views.APIView):
         serializer = StorySerializer(page, many=True)
 
         return Response({
+            'success':True ,
+            'msg': 'Search success',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
