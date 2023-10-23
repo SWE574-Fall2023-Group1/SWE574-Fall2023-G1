@@ -24,12 +24,14 @@ from .authentication import *
 from .models import PasswordResetToken
 from django.contrib.auth import authenticate
 from .functions import *
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class UserRegistrationView(views.APIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
     permission_classes = [AllowAny]
-
+    @swagger_auto_schema(request_body=UserRegisterSerializer)
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -42,9 +44,17 @@ class UserRegistrationView(views.APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+custom_schema_login = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        'username': openapi.Schema(type=openapi.TYPE_STRING, description='enter username'),
+        'password': openapi.Schema(type=openapi.TYPE_STRING, description='enter password'),
+    },
+    required=['content','password'],
+)
 class UserLoginView(views.APIView):
     queryset = User.objects.all()
-
+    @swagger_auto_schema(request_body=custom_schema_login)
     def post(self, request, *args, **kwargs):
         body = json.loads(request.body)
 
@@ -101,6 +111,7 @@ class LogoutAPIView(views.APIView):
         return response
 
 class CreateStoryView(views.APIView):
+    @swagger_auto_schema(request_body=StorySerializer)
     def post(self, request):
         try:
             #print(request.COOKIES)
@@ -124,8 +135,15 @@ class CreateStoryView(views.APIView):
         except RequestDataTooBig:
             return Response({"detail": "Uploaded data is too large."}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
 
-
+custom_schema_update_story = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        'content': openapi.Schema(type=openapi.TYPE_STRING, description='enter new content'),
+    },
+    required=['content'],
+)
 class UpdateStoryView(views.APIView):
+    @swagger_auto_schema(request_body=custom_schema_update_story)
     def put(self, request, pk):
 
         cookie_value = request.COOKIES['refreshToken']
@@ -147,6 +165,7 @@ class UpdateStoryView(views.APIView):
 
 
 class LikeStoryView(views.APIView):
+
     def post(self, request, pk):
 
         cookie_value = request.COOKIES['refreshToken']
@@ -181,6 +200,7 @@ class StoryDetailView(views.APIView): ##need to add auth here?
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CreateCommentView(views.APIView):
+    @swagger_auto_schema(request_body=CommentSerializer)
     def post(self, request, id):
 
         cookie_value = request.COOKIES['refreshToken']
@@ -376,7 +396,7 @@ class UserBiographyView(views.APIView):
 
         serializer = UserBiographySerializer(user)
         return Response(serializer.data)
-
+    @swagger_auto_schema(request_body=UserBiographySerializer)
     def put(self, request):
 
 
@@ -415,7 +435,7 @@ class UserPhotoView(views.APIView):
         response['Content-Disposition'] = f'inline; filename="{user.profile_photo.name}"'
 
         return response
-
+    @swagger_auto_schema(request_body=UserPhotoSerializer)
     def put(self, request):
 
         cookie_value = request.COOKIES['refreshToken']
@@ -449,9 +469,6 @@ class UserPhotoView(views.APIView):
 
 
 class SearchUserView(views.APIView):
-
-
-
     def get(self, request, *args, **kwargs):
 
         cookie_value = request.COOKIES['refreshToken']
