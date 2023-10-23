@@ -9,9 +9,9 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Django Sample Application API",
+        title="SWE574 G1 Memories Application API",
         default_version='v1',
-        description="Welcome to the Django Sample Application API documentation",
+        description="SWE574 G1 Memories Application API Documentation",
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
