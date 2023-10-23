@@ -18,9 +18,10 @@ django-elasticsearch-dsl-drf
 django-modeltranslation
 psycopg2-binary
 Pillow
-drf-yasg
 cryptography
 flake8
 boto3
 django-storages
 Pillow
+django-rest-swagger
+drf_yasg
