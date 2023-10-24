@@ -35,14 +35,10 @@ function StoriesByFollowingsUsers() {
       const profilePhotoResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto/${userId}`, {
         headers: {},
         withCredentials: true,
-        responseType: 'arraybuffer',
       });
-      const base64Image = Buffer.from(profilePhotoResponse.data, 'binary').toString('base64');
 
-      const contentType = profilePhotoResponse.headers['content-type'];
-      const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-
-      return `${dataUrlPrefix}${base64Image}`;
+      // Just return the photo_url
+      return profilePhotoResponse.data.photo_url;
     } catch (error) {
       if (error.response && error.response.status === 404) {
         return defaultProfilePhoto;
@@ -56,7 +52,7 @@ function StoriesByFollowingsUsers() {
         return newState;
       });
     }
-  };
+};
 
   useEffect(() => {
     const fetchData = async () => {
