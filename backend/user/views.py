@@ -300,6 +300,7 @@ class FollowUserView(views.APIView):
 
 class UserFollowersView(views.APIView):
     def get(self, request,user_id=None):
+
         if user_id:
             user = get_object_or_404(User, pk=user_id)
         else:
@@ -312,8 +313,8 @@ class UserFollowersView(views.APIView):
 
         followers = user.followers.all()
         serializer = UserFollowerSerializer(followers, many=True)
-
-        return Response({'success':True ,'msg': 'Get user followers.'}, serializer.data, status=status.HTTP_200_OK)
+        serializer.data.update({'success':True ,'msg': 'Get user followers.'})
+        return Response(serializer.data , status=status.HTTP_200_OK)
 
 
 class StoryAuthorView(views.APIView):
