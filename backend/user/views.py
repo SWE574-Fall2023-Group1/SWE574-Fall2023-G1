@@ -26,6 +26,9 @@ from django.contrib.auth import authenticate
 from .functions import *
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+import logging
+
+logger = logging.getLogger('django')
 
 class UserRegistrationView(views.APIView):
     queryset = User.objects.all()
@@ -66,7 +69,7 @@ class UserLoginView(views.APIView):
         user = authenticate(request, username=username, password=password)
 
         if user is None:
-            return Response({'success':False ,'msg': 'Invalid username or password'}, status=400)
+            return Response({'success':False ,'msg': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
 
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)
@@ -86,14 +89,10 @@ class AuthUserAPIView(views.APIView):
     def get(self, request):
         try:
             cookie_value = request.COOKIES['refreshToken']
-            try:
-                user_id = decode_refresh_token(cookie_value)
-            except:
-                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-            return Response({'success':True ,'msg': 'User is authed'}, user_id, status=status.HTTP_200_OK)
+            user_id = decode_refresh_token(cookie_value)
+            return Response({'success':True ,'msg': 'User is authed', 'user_id': user_id}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'success':False ,'msg': 'Unauthenticated','user_id': None, 'is_authenticated': False}, status=status.HTTP_401_UNAUTHORIZED)
-
 class RefreshUserAuthAPIView(views.APIView):
     def post(self,request):
         refresh_token = request.COOKIES.get('refreshToken')
@@ -143,7 +142,8 @@ class CreateStoryView(views.APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response({'success':True ,'msg': 'Story Created'},serializer.data, status=status.HTTP_201_CREATED)
+                serializer.data.update({'success':True ,'msg': 'Story Created'})
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         except RequestDataTooBig:
@@ -217,9 +217,9 @@ class StoryDetailView(views.APIView): ##need to add auth here?
             return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = StorySerializer(story)
-
+        serializer.data.update({'success':True ,'msg': 'Story detail got.'})
         #print(serializer.data)
-        return Response({'success':True ,'msg': 'Story detail got.'}, serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CreateCommentView(views.APIView):
     @swagger_auto_schema(request_body=CommentSerializer)
@@ -245,7 +245,8 @@ class CreateCommentView(views.APIView):
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'success':True ,'msg': 'Comment added.'}, serializer.data, status=status.HTTP_201_CREATED)
+            serializer.data.update({'success':True ,'msg': 'Comment added.'})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -425,10 +426,8 @@ class UserDetailsView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UsersSerializer(user)
-        return Response(
-            {'success':True ,
-            'msg':'Get user details'},
-            serializer.data, status=status.HTTP_200_OK)
+        serializer.data.update({'success':True ,'msg':'Get user details'})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserBiographyView(views.APIView):
 
@@ -444,7 +443,8 @@ class UserBiographyView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UserBiographySerializer(user)
-        return Response({'success':True ,'msg': 'Got user bio'},serializer.data, status=status.HTTP_200_OK)
+        serializer.data.update({'success':True ,'msg': 'Got user bio'})
+        return Response(serializer.data, status=status.HTTP_200_OK)
     @swagger_auto_schema(request_body=UserBiographySerializer)
     def put(self, request):
 
@@ -459,8 +459,9 @@ class UserBiographyView(views.APIView):
         serializer = UserBiographySerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'success':True ,'msg': 'Update user bio'},serializer.data, status=status.HTTP_201_CREATED)
-        return Response({'success':False ,'msg': 'Update user bio failed'}, serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.data.update({'success':True ,'msg': 'Update user bio'})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserPhotoView(views.APIView):
 
@@ -484,9 +485,10 @@ class UserPhotoView(views.APIView):
 
         content_type = 'image/jpeg' if file_ext == '.jpg' or file_ext == '.jpeg' else 'image/png'
         # Serve the image file with the proper content type and inline attachment
-        response = Response({'success':True ,'msg': 'Profile photo get'}, user.profile_photo, content_type=content_type, status=status.HTTP_200_OK)
+        response = HttpResponse(user.profile_photo, content_type=content_type, status=status.HTTP_200_OK)
         response['Content-Disposition'] = f'inline; filename="{user.profile_photo.name}"'
-
+        response['success'] = True
+        response['msg'] = 'Photo got'
         return response
     @swagger_auto_schema(request_body=UserPhotoSerializer)
     def put(self, request):
@@ -503,7 +505,8 @@ class UserPhotoView(views.APIView):
         serializer = UserPhotoSerializer(user, data={'profile_photo': request.FILES['profile_photo']})
         if serializer.is_valid():
             serializer.save()
-            return Response({'success':True ,'msg': 'Profile photo changed'}, serializer.data, status=status.HTTP_201_CREATED)
+            serializer.data.update({'success':True ,'msg': 'Profile photo changed'})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
