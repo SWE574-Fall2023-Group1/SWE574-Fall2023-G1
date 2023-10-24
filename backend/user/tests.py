@@ -145,7 +145,7 @@ class UserLoginViewTestCase(APITestCase):
             "password": "testpassword"
         }
         response = self.client.post(reverse('login'), json.dumps(data), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)
         self.assertIn('refreshToken', response.cookies)

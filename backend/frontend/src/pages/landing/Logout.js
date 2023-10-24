@@ -6,10 +6,7 @@ function LogoutButton() {
   const handleLogoutClick = async () => {
     try {
       const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/logout`,{}, { withCredentials: true });
-      console.log('Request Headers:', response.config.headers);
-      console.log('Response Headers:', response.headers);
-      if (response.data.message === 'success') {
-
+      if (response.data.success === true) {
         // Redirect to the home page or the login page after successful logout
         localStorage.setItem('token', '');
         window.location.href = '/';
