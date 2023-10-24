@@ -5,7 +5,7 @@ from rest_framework.fields import CharField
 from .functions import *
 import urllib.parse
 from django.contrib.auth.hashers import make_password
-
+import os
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -72,9 +72,19 @@ class UserBiographySerializer(serializers.ModelSerializer):
         return instance
 
 class UserPhotoSerializer(serializers.ModelSerializer):
+
+    photo_url = serializers.SerializerMethodField('get_image_url')
+
     class Meta:
         model = User
-        fields = ['profile_photo']
+        fields = ['profile_photo', 'photo_url']
+
+    def get_image_url(self, obj):
+        if obj.profile_photo:
+            backend_host_ip = os.environ.get('BACKEND_HOST_IP', 'localhost')
+            backend_host = f"http://{backend_host_ip}:8000"
+            return backend_host + obj.profile_photo.url
+        return None
 
     def update(self, instance, validated_data):
         instance.profile_photo = validated_data.get('profile_photo', instance.profile_photo)

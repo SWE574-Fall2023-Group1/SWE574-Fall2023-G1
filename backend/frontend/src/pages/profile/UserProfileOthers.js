@@ -21,6 +21,8 @@ const UserProfileOthers = () => {
   const [isMe, setIsMe] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const { id } = useParams();
+  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png');
+
 
   const navigate = useNavigate();
 
@@ -49,7 +51,6 @@ const UserProfileOthers = () => {
           //return;
         }
 
-
         const userDetailsResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userDetails/${id}`, {
           headers: {},
           withCredentials: true,
@@ -61,38 +62,32 @@ const UserProfileOthers = () => {
           const profilePhotoResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto/${id}`, {
             headers: {},
             withCredentials: true,
-            responseType: 'arraybuffer',
           });
-          const base64Image = Buffer.from(profilePhotoResponse.data, 'binary').toString('base64');
 
-          const contentType = profilePhotoResponse.headers['content-type'];
-          const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-
-          setProfilePhotoUrl(`${dataUrlPrefix}${base64Image}`);
+          // Directly set the URL from the response to state
+          setProfilePhotoUrl(profilePhotoResponse.data.photo_url);
         } catch (error) {
           if (error.response && error.response.status === 404) {
-            // Profile photo not found, do nothing
+            // Profile photo not found, you might want to set the default photo here
+            setProfilePhotoUrl(defaultProfilePhoto);
           } else {
             console.error('Error fetching profile photo:', error);
           }
         }
 
         const followersResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userFollowers/${id}`, {
-        headers: {},
-        withCredentials: true,
+          headers: {},
+          withCredentials: true,
         });
         console.log('Followers response:', followersResponse.data);
 
-        console.log(followersResponse.data)
         const isCurrentUserFollowing = followersResponse.data.some(
             (follower) => follower.id === currentUser
         );
         setIsFollowing(isCurrentUserFollowing);
 
-
         setFollowerCount(followersResponse.data.length);
         setLoading(false);
-
 
       } catch (error) {
         console.error('Error fetching user details and profile photo:', error);
@@ -101,9 +96,9 @@ const UserProfileOthers = () => {
       }
     };
 
-
     fetchData();
   }, [id]);
+
 
   useEffect(() => {
     fetchUserStories();
