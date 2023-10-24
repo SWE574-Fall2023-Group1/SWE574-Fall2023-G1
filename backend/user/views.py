@@ -466,15 +466,9 @@ class UserPhotoView(views.APIView):
             return Response({'success':False ,'msg': 'Profile photo not found'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = UserPhotoSerializer(user)
-        file_ext = os.path.splitext(user.profile_photo.name)[-1].lower()
 
-        content_type = 'image/jpeg' if file_ext == '.jpg' or file_ext == '.jpeg' else 'image/png'
-        # Serve the image file with the proper content type and inline attachment
-        response = HttpResponse(user.profile_photo, content_type=content_type, status=status.HTTP_200_OK)
-        response['Content-Disposition'] = f'inline; filename="{user.profile_photo.name}"'
-        response['success'] = True
-        response['msg'] = 'Photo got'
-        return response
+        return Response({'success': True, 'msg': 'Photo got', 'photo_url': serializer.data['photo_url']}, status=status.HTTP_200_OK)
+
     @swagger_auto_schema(request_body=UserPhotoSerializer)
     def put(self, request):
 
