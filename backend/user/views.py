@@ -101,7 +101,6 @@ class RefreshUserAuthAPIView(views.APIView):
             id = decode_refresh_token(refresh_token)
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-        #print(id)
         access_token = create_access_token(id)
         return Response({
             'success':True ,
@@ -124,16 +123,13 @@ class CreateStoryView(views.APIView):
     @swagger_auto_schema(request_body=StorySerializer)
     def post(self, request):
         try:
-            #print(request.COOKIES)
             cookie_value = request.COOKIES['refreshToken']
             try:
                 user_id = decode_refresh_token(cookie_value)
             except:
                 return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            #print(request.body)
             request_data = json.loads(request.body)
-            #print(request_data)
 
             request_data['content'] = convert_base64_to_url(request_data['content'])
 
@@ -218,7 +214,6 @@ class StoryDetailView(views.APIView): ##need to add auth here?
 
         serializer = StorySerializer(story)
         serializer.data.update({'success':True ,'msg': 'Story detail got.'})
-        #print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CreateCommentView(views.APIView):
@@ -241,7 +236,6 @@ class CreateCommentView(views.APIView):
             'story': id,
             'text': request.data.get('text')
         }
-        #print(data)
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -289,7 +283,6 @@ class FollowUserView(views.APIView):
             user_id = decode_refresh_token(cookie_value)
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-        #print(user_id)
         try:
             user_to_follow = User.objects.get(pk=id)
         except User.DoesNotExist:
@@ -299,11 +292,9 @@ class FollowUserView(views.APIView):
 
         if user_to_follow.followers.filter(pk=user_id).exists():
             user_to_follow.followers.remove(user_id)
-            #serializer = UsersSerializer(user_to_follow)
             return Response({'success':True ,'msg': 'Unfollowed'}, status=status.HTTP_201_CREATED)
         else:
             user_to_follow.followers.add(user_id)
-            #serializer = UsersSerializer(user_to_follow)
 
             return Response({'success':True ,'msg': 'Followed'}, status=status.HTTP_201_CREATED)
 
@@ -322,20 +313,15 @@ class UserFollowersView(views.APIView):
         followers = user.followers.all()
         serializer = UserFollowerSerializer(followers, many=True)
 
-        #print("caner")
-        #print(serializer.data)
-
         return Response({'success':True ,'msg': 'Get user followers.'}, serializer.data, status=status.HTTP_200_OK)
 
 
 class StoryAuthorView(views.APIView):
     def get(self, request, user_id=None):
 
-        #print(request.COOKIES)
-        #print(user_id)
         cookie_value = request.COOKIES['refreshToken']
         try:
-            user_id = decode_refresh_token(cookie_value)
+            decode_refresh_token(cookie_value)
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         if user_id:
@@ -347,8 +333,6 @@ class StoryAuthorView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
             user_ids = user.following.values_list('id', flat=True)
             stories = Story.objects.filter(author__in=user_ids).order_by('-creation_date')
-
-        #print(stories)
 
         # Get the page number and size
         page_number = int(request.query_params.get('page', 1))
