@@ -216,6 +216,22 @@ class StoryDetailView(views.APIView): ##need to add auth here?
         serializer.data.update({'success':True ,'msg': 'Story detail got.'})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self, request, pk):
+        cookie_value = request.COOKIES.get('refreshToken')
+        if not cookie_value:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            story = Story.objects.get(pk=pk)
+            story.delete()
+            return Response({'success':True ,'msg': 'Story deleted successfully.'}, status=status.HTTP_200_OK)
+        except Story.DoesNotExist:
+            return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 class CreateCommentView(views.APIView):
     @swagger_auto_schema(request_body=CommentSerializer)
     def post(self, request, id):
