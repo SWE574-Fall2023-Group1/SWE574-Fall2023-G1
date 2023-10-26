@@ -672,7 +672,7 @@ class ResetPassword(views.APIView):
 
 
 class SearchStoryByLocationView(views.APIView):
-    def extract_timestamp(story):
+    def extract_timestamp(self, story):
     # Default to creation date in case there's an issue
         default_timestamp = story.creation_date
 
@@ -730,10 +730,13 @@ class SearchStoryByLocationView(views.APIView):
         stories = Story.objects.filter(query_filter)
         stories = sorted(stories, key=lambda story: self.extract_timestamp(story), reverse=True)
 
+        # Serialize the stories
+        serializer = StorySerializer(stories, many=True)
+
         # Page sizes and numbers
 
         return Response({
             'success' : True,
             'msg' : 'Stories successfully got',
-            'stories': stories
+            'stories': serializer.data
         }, status=status.HTTP_200_OK)
