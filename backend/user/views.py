@@ -15,7 +15,7 @@ from django.utils.encoding import force_bytes, smart_str
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 import json
-import os
+from django.utils import timezone
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
@@ -679,24 +679,25 @@ class SearchStoryByLocationView(views.APIView):
         if story.date_type == Story.YEAR_INTERVAL or story.date_type == Story.YEAR:
             year = story.start_year if story.date_type == Story.YEAR_INTERVAL else story.year
             if story.season_name == "Summer":
-                return datetime(year, 6, 1)
+                return timezone.make_aware(datetime(year, 6, 1))
             elif story.season_name == "Fall":
-                return datetime(year, 9, 1)
+                return timezone.make_aware(datetime(year, 9, 1))
             elif story.season_name == "Winter":
-                return datetime(year, 12, 1)
+                return timezone.make_aware(datetime(year, 12, 1))
             elif story.season_name == "Spring":
-                return datetime(year, 3, 1)
+                return timezone.make_aware(datetime(year, 3, 1))
             else:
-                return default_timestamp
+                return timezone.make_aware(datetime(year, 1, 1))
 
         elif story.date_type == Story.NORMAL_DATE:
+            logger.warning(story.date)
             return story.date
 
         elif story.date_type == Story.INTERVAL_DATE:
             return story.start_date
 
         elif story.date_type == Story.DECADE:
-            return datetime(story.decade, 1, 1)
+            return timezone.make_aware(datetime(story.decade, 1, 1))
 
         else:
             return default_timestamp
@@ -728,6 +729,7 @@ class SearchStoryByLocationView(views.APIView):
 
 
         stories = Story.objects.filter(query_filter)
+        logger.warning(stories)
         stories = sorted(stories, key=lambda story: self.extract_timestamp(story), reverse=True)
 
         # Serialize the stories
