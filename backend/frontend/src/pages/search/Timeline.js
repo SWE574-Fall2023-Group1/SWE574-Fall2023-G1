@@ -12,14 +12,13 @@ const LocationSearch = () => {
     const handleSearch = async () => {
       if (locationJSON) { // Checking if all necessary parameters are available
         try {
-          const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation/`, {
+          const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
             params: {
               location: locationJSON, // Updated location objec
               radius_diff: radiusDiff,
             },
             withCredentials: true,
           });
-      console.log("oguz", location)
 
           setLocationStories(response.data.stories);
         } catch (error) {
@@ -30,7 +29,7 @@ const LocationSearch = () => {
     };
 
     handleSearch();
-  }, [name, latitude, longitude, radiusDiff]);
+  }, [locationJSON, radiusDiff]);
 
   const handleStoryClick = async (id) => {
     navigate(`/story/${id}`);
