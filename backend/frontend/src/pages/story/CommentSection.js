@@ -79,14 +79,10 @@ function CommentSection({ comments, setComments}) {
       const profilePhotoResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto/${userId}`, {
         headers: {},
         withCredentials: true,
-        responseType: 'arraybuffer',
       });
-      const base64Image = Buffer.from(profilePhotoResponse.data, 'binary').toString('base64');
 
-      const contentType = profilePhotoResponse.headers['content-type'];
-      const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-
-      return `${dataUrlPrefix}${base64Image}`;
+      // Directly return the photo_url from the response
+      return profilePhotoResponse.data.photo_url;
     } catch (error) {
       if (error.response && error.response.status === 404) {
         return defaultProfilePhoto;
@@ -94,7 +90,7 @@ function CommentSection({ comments, setComments}) {
         console.error('Error fetching profile photo:', error);
       }
     }
-  };
+};
 
   const handlePhotoClick = async (userId) => {
     navigate(`/user-profile/${userId}`);

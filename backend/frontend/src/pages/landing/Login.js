@@ -19,7 +19,7 @@ function Login({ onLoginSuccess }) {
       username: username,
       password: password
     },{ withCredentials: true }).then(response => {
-      if (response.status == 200) {
+      if (response.status === 201) {
 
         onLoginSuccess();
         toast.success('Login successful!');

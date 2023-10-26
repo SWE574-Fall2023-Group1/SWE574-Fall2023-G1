@@ -17,7 +17,7 @@ const UserProfile = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [updatedBio, setUpdatedBio] = useState(null);
   const [isEditingBio, setIsEditingBio] = useState(false);
-
+  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png');
 
   const navigate = useNavigate();
 
@@ -48,22 +48,21 @@ const UserProfile = () => {
   const fetchProfilePhoto = async () => {
     try {
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
-        headers: {
-        },
+        headers: {},
         withCredentials: true,
-        responseType: 'arraybuffer',
       });
-      const base64Image = Buffer.from(response.data, 'binary').toString('base64');
 
-      const contentType = response.headers['content-type'];
-      const dataUrlPrefix = contentType === 'image/jpeg' ? 'data:image/jpeg;base64,' : 'data:image/png;base64,';
-
-      setProfilePhotoUrl(`${dataUrlPrefix}${base64Image}`);
+      // Directly set the URL from the response to state
+      setProfilePhotoUrl(response.data.photo_url);
 
     } catch (error) {
-      console.error('Error fetching profile photo:', error);
+      if (error.response && error.response.status === 404) {
+        // Profile photo not found, set the default photo
+        setProfilePhotoUrl(defaultProfilePhoto);
+      } else {
+        console.error('Error fetching profile photo:', error);
+      }
     }
-
   };
 
   const fetchUserStories = async (user) => {
