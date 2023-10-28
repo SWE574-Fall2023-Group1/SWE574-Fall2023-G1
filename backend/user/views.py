@@ -279,8 +279,6 @@ class StoryCommentsView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Story commnents got',
             'comments': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -363,8 +361,6 @@ class StoryAuthorView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Show story details by authors itself',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -399,8 +395,6 @@ class AllStoryView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Get all stories',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -478,7 +472,7 @@ class UserPhotoView(views.APIView):
 
         serializer = UserPhotoSerializer(user)
 
-        return Response({'success': True, 'msg': 'Photo got', 'photo_url': serializer.data['photo_url']}, status=status.HTTP_200_OK)
+        return Response({'success':  serializer.data['success'], 'msg':  serializer.data['msg'], 'photo_url': serializer.data['photo_url']}, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(request_body=UserPhotoSerializer)
     def put(self, request):
@@ -536,8 +530,6 @@ class SearchUserView(views.APIView):
         users_serializer = UsersSerializer(user_queryset, many=True)
 
         return Response({
-            'success':True ,
-            'msg': 'Searching user success',
             "users": users_serializer.data,
         }, status=status.HTTP_200_OK)
 
@@ -630,8 +622,6 @@ class SearchStoryView(views.APIView):
         serializer = StorySerializer(page, many=True)
 
         return Response({
-            'success':True ,
-            'msg': 'Search success',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
