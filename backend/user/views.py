@@ -138,7 +138,6 @@ class CreateStoryView(views.APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                serializer.data.update({'success':True ,'msg': 'Story Created'})
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -213,9 +212,25 @@ class StoryDetailView(views.APIView): ##need to add auth here?
             return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = StorySerializer(story)
-        serializer.data.update({'success':True ,'msg': 'Story detail got.'})
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self, request, pk):
+        cookie_value = request.COOKIES.get('refreshToken')
+        if not cookie_value:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            story = Story.objects.get(pk=pk)
+            story.delete()
+            return Response({'success':True ,'msg': 'Story deleted successfully.'}, status=status.HTTP_200_OK)
+        except Story.DoesNotExist:
+            return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 class CreateCommentView(views.APIView):
     @swagger_auto_schema(request_body=CommentSerializer)
     def post(self, request, id):
@@ -239,7 +254,6 @@ class CreateCommentView(views.APIView):
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Comment added.'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -313,7 +327,7 @@ class UserFollowersView(views.APIView):
 
         followers = user.followers.all()
         serializer = UserFollowerSerializer(followers, many=True)
-        serializer.data.update({'success':True ,'msg': 'Get user followers.'})
+
         return Response(serializer.data , status=status.HTTP_200_OK)
 
 
@@ -411,7 +425,6 @@ class UserDetailsView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UsersSerializer(user)
-        serializer.data.update({'success':True ,'msg':'Get user details'})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserBiographyView(views.APIView):
@@ -428,7 +441,6 @@ class UserBiographyView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UserBiographySerializer(user)
-        serializer.data.update({'success':True ,'msg': 'Got user bio'})
         return Response(serializer.data, status=status.HTTP_200_OK)
     @swagger_auto_schema(request_body=UserBiographySerializer)
     def put(self, request):
@@ -444,7 +456,6 @@ class UserBiographyView(views.APIView):
         serializer = UserBiographySerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Update user bio'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -484,7 +495,6 @@ class UserPhotoView(views.APIView):
         serializer = UserPhotoSerializer(user, data={'profile_photo': request.FILES['profile_photo']})
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Profile photo changed'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
