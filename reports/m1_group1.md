@@ -15,8 +15,8 @@ Due Date: 02 November 2023
 
 
 ### Progress Tracking:
-* [Kanban Board](https://github.com/orgs/SWE574-Fall2023-Group1/projects/1) 
-* [Issues](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues) 
+* [Kanban Board](https://github.com/orgs/SWE574-Fall2023-Group1/projects/1)
+* [Issues](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues)
 * [Issue Labels](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Issue-Labels)
 
 ### Software Release:
@@ -137,13 +137,13 @@ Mention any additional task you have performed that is notlisted above.
 1. Requirements have been specified according to comments of professor
 2. Web mock-ups have been designed in figma and shared
 3. Frontend codes such as unnecessary console log have been refined by removing and editing
-4. Project plan has been created according to deliverables plan of team 
+4. Project plan has been created according to deliverables plan of team
  * Code-related significant issues:
-In #75 Frontend Refinements issue, non unique ids problem has been fixed. Unnecessary console logs have been removed or edited.  
+In #75 Frontend Refinements issue, non unique ids problem has been fixed. Unnecessary console logs have been removed or edited.
  * Management-related significant issues:
 In #74 Project Plan for Milestone 1 Report issue, project plan has been created according to deliverables plan of team.
-In #31 Create Web Application Mockups issue, web application mockups have been designed. 
-In #47 Project Plan for Milestone 1 Report issue, 
+In #31 Create Web Application Mockups issue, web application mockups have been designed.
+In #47 Project Plan for Milestone 1 Report issue,
 In #38 Project Plan for Milestone 1 Report issue
  * Pull requests:
 You have created, merged, and reviewed. Please also briefly summarizewhat the conflict was (if you had any) and how it was resolved, regarding the pullrequests you have reviewed.
@@ -157,11 +157,11 @@ Mention any additional task you have performed that is notlisted above.
 4. Explaining Frontend Components to the Frontend Team
 5. Deployment
  * Main contributions:
-1. Main & Dev branches created and both branch's deployed on GCP VM. 
+1. Main & Dev branches created and both branch's deployed on GCP VM.
 2. Changing API request responses for Mobile Development
 3. Adding delete story API request to delete stories while devleoping
 4. Swagger added to the project.
-5. Changing profile photo store type. 
+5. Changing profile photo store type.
 6. Changing story photo store type and file size management.
 7. Mobile authentication test
  * Code-related significant issues:
@@ -186,7 +186,7 @@ Mention any additional task you have performed that is notlisted above.
 #### Oğuz
  * Responsibilities:
 1. Making mobile mock-ups
-2. 
+2.
  * Main contributions:
 The overall description of your contributions to the project untilCustomer Milestone 1.
  * Code-related significant issues:
