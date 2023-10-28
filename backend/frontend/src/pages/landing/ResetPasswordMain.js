@@ -8,8 +8,6 @@ function ResetPasswordMain() {
   const [newPassword, setNewPassword] = useState('');
   const { uidb64, token } = useParams();
   const navigate = useNavigate();
-  // console.log(uidb64)
-  // console.log(token)
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/passwordReset/${token}/${uidb64}`, {
