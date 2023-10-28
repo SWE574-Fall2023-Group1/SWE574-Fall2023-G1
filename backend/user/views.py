@@ -138,7 +138,6 @@ class CreateStoryView(views.APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                serializer.data.update({'success':True ,'msg': 'Story Created'})
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -213,7 +212,7 @@ class StoryDetailView(views.APIView): ##need to add auth here?
             return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = StorySerializer(story)
-        serializer.data.update({'success':True ,'msg': 'Story detail got.'})
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
@@ -255,7 +254,6 @@ class CreateCommentView(views.APIView):
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Comment added.'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -281,8 +279,6 @@ class StoryCommentsView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Story commnents got',
             'comments': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -329,7 +325,7 @@ class UserFollowersView(views.APIView):
 
         followers = user.followers.all()
         serializer = UserFollowerSerializer(followers, many=True)
-        serializer.data.update({'success':True ,'msg': 'Get user followers.'})
+
         return Response(serializer.data , status=status.HTTP_200_OK)
 
 
@@ -365,8 +361,6 @@ class StoryAuthorView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Show story details by authors itself',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -401,8 +395,6 @@ class AllStoryView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Get all stories',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -427,7 +419,6 @@ class UserDetailsView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UsersSerializer(user)
-        serializer.data.update({'success':True ,'msg':'Get user details'})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserBiographyView(views.APIView):
@@ -444,7 +435,6 @@ class UserBiographyView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UserBiographySerializer(user)
-        serializer.data.update({'success':True ,'msg': 'Got user bio'})
         return Response(serializer.data, status=status.HTTP_200_OK)
     @swagger_auto_schema(request_body=UserBiographySerializer)
     def put(self, request):
@@ -460,7 +450,6 @@ class UserBiographyView(views.APIView):
         serializer = UserBiographySerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Update user bio'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -483,7 +472,7 @@ class UserPhotoView(views.APIView):
 
         serializer = UserPhotoSerializer(user)
 
-        return Response({'success': True, 'msg': 'Photo got', 'photo_url': serializer.data['photo_url']}, status=status.HTTP_200_OK)
+        return Response({'success':  serializer.data['success'], 'msg':  serializer.data['msg'], 'photo_url': serializer.data['photo_url']}, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(request_body=UserPhotoSerializer)
     def put(self, request):
@@ -500,7 +489,6 @@ class UserPhotoView(views.APIView):
         serializer = UserPhotoSerializer(user, data={'profile_photo': request.FILES['profile_photo']})
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Profile photo changed'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -542,8 +530,6 @@ class SearchUserView(views.APIView):
         users_serializer = UsersSerializer(user_queryset, many=True)
 
         return Response({
-            'success':True ,
-            'msg': 'Searching user success',
             "users": users_serializer.data,
         }, status=status.HTTP_200_OK)
 
@@ -636,8 +622,6 @@ class SearchStoryView(views.APIView):
         serializer = StorySerializer(page, many=True)
 
         return Response({
-            'success':True ,
-            'msg': 'Search success',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
