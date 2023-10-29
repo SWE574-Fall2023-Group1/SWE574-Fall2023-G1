@@ -44,7 +44,8 @@ class UserRegistrationView(views.APIView):
             return Response({'success':True ,'msg':'Successfully registered!', 'email':user.email,
                                     'username':user.username}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'success':False ,'msg':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            registration_error = serializer.errors.get("username") or serializer.errors.get("email") or serializer.errors.get("password") or ["Registration failed."]
+            return Response({'success': False, 'msg': registration_error[0]}, status=status.HTTP_400_BAD_REQUEST)
 
 
 custom_schema_login = openapi.Schema(
