@@ -1,4 +1,4 @@
-## SWE574 Fall 2023 Group 1 Project - Memories Web App Platform
+## SWE574 Fall 2023 Group 1 Project - Memories Web&Mobile App
 
 This repository contains Group 1's project for SWE574 - Software Development As A Team, part of the Software Engineering Master's Program at Boğaziçi University.
 
