@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import './Timeline.css';
 
 const LocationSearch = () => {
   const [radiusDiff, setRadiusDiff] = useState(25);
   const [locationStories, setLocationStories] = useState([]);
+  const [locationName, setLocationName] = useState('');
   const { locationJSON } = useParams();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Updated
 
   useEffect(() => {
     const handleSearch = async () => {
-      if (locationJSON) { // Checking if all necessary parameters are available
+      if (locationJSON) {
         try {
           const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
             params: {
-              location: locationJSON, // Updated location objec
+              location: locationJSON,
               radius_diff: radiusDiff,
             },
             withCredentials: true,
           });
 
           setLocationStories(response.data.stories);
+
+          const locationData = JSON.parse(locationJSON);
+          setLocationName(locationData.name);
+
         } catch (error) {
           console.error('Error fetching location stories:', error);
           setLocationStories([]);
@@ -32,14 +38,18 @@ const LocationSearch = () => {
   }, [locationJSON, radiusDiff]);
 
   const handleStoryClick = async (id) => {
-    navigate(`/story/${id}`);
+    window.location.href = `/story/${id}`;
+  };
+
+  const handleGoBack = () => {
+    navigate(-1); // This will navigate back to the previous page
   };
 
   return (
     <div>
-      <h2>Location Search</h2>
+      <h2>Memories in {locationName}</h2>
 
-      {locationStories.length > 0 && (
+      {locationStories.length > 0 ? (
         <>
           <h3>Location Search Results:</h3>
           <div>
@@ -52,7 +62,13 @@ const LocationSearch = () => {
               </div>
             ))}
           </div>
+          <button onClick={handleGoBack}>Go Back</button>
         </>
+      ) : (
+        <div>
+          <h1>Sorry, there are no stories on this location.</h1>
+          <h2>Try a different one.</h2>
+        </div>
       )}
     </div>
   );
