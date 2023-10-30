@@ -146,21 +146,6 @@ We have been using git and GitHub to their full extent, having established our c
 
 * [Members and Team Distributions](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Team-Members)
 
-#### Instructions
-
- * Responsibilities:
-The overall description of responsibilities assigned to you.
- * Main contributions:
-The overall description of your contributions to the project until Customer Milestone 1.
- * Code-related significant issues:
-Your issues (that you have resolved or reviewed significantly) that contribute to the code base demonstrated during the demo.
- * Management-related significant issues:
-Your issues (that you have resolved or reviewed significantly) that contribute to the management of the project.
- * Pull requests:
-You have created, merged, and reviewed. Please also briefly summarize what the conflict was (if you had any) and how it was resolved, regarding the pull requests you have reviewed.
- * Additional information:
-Mention any additional task you have performed that is not listed above.
-
 #### **Ayhan**
  * **Responsibilities:**
 1. Developing the architecture of the mobile app
@@ -284,11 +269,8 @@ Mention any additional task you have performed that is not listed above.
 3. Proofread everything on GitHub to fix mistakes
 4. Moderate and take notes during weekly and regular meetings
  * Main contributions:
-The overall description of your contributions to the project until Customer Milestone 1.
-     * Code-related significant issues:
-Your issues (that you have resolved or reviewed significantly) that contribute to the code base demonstrated during the demo.
      * Management-related significant issues:
-Your issues (that you have resolved or reviewed significantly) that contribute to the management of the project.
+     #1, #3, #15, #38, #44, #46, #47, #58, #59, #64, #68, #69, #71, #72, #73, #84, #87, #92
  * Pull requests:
  1. Reviewed [pull request #93](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/93)
  * Additional information:
@@ -298,6 +280,22 @@ Your issues (that you have resolved or reviewed significantly) that contribute t
 4. Proofread and corrected issues in order to comply with established conventions
 
 #### **Mert**
+    
+#### Instructions
+
+ * Responsibilities:
+The overall description of responsibilities assigned to you.
+ * Main contributions:
+The overall description of your contributions to the project until Customer Milestone 1.
+ * Code-related significant issues:
+Your issues (that you have resolved or reviewed significantly) that contribute to the code base demonstrated during the demo.
+ * Management-related significant issues:
+Your issues (that you have resolved or reviewed significantly) that contribute to the management of the project.
+ * Pull requests:
+You have created, merged, and reviewed. Please also briefly summarize what the conflict was (if you had any) and how it was resolved, regarding the pull requests you have reviewed.
+ * Additional information:
+Mention any additional task you have performed that is not listed above.
+
 
 #### **Oğuz**
  *  Responsibilities:
