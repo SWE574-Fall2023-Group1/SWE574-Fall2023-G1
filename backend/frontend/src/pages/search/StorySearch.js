@@ -48,7 +48,7 @@ const StorySearch = () => {
 
 
     const url = `/timeline/${locationJSON}`;
-    console.log(url); // Add this line
+    //console.log(url); // Add this line
 
     navigate(url);
   };
@@ -94,7 +94,7 @@ const StorySearch = () => {
         },
         withCredentials: true,
       });
-      console.log(locationSearch)
+      //console.log(locationSearch)
       setStories(response.data.stories);
       setTotalPages(response.data.total_pages);
       setCurrentPage(pageNumber)
