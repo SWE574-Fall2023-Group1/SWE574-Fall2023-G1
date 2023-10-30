@@ -9,15 +9,15 @@ Due Date: 02 November 2023
 * [Project Conventions](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Conventions)
 * [Project Plan](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Project-Plan)
 * [Communication Plan](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Communication-Plan)
-* [Responsibility Assignment Matrix](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Responsiblities) 
+* [Responsibility Assignment Matrix](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Responsiblities)
 * [Software Requirements Specification (Includes Glossary)](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Requirements)
 * [Mockups](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Mockups-and-Storyboards)
 * [User Scenarios](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/User-Scenarios)
 * [Diagrams](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Diagrams)
 
 ### Progress Tracking:
-* [Kanban Board](https://github.com/orgs/SWE574-Fall2023-Group1/projects/1) 
-* [Issues](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues) 
+* [Kanban Board](https://github.com/orgs/SWE574-Fall2023-Group1/projects/1)
+* [Issues](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues)
 * [Issue Labels](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Issue-Labels)
 * [Meeting Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Meeting-Notes)
 
@@ -110,7 +110,7 @@ The following requirements have been addressed in the current release. For the o
 
 #### Future Plans
 For milestone 2, we plan to implement the new recommendation, timeline visualization, notification and activity features to the web application. The mobile application will also be worked upon to catch up with the current features of the web version. The frontend will be rehauled to look better, new unit tests will be implemented, and the backend will be optimized to run more efficiently.
-    
+
 #### Feedback & Reflections
 We have gone through an iterative process to better shape our requirements, where we had to remove and rewrite several requirements as per the customer's demands, and add a few new ones as well. We have also received feedback on which tools we will be using, and especially how well the wiki and the issues should be handled. We are currently making sure to keep good records of our contributions and progress, paying attention to commit messages, meeting notes, issue labels and deadlines.
 
@@ -211,21 +211,21 @@ We have been using git and GitHub to their full extent, having established our c
 1. Requirements have been specified according to comments of professor
 2. Web mock-ups have been designed in figma and shared
 3. Frontend codes such as unnecessary console log have been refined by removing and editing
-4. Project plan has been created according to deliverables plan of team 
+4. Project plan has been created according to deliverables plan of team
  * **Code-related significant issues:**
 1. In #75 Frontend Refinements issue, non unique ids problem has been fixed. Unnecessary console logs have been removed or edited.
 2. In #80 Unit test execution and in #79 User Acceptance Tests User issues, test scenarios have been planned to creation and execution then according to results codes will be refined.
  * **Management-related significant issues:**
 1. In #74 Project Plan for Milestone 1 Report issue, project plan has been created according to deliverables plan of team.
-2. In #31 Create Web Application Mockups issue, web application mockups have been designed. 
-3. In #47 Hold first frontend meeting issue, we orginized and met as frontend team for frontend related works. 
-4. In #38 Create Scenarios for Milestone 1 Report issue, memories, profiles have been formed. 
-5. In #29 Organize and revise requirements issue, requirements have been specified and organized. 
+2. In #31 Create Web Application Mockups issue, web application mockups have been designed.
+3. In #47 Hold first frontend meeting issue, we orginized and met as frontend team for frontend related works.
+4. In #38 Create Scenarios for Milestone 1 Report issue, memories, profiles have been formed.
+5. In #29 Organize and revise requirements issue, requirements have been specified and organized.
  * **Pull requests:**
-1. In #76 Feature/75 frontend refinements pull request, non unique ids problem has been fixed and unnecessary console logs have been removed and edited in branch of feature/75-frontend-refinements. It has been pushed to dev. 
+1. In #76 Feature/75 frontend refinements pull request, non unique ids problem has been fixed and unnecessary console logs have been removed and edited in branch of feature/75-frontend-refinements. It has been pushed to dev.
  * **Additional information:**
-1. Each week classes, notes relating to professor's comments and team's reviews have been taken and shared with team. 
-2. Some informative sources and useful drafts have been found and shared with team. 
+1. Each week classes, notes relating to professor's comments and team's reviews have been taken and shared with team.
+2. Some informative sources and useful drafts have been found and shared with team.
 #### **Caner**
  * **Responsibilities:**
 1. Creating discord channel and configuring it with GitHub
@@ -235,11 +235,11 @@ We have been using git and GitHub to their full extent, having established our c
 5. Explaining frontend components to the frontend team
 6. Deployment on GCP
  * **Main contributions:**
-1. Main and Dev branches created and both branches deployed on GCP VM. 
+1. Main and Dev branches created and both branches deployed on GCP VM.
 2. Changing API request responses for Mobile Development.
 3. Adding delete story API request so that we can delete stories while developing the project.
 4. Swagger added to the project for everyone to see API requests easily.
-5. Changing profile photo store type as URL in the project so that we can get photo faster. 
+5. Changing profile photo store type as URL in the project so that we can get photo faster.
 6. Changing story photo store type as URL and file size decreased on frontend so that rendering become faster.
 7. Mobile authentication test for JWT is available to use in flutter easily.
      * **Code-related significant issues:**
@@ -274,13 +274,13 @@ We have been using git and GitHub to their full extent, having established our c
  * Pull requests:
  1. Reviewed [pull request #93](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/93)
  * Additional information:
-1. Moderated regular meetings on Discord 
-2. Communicated with the customer for feedback on requirements and workflow, 
+1. Moderated regular meetings on Discord
+2. Communicated with the customer for feedback on requirements and workflow,
 3. Wrote milestone review with input from teammates
 4. Proofread and corrected issues in order to comply with established conventions
 
 #### **Mert**
-    
+
 #### Instructions
 
  * Responsibilities:
@@ -331,7 +331,7 @@ Mention any additional task you have performed that is not listed above.
 
  * Pull requests:
 1. Update `views.py` for timeline search [**#70**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/70)
-2. Features/56 profile photo improvement [**#57**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/57) 
+2. Features/56 profile photo improvement [**#57**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/57)
 3. Add swagger settings and configs [**#43**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/43)
 
 #### **Sadık**
