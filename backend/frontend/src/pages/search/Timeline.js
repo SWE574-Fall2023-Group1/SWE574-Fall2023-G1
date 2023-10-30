@@ -10,6 +10,14 @@ const LocationSearch = () => {
   const { locationJSON } = useParams();
   const navigate = useNavigate(); // Updated
 
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+
   useEffect(() => {
     const handleSearch = async () => {
       if (locationJSON) {
@@ -44,7 +52,43 @@ const LocationSearch = () => {
   const handleGoBack = () => {
     navigate(-1); // This will navigate back to the previous page
   };
+  const formatDate = (story) => {
 
+    let dateString = "";
+    const optionsWithoutTime = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const dateOptions = story.include_time ? options : optionsWithoutTime;
+
+    switch (story.date_type) {
+      case "decade":
+        dateString = `Memory Time: ${story.decade}s`;
+        break;
+      case "year":
+        dateString = `Memory Time: ${story.year}`;
+        break;
+      case "year_interval":
+        const startYear = story.start_year;
+        const endYear = story.end_year;
+        dateString = `Memory Time: ${startYear}-${endYear}`;
+        break;
+      case "normal_date":
+        const date = new Date(story.date).toLocaleDateString("en-US", dateOptions);
+        dateString = `Memory Time: ${date}`;
+        break;
+      case "interval_date":
+        const startDate = new Date(story.start_date).toLocaleDateString("en-US", dateOptions);
+        const endDate = new Date(story.end_date).toLocaleDateString("en-US", dateOptions);
+        dateString = `Memory Time: ${startDate}-${endDate}`;
+        break;
+      default:
+        dateString = "";
+    }
+    return dateString;
+  };
   return (
     <div>
       <h2>Memories in {locationName}</h2>
@@ -57,6 +101,7 @@ const LocationSearch = () => {
               <div key={story.id} className="story-box-search">
                 <div className="story-details-search">
                   <h3 className="story-title-search" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
+                  <p className="story-date-search">{formatDate(story)}</p> {/* Display the date */}
                   <p className="story-author-search">by {story.author_username || 'Unknown'}</p>
                 </div>
               </div>

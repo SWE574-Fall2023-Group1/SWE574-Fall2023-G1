@@ -159,3 +159,12 @@
     font-size: 1rem; /* Adjust font size as needed */
     color: #666;
   }
+
+  .story-date-search {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    margin: 0;
+    font-size: 1rem; /* Adjust font size as needed */
+    color: #666;
+  }
