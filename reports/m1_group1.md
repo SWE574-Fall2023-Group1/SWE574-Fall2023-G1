@@ -12,7 +12,7 @@ Due Date: 02 November 2023
 * [Responsibility Assignment Matrix](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Responsiblities) 
 * [Software Requirements Specification (Includes Glossary)](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Requirements)
 * [Mockups](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Mockups-and-Storyboards)
-* [User Scenarios](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/User-Scenarios) (TBA)
+* [User Scenarios](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/User-Scenarios)
 * [Diagrams](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Diagrams)
 
 ### Progress Tracking:
@@ -22,17 +22,8 @@ Due Date: 02 November 2023
 * [Meeting Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Meeting-Notes)
 
 ### Software Release:
-* [Web Release] (TBA)
-* [Mobile Release] (TBA)
-* [Release Notes] (TBA)
-
-#### Instructions
-* The software must be **dockerized** and **deployed**.
-* Create a pre-release version of your software that marks this version (check out how you create a release (https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases) in GitHub):
-* Release Name: 0.1.0-alpha (pre-release option)
-* Release Description: Brief description of requirements that are covered
-* Tag name: customer-milestone-1
-* Your release should include the android package file (.apk).
+* [0.1.0-alpha Release Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/releases/tag/customer-milestone-1)
+* [Android Application APK](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/releases/download/customer-milestone-1/app-release.apk)
 * All instructions for building and running the software should be provided, including thedocker build instructions and environment variables, if any. A fresh programmer that isfluent with various programming tools but not docker itself nor your project, should beable to do the deployment (for both web and mobile) by just following your steps.
 
 ### Milestone Review:
@@ -40,9 +31,9 @@ Due Date: 02 November 2023
 
 #### Current Status
 The web application is currently deployed online with the following features listed as deliverables for milestone 1:
-- [x] Signup
+- [x] Register
 - [x] Login
-- [x] Logout (Web only)
+- [x] Logout
 - [x] Feed - Homepage
 - [x] Profile Page (Web only)
 - [x] Memory Creation (Web only)
@@ -170,7 +161,7 @@ You have created, merged, and reviewed. Please also briefly summarize what the c
  * Additional information:
 Mention any additional task you have performed that is not listed above.
 
-#### Ayhan
+#### **Ayhan**
  * **Responsibilities:**
 1. Developing the architecture of the mobile app
 2. Developing the mobile designs in Flutter
@@ -222,9 +213,8 @@ Mention any additional task you have performed that is not listed above.
 13. Feature/21 feed screen [**#38**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/38)
 14. Dev-> Main [**#43**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/43)
 
-// TODO: Add splash, bloc test, lint, golden test PRs
 
-#### Aykut
+#### **Aykut**
  * **Responsibilities:**
 1. Designing web mock-ups
 2. Requirements specification
@@ -251,7 +241,7 @@ Mention any additional task you have performed that is not listed above.
  * **Additional information:**
 1. Each week classes, notes relating to professor's comments and team's reviews have been taken and shared with team. 
 2. Some informative sources and useful drafts have been found and shared with team. 
-#### Caner
+#### **Caner**
  * **Responsibilities:**
 1. Creating discord channel and configuring it with GitHub
 2. Transfering details of existing project to the team [SWE573 Project Link](https://github.com/ckertam/SWE573_SPRING_2023)
@@ -286,11 +276,30 @@ Mention any additional task you have performed that is not listed above.
 5. Profile Photo and Story Photo related #30 #33 #57
 6. Reviewed pull requests #26 #33 #35 #43 #55 #76
 
-#### Deniz
+#### **Deniz**
 
-#### Mert
+ * Responsibilities
+1. Member of frontend team: work on mockups, design, frontend code implementation
+2. Create new pages and maintain wiki
+3. Proofread everything on GitHub to fix mistakes
+4. Moderate and take notes during weekly and regular meetings
+ * Main contributions:
+The overall description of your contributions to the project until Customer Milestone 1.
+     * Code-related significant issues:
+Your issues (that you have resolved or reviewed significantly) that contribute to the code base demonstrated during the demo.
+     * Management-related significant issues:
+Your issues (that you have resolved or reviewed significantly) that contribute to the management of the project.
+ * Pull requests:
+ 1. Reviewed [pull request #93](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/93)
+ * Additional information:
+1. Moderated regular meetings on Discord 
+2. Communicated with the customer for feedback on requirements and workflow, 
+3. Wrote milestone review with input from teammates
+4. Proofread and corrected issues in order to comply with established conventions
 
-#### Oğuz
+#### **Mert**
+
+#### **Oğuz**
  *  Responsibilities:
 1. Making mobile mock-ups
 2. Web frontend code refinement
@@ -327,7 +336,7 @@ Mention any additional task you have performed that is not listed above.
 2. Features/56 profile photo improvement [**#57**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/57) 
 3. Add swagger settings and configs [**#43**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/43)
 
-#### Sadık
+#### **Sadık**
  * **Responsibilities**:
     1. Member of backend, mobile and devops teams.
     2. Created GitHub organization account and managed it.
