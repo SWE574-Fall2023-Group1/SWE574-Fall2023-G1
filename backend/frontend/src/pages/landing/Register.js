@@ -50,25 +50,25 @@ function Register() {
         <div>
           {/* <label>Username:</label>
           <input type="text" className="form-control" onChange={(e) => setUsername(e.target.value)} /> */}
-          <TextField id="outlined-basic" label="Username" variant="outlined" onChange={(e) => setUsername(e.target.value)} />
+          <TextField id="register-username" label="Username" variant="outlined" onChange={(e) => setUsername(e.target.value)} />
         </div>
         <br/>
         <div>
           {/* <label>Email:</label>
           <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} /> */}
-          <TextField id="outlined-basic" label="E-Mail" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
+          <TextField id="register-email" label="E-Mail" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
         </div>
         <br/>
         <div>
           {/* <label>Password:</label>
           <input type="password" className="form-control" onChange={(e) => setPassword(e.target.value)} /> */}
-          <TextField id="outlined-basic" label="Password" variant="outlined" type='password' onChange={(e) => setPassword(e.target.value)} />
+          <TextField id="register-password" label="Password" variant="outlined" type='password' onChange={(e) => setPassword(e.target.value)} />
         </div>
         <br/>
         <div>
           {/* <label>Password Again:</label>
           <input type="password" className="form-control" onChange={(e) => setPasswordAgain(e.target.value)} /> */}
-          <TextField id="outlined-basic" label="Password Again" variant="outlined" type='password' onChange={(e) => setPasswordAgain(e.target.value)} />
+          <TextField id="register-password-again" label="Password Again" variant="outlined" type='password' onChange={(e) => setPasswordAgain(e.target.value)} />
         </div>
         <br/>
         {/* <button type="submit" className="btn btn-primary">Register</button> */}
