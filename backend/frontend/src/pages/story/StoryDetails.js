@@ -151,7 +151,7 @@ function StoryDetails() {
   const handleLikeDislike = async () => {
     try {
       const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/like/${id}`, {}, { withCredentials: true });
-      if (response.data.message === 'Like added successfully.') {
+      if (response.data.msg === 'Liked.') {
         setNumLikes(numLikes + 1);
         setLiked(true);
       } else {
