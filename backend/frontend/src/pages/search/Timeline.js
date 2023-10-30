@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './Timeline.css';
 
 const LocationSearch = () => {
-  const [radiusDiff, setRadiusDiff] = useState(25);
+  const [radiusDiff, setRadiusDiff] = useState(5);
   const [locationStories, setLocationStories] = useState([]);
   const [locationName, setLocationName] = useState('');
   const { locationJSON } = useParams();
@@ -46,7 +46,7 @@ const LocationSearch = () => {
   }, [locationJSON, radiusDiff]);
 
   const handleStoryClick = async (id) => {
-    window.location.href = `/story/${id}`;
+    navigate(`/story/${id}`);
   };
 
   const handleGoBack = () => {
