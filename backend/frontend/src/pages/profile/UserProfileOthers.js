@@ -110,12 +110,12 @@ const UserProfileOthers = () => {
         headers: {},
         withCredentials: true,
       });
-      if (response.data === "followed") {
+      if (response.data.msg === 'Followed') {
+        setFollowerCount(followerCount + 1);
         setIsFollowing(true);
-        setFollowerCount((prevCount) => prevCount + 1);
-      } else if (response.data === "unfollowed") {
+      } else {
+        setFollowerCount(followerCount - 1);
         setIsFollowing(false);
-        setFollowerCount((prevCount) => prevCount - 1);
       }
     } catch (error) {
       console.error('Error following/unfollowing user:', error);
