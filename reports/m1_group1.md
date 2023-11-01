@@ -96,8 +96,6 @@ The following requirements have been addressed in the current release. For the o
 | F-5.13 | The search function shall sort results by memory date. | <ul><li>[x] </li> |
 | F-5.14 | The search function shall sort results by creation date. | <ul><li>[x] </li> |
 | F-5.15 | The search function shall sort results by location. | <ul><li>[x] </li> |
-| F-5.16 | When the user clicks on a map marker, the system shall navigate to a search result page considering the memory time order. | <ul><li>[x] </li> |
-| F-5.17 | The search function shall have a toggle which allows users to see search results considering the memory time order. | <ul><li>[x] </li> |
 
 
 #### Non-Functional Requirements
