@@ -45,11 +45,11 @@ function Login({ onLoginSuccess }) {
         <div className="form-group">
           {/* <label>Username:</label>
           <input type="text" className="form-control" onChange={(e) => setUsername(e.target.value)} /> */}
-          <TextField id="outlined-basic" label="Username" variant="outlined" onChange={(e) => setUsername(e.target.value)} />
+          <TextField id="login-username" label="Username" variant="outlined" onChange={(e) => setUsername(e.target.value)} />
         </div>
         <br/>
         <div className="form-group">
-        <TextField id="outlined-basic" label="Password" variant="outlined" type="password" onChange={(e) => setPassword(e.target.value)} />
+        <TextField id="login-password" label="Password" variant="outlined" type="password" onChange={(e) => setPassword(e.target.value)} />
         </div>
         <br/>
         <Button variant="contained" onClick={handleSubmit} className="login-button">Login</Button>
