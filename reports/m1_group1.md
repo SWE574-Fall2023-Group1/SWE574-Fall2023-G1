@@ -9,22 +9,22 @@ Due Date: 02 November 2023
 * [Project Conventions](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Conventions)
 * [Project Plan](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Project-Plan)
 * [Communication Plan](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Communication-Plan)
-* [Responsibility Assignment Matrix](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Responsiblities) 
+* [Responsibility Assignment Matrix](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Responsiblities)
 * [Software Requirements Specification (Includes Glossary)](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Requirements)
 * [Mockups](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Mockups-and-Storyboards)
 * [User Scenarios](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/User-Scenarios)
 * [Diagrams](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Diagrams)
 
 ### Progress Tracking:
-* [Kanban Board](https://github.com/orgs/SWE574-Fall2023-Group1/projects/1) 
-* [Issues](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues) 
+* [Kanban Board](https://github.com/orgs/SWE574-Fall2023-Group1/projects/1)
+* [Issues](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues)
 * [Issue Labels](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Issue-Labels)
 * [Meeting Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Meeting-Notes)
 
 ### Software Release:
 * [0.1.0-alpha Release Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/releases/tag/customer-milestone-1)
 * [0.1.1-alpha Release Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/releases/tag/customer-milestone-1.1)
-* We have 2 releases because we added the timeline feature before the customer presentation. But we had made the release before finalizing it, so we made a second release to include it for the first milestone. 
+* We have 2 releases because we added the timeline feature before the customer presentation. But we had made the release before finalizing it, so we made a second release to include it for the first milestone.
 * [Android Application APK](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/releases/download/customer-milestone-1/app-release.apk)
 
 ### Milestone Review:
@@ -42,9 +42,9 @@ The web application is currently deployed online with the following features lis
 - [x] Timeline v1 (Web only)
 
 It is currently possible to register, login, modify one's profile page, share a new memory, read memories, search memories, like memories, follow other members and leave comments on memories.
-We also added a feature to search stories near a specific location directly and see the results visualized as a timeline. 
+We also added a feature to search stories near a specific location directly and see the results visualized as a timeline.
 The mobile application has also been developed and published as an APK file, with the planned features present for milestone 1.
-We mainly focused on workflow pipelines for backend, web and mobile parts. Understand the code structure we already have. So, we have no significant progress on mobile nevertheless we have initial implementations which connects the mobile with our working backend system. 
+We mainly focused on workflow pipelines for backend, web and mobile parts. Understand the code structure we already have. So, we have no significant progress on mobile nevertheless we have initial implementations which connects the mobile with our working backend system.
 Besides, it is possible to register, login and logout on the mobile application. The remaining features from the web version will be implemented in mobile for milestone 2.
 
 #### Requirements Addressed
@@ -121,17 +121,17 @@ For milestone 2, we plan to implement the new recommendation, timeline visualiza
 We have gone through an iterative process to better shape our requirements, where we had to remove and rewrite several requirements as per the customer's demands, and add a few new ones as well. We have also received feedback on which tools we will be using, and especially how well the wiki and the issues should be handled. We are currently making sure to keep good records of our contributions and progress, paying attention to commit messages, meeting notes, issue labels and deadlines.
 
 ##### Customer Feedback & Reflections
-* The customer commented on search results. There was a duplicate in the  search results so the customer wants us to resolve it. 
+* The customer commented on search results. There was a duplicate in the  search results so the customer wants us to resolve it.
 * The customer wants us to remove the "Remove profile photo" button if there is no added profile photo yet.
 * The customer wants us to focus on the mobile app more and wants to see some new features like "activity report" or "recommendation system" on both web and mobile.
 * The customer wants us to add "season" resolution while selecting memory time as "decade".
 
 ##### Other Teams' Feedback & Reflections
-* Gökalp mentioned how clicking a marker to search a memory near that location may not be clear for a user. Adding an instruction about it should be good. 
+* Gökalp mentioned how clicking a marker to search a memory near that location may not be clear for a user. Adding an instruction about it should be good.
 * Erhan asked about separating tags while entering them in a new memory. We mentioned that we already have an indicator inside the "tag box". But for clarity we might change the user experience while adding tags.
-* Ali Hakan asked about search radius when clicking on map marker. We answered that it has a default 5 km radius range. 
+* Ali Hakan asked about search radius when clicking on map marker. We answered that it has a default 5 km radius range.
 * Hasan Deniz asked about searching with tags and location at the same time. We demonstrated that the system allows searching with both tag and location info at the same time.
-    
+
 
 
 #### Tools & Platforms Used:
@@ -198,7 +198,7 @@ We have been using git and GitHub to their full extent, having established our c
         14. Add splash screen [**#22**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/22)
 
      * **Management-related significant issues:**
-    
+
         1. Add workflow file for CI/CD [**#12**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/12)
         2. Set up lint rules [**#5**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/15)
 
@@ -220,7 +220,7 @@ We have been using git and GitHub to their full extent, having established our c
 
 
 #### **Aykut**
-    
+
  * **Responsibilities:**
     1. Designing web mock-ups
     2. Requirements specification
@@ -228,18 +228,18 @@ We have been using git and GitHub to their full extent, having established our c
     4. Frontend code refinement
     5. Creation project plan
     6. Testing and creation unit tests
-    
+
  * **Main contributions:**
     1. Requirements have been specified according to comments of professor
     2. Web mock-ups have been designed in figma and shared
     3. Frontend codes such as unnecessary console log have been refined by removing and editing
-    4. Project plan has been created according to deliverables plan of team 
+    4. Project plan has been created according to deliverables plan of team
      * **Code-related significant issues:**
-    
-        1. Frontend Refinements issue, non unique ids problem has been fixed. Unnecessary console logs have been removed or edited. [**#75**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/75) 
+
+        1. Frontend Refinements issue, non unique ids problem has been fixed. Unnecessary console logs have been removed or edited. [**#75**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/75)
         2. Unit test execution and User Acceptance Tests User issues, test scenarios have been planned to creation and execution then according to results codes will be refined. [**#79**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/79) [**#80**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/80)
      * **Management-related significant issues:**
-    
+
         1. Project Plan for Milestone 1 Report issue, project plan has been created according to deliverables plan of team. [**#74**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/74)
         2. Create Web Application Mockups issue, web application mockups have been designed. [**#31**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/31)
         3. Hold first frontend meeting issue, we orginized and met as frontend team for frontend related works. [**#47**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/47)
@@ -248,13 +248,13 @@ We have been using git and GitHub to their full extent, having established our c
  * **Pull requests:**
     1. Feature/75 frontend refinements pull request, non unique ids problem has been fixed and unnecessary console logs have been removed and edited. [**#76**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/76)
  * **Additional information:**
-    1. Each week classes, notes relating to professor's comments and team's reviews have been taken and shared with team. 
-    2. Some informative sources and useful drafts have been found and shared with team. 
+    1. Each week classes, notes relating to professor's comments and team's reviews have been taken and shared with team.
+    2. Some informative sources and useful drafts have been found and shared with team.
 
 
 #### **Caner**
  * **Responsibilities:**
-    
+
     1. Creating discord channel and configuring it with GitHub
     2. Transfering details of existing project to the team [SWE573 Project Link](https://github.com/ckertam/SWE573_SPRING_2023)
     3. Improvement on backend for initializing the obile part
@@ -262,18 +262,18 @@ We have been using git and GitHub to their full extent, having established our c
     5. Explaining frontend components to the frontend team
     6. Deployment on GCP
 * **Main contributions:**
-    
-    1. Main and Dev branches created and both branches deployed on GCP VM. 
+
+    1. Main and Dev branches created and both branches deployed on GCP VM.
     2. Changing API request responses for Mobile Development.
     3. Adding delete story API request so that we can delete stories while developing the project.
     4. Swagger added to the project for everyone to see API requests easily.
-    5. Changing profile photo store type as URL in the project so that we can get photo faster. 
+    5. Changing profile photo store type as URL in the project so that we can get photo faster.
     6. Changing story photo store type as URL and file size decreased on frontend so that rendering become faster.
     7. Mobile authentication test for JWT is available to use in flutter easily.
     8. Timeline system backend & frontend implementation.
-    
+
      * **Code-related significant issues:**
-    
+
         1. Main and Dev branch deployment [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/24)
         2. Changing API request responses for mobile development [**#50**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/50) [**#77**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/77)
         3. Delete story API View [**#62**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/62)
@@ -284,14 +284,14 @@ We have been using git and GitHub to their full extent, having established our c
         8. Timeline system backend [**#45**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/45)
         9. Timeline system frontend [**#46**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/46) [**#49**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/49) [**#97**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/97)
         10. Story like counter bug [**#85**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/85)
-    
+
      * **Management-related significant issues:**
-    
+
         1. Discord related [**#4**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/4)
         2. Git workflow and Deployment [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/24)
-    
+
  * **Pull requests:**
-    
+
     1. Transferring old codes to new repository and Deployment [**#19**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/19)
     2. Dev to Main PRs [**#34**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/34) [**#65**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/65) [**#102**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/102)
     3. Change request response for mobile development [**#51**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/51) [**#52**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/52) [**#53**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/53) [**#54**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/54)
@@ -306,7 +306,7 @@ We have been using git and GitHub to their full extent, having established our c
 #### **Deniz**
 
  * **Responsibilities:**
-    
+
     1. Member of frontend team: work on mockups, design, frontend code implementation
     2. Create new pages and maintain wiki
     3. Moderate and take notes during weekly and regular meetings
@@ -315,30 +315,30 @@ We have been using git and GitHub to their full extent, having established our c
     * **Code-related significant issues:**
        1. Frontend Code Refinement [**#42**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/42)
        1. Create needed compenent on frontend for Timeline Feature [**#46**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/46)
-       1. Improve frontend design [**#68**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/68) 
+       1. Improve frontend design [**#68**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/68)
      * **Management-related significant issues:**
-       1. Create custom sidebar [**#1**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/1) 
-       3. Write down meeting notes [**#15**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/15) 
-       3. Create Scenarios for Milestone 1 [**#38**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/38) 
-       3. Get on the same page [**#44**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/44)  
-       3. Hold first frontend meeting [**#47**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/47) 
-       3. Write milestone 1 report [**#64**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/64) 
-       3. Create additional design documents and plans [**#71**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/71) 
-       3. Create communication plan [**#72**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/72) 
-       3. Create responsibility assignment matrix [**#73**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/73) 
-       3. Add UML diagrams [**#84**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/84) 
+       1. Create custom sidebar [**#1**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/1)
+       3. Write down meeting notes [**#15**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/15)
+       3. Create Scenarios for Milestone 1 [**#38**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/38)
+       3. Get on the same page [**#44**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/44)
+       3. Hold first frontend meeting [**#47**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/47)
+       3. Write milestone 1 report [**#64**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/64)
+       3. Create additional design documents and plans [**#71**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/71)
+       3. Create communication plan [**#72**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/72)
+       3. Create responsibility assignment matrix [**#73**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/73)
+       3. Add UML diagrams [**#84**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/84)
        3. Prepare pre-release for milestone 1 [**#92**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/92)
-    
+
     * **Pull requests:**
        1. Reviewed pull request [**#93**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/93)
  * **Additional information:**
-    1. Moderated regular meetings on Discord 
+    1. Moderated regular meetings on Discord
     2. Communicated with the customer for feedback on requirements and workflow
     3. Wrote milestone review and tool analysis with input from teammates
     5. Presented milestone 1 progress with teammates
 
 #### **Mert**
-    
+
  * **Responsibilities:**
     1. Developing the mobile app in Flutter
     2. Developing the mobile designs in Flutter
@@ -350,7 +350,7 @@ We have been using git and GitHub to their full extent, having established our c
     2. Feed page developed
 
      * **Code-related significant issues:** (Mobile Repo)
-    
+
         1. Allow cleartext traffic for release variant [**#41**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/41)
         2. Registration page [**#23**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/23)
         3. Home page [**#21**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/21)
@@ -365,7 +365,7 @@ We have been using git and GitHub to their full extent, having established our c
     3. Development of register screen [**#36**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/36)
     4. Improvements for NetworkManager class [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/24)
     5. Development of Login screen [**#9**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/9)
-    
+
  * **Additional information:**
     1. Hold separate meetings with all and mobile-only team members.
     2. Shared experiences on mobile app development.
@@ -385,7 +385,7 @@ We have been using git and GitHub to their full extent, having established our c
     3. Timeline feature frontend implementation.
 
      * **Code-related significant issues:**
-    
+
         1. Frontend Code Refinement [**#42**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/42)
         2. Create mobile app mockups [**#22**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/22)
         3. Edit Organization team distribution [**#13**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/13)
@@ -407,7 +407,7 @@ We have been using git and GitHub to their full extent, having established our c
 
  * **Pull requests:**
     1. Update `views.py` for timeline search [**#70**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/70)
-    2. Features/56 profile photo improvement [**#57**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/57) 
+    2. Features/56 profile photo improvement [**#57**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/57)
     3. Add swagger settings and configs [**#43**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/43)
     4. Timeline feature [**#91**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/91)
 
@@ -425,7 +425,7 @@ We have been using git and GitHub to their full extent, having established our c
 
  * **Main contributions:**
     * **Code-related significant issues**:
-    
+
         1. Favicon for web ui [**#23**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/23)
         2. Construct git workflow with new dev branch [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/24)
         3. Update preview icon and description for web [**#25**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/25)
