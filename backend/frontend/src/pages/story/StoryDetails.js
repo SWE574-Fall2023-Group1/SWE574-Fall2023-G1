@@ -53,6 +53,17 @@ function StoryDetails() {
   };
 
 
+  const handleMarkerClick = ({ name, latitude, longitude }) => {
+    const floatLatitude = parseFloat(latitude);
+    const floatLongitude = parseFloat(longitude);
+
+    const url = `/timeline/${(JSON.stringify({ name, latitude: floatLatitude, longitude: floatLongitude }))}`;
+    navigate(url);
+};
+
+
+
+
   useEffect(() => {
     const fetchStory = async () => {
       try {
@@ -122,7 +133,7 @@ function StoryDetails() {
 
 
 
-  function StoryMarkers({ locations }) {
+  function StoryMarkers({ locations, handleMarkerClick }) {
     const markers = locations.map((location, index) => (
       <Marker
         key={index}
@@ -130,6 +141,7 @@ function StoryDetails() {
           lat: parseFloat(location.latitude),
           lng: parseFloat(location.longitude),
         }}
+        onClick={() => handleMarkerClick(location)}
       />
     ));
 
@@ -139,7 +151,7 @@ function StoryDetails() {
   const handleLikeDislike = async () => {
     try {
       const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/like/${id}`, {}, { withCredentials: true });
-      if (response.data.message === 'Like added successfully.') {
+      if (response.data.msg === 'Liked.') {
         setNumLikes(numLikes + 1);
         setLiked(true);
       } else {
@@ -246,7 +258,8 @@ function StoryDetails() {
                         lng: parseFloat(story.location_ids[0].longitude),
                       }}
                     >
-                      <StoryMarkers locations={story.location_ids} />
+                      <StoryMarkers locations={story.location_ids} handleMarkerClick={handleMarkerClick} />
+
                     </GoogleMap>
                   </div>
                 </>
