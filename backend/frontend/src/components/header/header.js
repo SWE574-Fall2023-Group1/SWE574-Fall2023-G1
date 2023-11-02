@@ -17,6 +17,7 @@ import StorySearch from '../../pages/search/StorySearch';
 import mainPhoto from '../../assets/images/homePage4.png'
 import ResetPasswordRequest from '../../pages/landing/ResetPasswordRequest';
 import ResetPasswordMain from '../../pages/landing/ResetPasswordMain';
+import LocationSearch from '../../pages/search/Timeline';
 
 
 function Header() {
@@ -105,6 +106,8 @@ function Header() {
             <Route path="/user-profile/:id" element={<UserProfileOthers />} />
             <Route path="/SearchUserResults/:searchQuery" element={<SearchUserResults />} />
             <Route path="/story_search" element={<StorySearch />} />
+            <Route path="/timeline/:locationJSON" element={<LocationSearch />} />
+
             </>
             )}
           </Routes>

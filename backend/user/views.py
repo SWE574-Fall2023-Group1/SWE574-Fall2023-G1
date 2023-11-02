@@ -15,7 +15,7 @@ from django.utils.encoding import force_bytes, smart_str
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 import json
-import os
+from django.utils import timezone
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
@@ -41,10 +41,29 @@ class UserRegistrationView(views.APIView):
             user = serializer.save()
 
             user.save()
-            return Response({'success':True ,'msg':'Successfully registered!', 'email':user.email,
-                                    'username':user.username}, status=status.HTTP_201_CREATED)
+            return Response(
+                {
+                    'success': True,
+                    'msg': 'Successfully registered!',
+                    'email': user.email,
+                    'username': user.username,
+                },
+                status=status.HTTP_201_CREATED,
+            )
         else:
-            return Response({'success':False ,'msg':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            registration_error = (
+                serializer.errors.get("username") or
+                serializer.errors.get("email") or
+                serializer.errors.get("password") or
+                ["Registration failed."]
+            )
+            return Response(
+                {
+                    'success': False,
+                    'msg': registration_error[0]
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 custom_schema_login = openapi.Schema(
@@ -138,7 +157,6 @@ class CreateStoryView(views.APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                serializer.data.update({'success':True ,'msg': 'Story Created'})
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -213,9 +231,25 @@ class StoryDetailView(views.APIView): ##need to add auth here?
             return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = StorySerializer(story)
-        serializer.data.update({'success':True ,'msg': 'Story detail got.'})
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self, request, pk):
+        cookie_value = request.COOKIES.get('refreshToken')
+        if not cookie_value:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            story = Story.objects.get(pk=pk)
+            story.delete()
+            return Response({'success':True ,'msg': 'Story deleted successfully.'}, status=status.HTTP_200_OK)
+        except Story.DoesNotExist:
+            return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 class CreateCommentView(views.APIView):
     @swagger_auto_schema(request_body=CommentSerializer)
     def post(self, request, id):
@@ -239,7 +273,6 @@ class CreateCommentView(views.APIView):
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Comment added.'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -265,8 +298,6 @@ class StoryCommentsView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Story commnents got',
             'comments': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -313,7 +344,7 @@ class UserFollowersView(views.APIView):
 
         followers = user.followers.all()
         serializer = UserFollowerSerializer(followers, many=True)
-        serializer.data.update({'success':True ,'msg': 'Get user followers.'})
+
         return Response(serializer.data , status=status.HTTP_200_OK)
 
 
@@ -349,8 +380,6 @@ class StoryAuthorView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Show story details by authors itself',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -385,8 +414,6 @@ class AllStoryView(views.APIView):
 
 
         return Response({
-            'success':True ,
-            'msg': 'Get all stories',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -411,7 +438,6 @@ class UserDetailsView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UsersSerializer(user)
-        serializer.data.update({'success':True ,'msg':'Get user details'})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserBiographyView(views.APIView):
@@ -428,7 +454,6 @@ class UserBiographyView(views.APIView):
             user = get_object_or_404(User, pk=user_id)
 
         serializer = UserBiographySerializer(user)
-        serializer.data.update({'success':True ,'msg': 'Got user bio'})
         return Response(serializer.data, status=status.HTTP_200_OK)
     @swagger_auto_schema(request_body=UserBiographySerializer)
     def put(self, request):
@@ -444,7 +469,6 @@ class UserBiographyView(views.APIView):
         serializer = UserBiographySerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Update user bio'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -467,7 +491,7 @@ class UserPhotoView(views.APIView):
 
         serializer = UserPhotoSerializer(user)
 
-        return Response({'success': True, 'msg': 'Photo got', 'photo_url': serializer.data['photo_url']}, status=status.HTTP_200_OK)
+        return Response({'success':  serializer.data['success'], 'msg':  serializer.data['msg'], 'photo_url': serializer.data['photo_url']}, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(request_body=UserPhotoSerializer)
     def put(self, request):
@@ -484,7 +508,6 @@ class UserPhotoView(views.APIView):
         serializer = UserPhotoSerializer(user, data={'profile_photo': request.FILES['profile_photo']})
         if serializer.is_valid():
             serializer.save()
-            serializer.data.update({'success':True ,'msg': 'Profile photo changed'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -526,8 +549,6 @@ class SearchUserView(views.APIView):
         users_serializer = UsersSerializer(user_queryset, many=True)
 
         return Response({
-            'success':True ,
-            'msg': 'Searching user success',
             "users": users_serializer.data,
         }, status=status.HTTP_200_OK)
 
@@ -620,8 +641,6 @@ class SearchStoryView(views.APIView):
         serializer = StorySerializer(page, many=True)
 
         return Response({
-            'success':True ,
-            'msg': 'Search success',
             'stories': serializer.data,
             'has_next': page.has_next(),
             'has_prev': page.has_previous(),
@@ -669,3 +688,76 @@ class ResetPassword(views.APIView):
             return Response({"detail": "Password has been reset."}, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SearchStoryByLocationView(views.APIView):
+    def extract_timestamp(self, story):
+    # Default to creation date in case there's an issue
+        default_timestamp = story.creation_date
+
+        if story.date_type == Story.YEAR_INTERVAL or story.date_type == Story.YEAR:
+            year = story.start_year if story.date_type == Story.YEAR_INTERVAL else story.year
+            if story.season_name == "Summer":
+                return timezone.make_aware(datetime(year, 6, 1))
+            elif story.season_name == "Fall":
+                return timezone.make_aware(datetime(year, 9, 1))
+            elif story.season_name == "Winter":
+                return timezone.make_aware(datetime(year, 12, 1))
+            elif story.season_name == "Spring":
+                return timezone.make_aware(datetime(year, 3, 1))
+            else:
+                return timezone.make_aware(datetime(year, 1, 1))
+
+        elif story.date_type == Story.NORMAL_DATE:
+            logger.warning(story.date)
+            return story.date
+
+        elif story.date_type == Story.INTERVAL_DATE:
+            return story.start_date
+
+        elif story.date_type == Story.DECADE:
+            return timezone.make_aware(datetime(story.decade, 1, 1))
+
+        else:
+            return default_timestamp
+
+
+    def get(self, request, *args, **kwargs ):
+        cookie_value = request.COOKIES['refreshToken']
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        user = get_object_or_404(User, pk=user_id)
+
+        location = request.query_params.get('location', '')
+        radius_diff = float(request.query_params.get('radius_diff', ''))
+
+        #print(tag_search)
+        query_filter = Q()
+        if location != "null":
+            location = json.loads(location)
+            lat = location['latitude']
+            lng = location['longitude']
+            radius = radius_diff  # radius set for near search
+
+            query_filter &= Q(
+                location_ids__latitude__range=(lat - radius / 110.574, lat + radius / 110.574),
+                location_ids__longitude__range=(lng - radius / (111.320 * cos(radians(lat))), lng + radius / (111.320 * cos(radians(lat))))
+            )
+
+
+        stories = Story.objects.filter(query_filter)
+        logger.warning(stories)
+        stories = sorted(stories, key=lambda story: self.extract_timestamp(story), reverse=True)
+
+        # Serialize the stories
+        serializer = StorySerializer(stories, many=True)
+
+        # Page sizes and numbers
+
+        return Response({
+            'success' : True,
+            'msg' : 'Stories successfully got',
+            'stories': serializer.data
+        }, status=status.HTTP_200_OK)

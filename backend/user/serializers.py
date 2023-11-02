@@ -28,6 +28,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user_data.save()
         return user_data
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'User details got.'})
+        return ret
+
 
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,10 +47,20 @@ class UsersSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ("id",)
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'User details got.'})
+        return ret
+
 class UserFollowerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username']
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'User followers got.'})
+        return ret
 
 class UserLoginSerializer(serializers.ModelSerializer):
     #token = CharField(allow_blank=True, read_only=True)
@@ -61,6 +76,11 @@ class UserLoginSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {"password": {"write_only": True, "required": False}}
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'User loged in.'})
+        return ret
+
 class UserBiographySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -70,6 +90,11 @@ class UserBiographySerializer(serializers.ModelSerializer):
         instance.biography = validated_data.get('biography', instance.biography)
         instance.save()
         return instance
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'User bio got.'})
+        return ret
 
 class UserPhotoSerializer(serializers.ModelSerializer):
 
@@ -91,10 +116,20 @@ class UserPhotoSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'User photo got.'})
+        return ret
+
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ['id', 'name', 'latitude', 'longitude']
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'Location got.'})
+        return ret
 
 class StorySerializer(serializers.ModelSerializer):
     location_ids = LocationSerializer(many=True)
@@ -142,10 +177,20 @@ class StorySerializer(serializers.ModelSerializer):
 
         return story
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'Story ok.'})
+        return ret
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'comment_author', 'story', 'text', 'date']
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'Comment create.'})
+        return ret
 
 class CommentGetSerializer(serializers.ModelSerializer):
     comment_author = serializers.SerializerMethodField()
@@ -159,3 +204,8 @@ class CommentGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'comment_author','comment_author_id', 'story', 'text', 'date']
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'Comment details got.'})
+        return ret
