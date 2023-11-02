@@ -121,15 +121,16 @@ const UserProfile = () => {
 
   const handleRemoveProfilePhoto = async () => {
     try {
-      await axios.delete(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
-        withCredentials: true,
-      });
-      setProfilePhotoUrl(null);
-      window.location.reload(); // Reload the page
+        console.log("Removing profile photo..."); // Add this line for debugging
+        await axios.delete(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
+            withCredentials: true,
+        });
+        setProfilePhotoUrl(null);
+        window.location.reload(); // Reload the page
     } catch (error) {
-      console.error('Error removing profile photo:', error);
+        console.error('Error removing profile photo:', error);
     }
-  };
+};
 
   const handleProfileBioChange = async () => {
     try {
@@ -164,6 +165,24 @@ const UserProfile = () => {
 {profilePhotoUrl !== defaultProfilePhoto && (
   <div>
 
+
+<div>
+    <button
+      type="button"
+      className="profile-photo-change-button"
+      onClick={() => document.getElementById('profile-photo-input').click()}
+    >
+      Change Profile Photo
+    </button>
+    <span id="profile-photo-filename"></span>
+    <input
+      id="profile-photo-input"
+      type="file"
+      accept="image/jpeg, image/png"
+      onChange={handleProfilePhotoChange}
+    />
+  </div>
+
     <button
       type="button"
       className="profile-photo-delete-button"
@@ -171,6 +190,7 @@ const UserProfile = () => {
     >
       Remove Profile Photo
     </button>
+
   </div>
 )}
 
