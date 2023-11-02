@@ -44,11 +44,9 @@ const UserProfileOthers = () => {
       try {
 
         const currentUser = await getCurrentUser();
-
-        if (Number(id) === currentUser) {
+        console.log("currentUser",currentUser)
+        if (Number(id) === currentUser.user_id) {
           setIsMe(true);
-          //navigate('/user-profile');
-          //return;
         }
 
         const userDetailsResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userDetails/${id}`, {
@@ -82,8 +80,11 @@ const UserProfileOthers = () => {
         console.log('Followers response:', followersResponse.data);
 
         const isCurrentUserFollowing = followersResponse.data.some(
-            (follower) => follower.id === currentUser
+            (follower) => follower.id === currentUser.user_id
         );
+        console.log("currentUser2",currentUser)
+        console.log("followresponse",followersResponse)
+        console.log("current",isCurrentUserFollowing)
         setIsFollowing(isCurrentUserFollowing);
 
         setFollowerCount(followersResponse.data.length);
