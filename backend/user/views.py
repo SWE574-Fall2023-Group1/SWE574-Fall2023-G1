@@ -15,7 +15,7 @@ from django.utils.encoding import force_bytes, smart_str
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 import json
-import os
+from django.utils import timezone
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
@@ -688,3 +688,76 @@ class ResetPassword(views.APIView):
             return Response({"detail": "Password has been reset."}, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SearchStoryByLocationView(views.APIView):
+    def extract_timestamp(self, story):
+    # Default to creation date in case there's an issue
+        default_timestamp = story.creation_date
+
+        if story.date_type == Story.YEAR_INTERVAL or story.date_type == Story.YEAR:
+            year = story.start_year if story.date_type == Story.YEAR_INTERVAL else story.year
+            if story.season_name == "Summer":
+                return timezone.make_aware(datetime(year, 6, 1))
+            elif story.season_name == "Fall":
+                return timezone.make_aware(datetime(year, 9, 1))
+            elif story.season_name == "Winter":
+                return timezone.make_aware(datetime(year, 12, 1))
+            elif story.season_name == "Spring":
+                return timezone.make_aware(datetime(year, 3, 1))
+            else:
+                return timezone.make_aware(datetime(year, 1, 1))
+
+        elif story.date_type == Story.NORMAL_DATE:
+            logger.warning(story.date)
+            return story.date
+
+        elif story.date_type == Story.INTERVAL_DATE:
+            return story.start_date
+
+        elif story.date_type == Story.DECADE:
+            return timezone.make_aware(datetime(story.decade, 1, 1))
+
+        else:
+            return default_timestamp
+
+
+    def get(self, request, *args, **kwargs ):
+        cookie_value = request.COOKIES['refreshToken']
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        user = get_object_or_404(User, pk=user_id)
+
+        location = request.query_params.get('location', '')
+        radius_diff = float(request.query_params.get('radius_diff', ''))
+
+        #print(tag_search)
+        query_filter = Q()
+        if location != "null":
+            location = json.loads(location)
+            lat = location['latitude']
+            lng = location['longitude']
+            radius = radius_diff  # radius set for near search
+
+            query_filter &= Q(
+                location_ids__latitude__range=(lat - radius / 110.574, lat + radius / 110.574),
+                location_ids__longitude__range=(lng - radius / (111.320 * cos(radians(lat))), lng + radius / (111.320 * cos(radians(lat))))
+            )
+
+
+        stories = Story.objects.filter(query_filter)
+        logger.warning(stories)
+        stories = sorted(stories, key=lambda story: self.extract_timestamp(story), reverse=True)
+
+        # Serialize the stories
+        serializer = StorySerializer(stories, many=True)
+
+        # Page sizes and numbers
+
+        return Response({
+            'success' : True,
+            'msg' : 'Stories successfully got',
+            'stories': serializer.data
+        }, status=status.HTTP_200_OK)
