@@ -112,7 +112,6 @@ const UserProfile = () => {
         withCredentials: true,
       });
       await fetchProfilePhoto(); // Wait for the photo to be updated
-      window.location.reload(); // Reload the page
 
     } catch (error) {
       console.error('Error updating profile photo:', error);
@@ -183,6 +182,7 @@ const UserProfile = () => {
     />
   </div>
 
+  <div>
     <button
       type="button"
       className="profile-photo-delete-button"
@@ -190,7 +190,7 @@ const UserProfile = () => {
     >
       Remove Profile Photo
     </button>
-
+    </div>
   </div>
 )}
 
