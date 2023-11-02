@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './UserProfile.css';
 import withAuth from '../../authCheck';
 import { TextField, Button, Paper } from '@mui/material';
+
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -20,8 +21,6 @@ const UserProfile = () => {
 
   const navigate = useNavigate();
 
-  const fileInputRef = useRef(); // Create a ref for the file input element
-
   useEffect(() => {
     const fetchData = async () => {
       const fetchedUser = await fetchUserDetails();
@@ -30,7 +29,6 @@ const UserProfile = () => {
     };
     fetchData();
   }, [currentPage]);
-
 
   const fetchUserDetails = async () => {
     try {
@@ -67,6 +65,7 @@ const UserProfile = () => {
       }
     }
   };
+  console.log(profilePhotoUrl)
 
   const fetchUserStories = async (user) => {
 
@@ -113,6 +112,8 @@ const UserProfile = () => {
         withCredentials: true,
       });
       await fetchProfilePhoto(); // Wait for the photo to be updated
+      window.location.reload(); // Reload the page
+
     } catch (error) {
       console.error('Error updating profile photo:', error);
     }
@@ -149,54 +150,48 @@ const UserProfile = () => {
   return (
     <div>
       <h1>{user.username}'s Profile</h1>
+
       {profilePhotoUrl && (
         <img
-          src={profilePhotoUrl}
-          alt={`${user.username}'s profile`}
-          className="profile-photo"
+        src={profilePhotoUrl}
+        alt={`${user.username}'s profile`}
+        className="profile-photo"
         />
-      )}
+        )}
 
 
 
 {profilePhotoUrl !== defaultProfilePhoto && (
-        <div>
-          <button
-            type="button"
-            className="profile-photo-button"
-            onClick={() => fileInputRef.current.click()} // Trigger click event on file input
-          >
-            Change Profile Photo
-          </button>
-          <button
-            type="button"
-            className="profile-photo-delete-button"
-            onClick={handleRemoveProfilePhoto}
-          >
-            Remove Profile Photo
-          </button>
-        </div>
-      )}
+  <div>
 
-      {profilePhotoUrl === defaultProfilePhoto && (
-        <div>
-          <button
-            type="button"
-            className="profile-photo-button"
-            onClick={() => fileInputRef.current.click()} // Trigger click event on file input
-          >
-            Upload Profile Photo
-          </button>
-          <span id="profile-photo-filename"></span>
-          <input
-            id="profile-photo-input"
-            type="file"
-            accept="image/jpeg, image/png"
-            onChange={handleProfilePhotoChange}
-            ref={fileInputRef} // Attach the ref to the file input
-          />
-        </div>
-      )}
+    <button
+      type="button"
+      className="profile-photo-delete-button"
+      onClick={handleRemoveProfilePhoto}
+    >
+      Remove Profile Photo
+    </button>
+  </div>
+)}
+
+{profilePhotoUrl === defaultProfilePhoto && (
+  <div>
+    <button
+      type="button"
+      className="profile-photo-button"
+      onClick={() => document.getElementById('profile-photo-input').click()}
+    >
+      Upload Profile Photo
+    </button>
+    <span id="profile-photo-filename"></span>
+    <input
+      id="profile-photo-input"
+      type="file"
+      accept="image/jpeg, image/png"
+      onChange={handleProfilePhotoChange}
+    />
+  </div>
+)}
 
       {isEditingBio ? (
           <div>
