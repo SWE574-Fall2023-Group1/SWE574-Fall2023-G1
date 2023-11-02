@@ -9,7 +9,7 @@ Due Date: 02 November 2023
 * [Project Conventions](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Conventions)
 * [Project Plan](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Project-Plan)
 * [Communication Plan](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Communication-Plan)
-* [Responsibility Assignment Matrix](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Responsiblities)
+* [Responsibility Assignment Matrix](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Responsibilities)
 * [Software Requirements Specification (Includes Glossary)](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Requirements)
 * [Mockups](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Mockups-and-Storyboards)
 * [User Scenarios](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/User-Scenarios)
@@ -22,9 +22,9 @@ Due Date: 02 November 2023
 * [Meeting Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Meeting-Notes)
 
 ### Software Release:
-* [0.1.0-alpha Release Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/releases/tag/customer-milestone-1)
-* [0.1.1-alpha Release Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/releases/tag/customer-milestone-1.1)
-* We have 2 releases because we added the timeline feature before the customer presentation. But we had made the release before finalizing it, so we made a second release to include it for the first milestone.
+* [0.1.0-alpha Release Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/releases/tag/customer-milestone-1) (mobile)
+* [0.1.1-alpha Release Notes](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/releases/tag/customer-milestone-1.1) (web)
+* The second release includes the new timeline feature for the web application.
 * [Android Application APK](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/releases/download/customer-milestone-1/app-release.apk)
 
 ### Milestone Review:
@@ -96,6 +96,8 @@ The following requirements have been addressed in the current release. For the o
 | F-5.13 | The search function shall sort results by memory date. | <ul><li>[x] </li> |
 | F-5.14 | The search function shall sort results by creation date. | <ul><li>[x] </li> |
 | F-5.15 | The search function shall sort results by location. | <ul><li>[x] </li> |
+| F-5.16 | When the user clicks on a map marker, the system shall navigate to a search result page considering the memory time order. | <ul><li>[x] </li> |
+| F-5.17 | The search function shall have a toggle which allows users to see search results considering the memory time order. | <ul><li>[x] </li> |
 
 
 #### Non-Functional Requirements
@@ -117,7 +119,7 @@ For milestone 2, we plan to implement the new recommendation, timeline visualiza
 
 #### Feedback & Reflections
 
-##### Team Feedback & Reflection
+##### Team Feedback & Reflections
 We have gone through an iterative process to better shape our requirements, where we had to remove and rewrite several requirements as per the customer's demands, and add a few new ones as well. We have also received feedback on which tools we will be using, and especially how well the wiki and the issues should be handled. We are currently making sure to keep good records of our contributions and progress, paying attention to commit messages, meeting notes, issue labels and deadlines.
 
 ##### Customer Feedback & Reflections
@@ -226,8 +228,8 @@ We have been using git and GitHub to their full extent, having established our c
     2. Requirements specification
     3. Editing wiki pages
     4. Frontend code refinement
-    5. Creation project plan
-    6. Testing and creation unit tests
+    5. Creating project plan
+    6. Testing and creating unit tests
 
  * **Main contributions:**
     1. Requirements have been specified according to comments of professor
@@ -257,7 +259,7 @@ We have been using git and GitHub to their full extent, having established our c
 
     1. Creating discord channel and configuring it with GitHub
     2. Transfering details of existing project to the team [SWE573 Project Link](https://github.com/ckertam/SWE573_SPRING_2023)
-    3. Improvement on backend for initializing the obile part
+    3. Improvement on backend for initializing the mobile part
     4. Improvement on frontend for better optimization
     5. Explaining frontend components to the frontend team
     6. Deployment on GCP
@@ -360,7 +362,7 @@ We have been using git and GitHub to their full extent, having established our c
         1. Custom issue labels [**#1**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/1)
 
  * **Pull requests:**
-    1. An issue related to network connectivity [**#42**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/42))
+    1. An issue related to network connectivity [**#42**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/42)
     2. Development of feed screen [**#38**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/38)
     3. Development of register screen [**#36**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/36)
     4. Improvements for NetworkManager class [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/24)
@@ -413,34 +415,82 @@ We have been using git and GitHub to their full extent, having established our c
 
 #### **Sadık**
  * **Responsibilities:**
+
     1. Member of backend, mobile and devops teams.
-    2. Created GitHub organization account and managed it.
-    3. Created GitHub organization teams and gave authorizations.
-    4. Created Kanban board in order to track all tasks.
-    5. Defined and applied branch protection rules for both repos.
-    6. Integrated pre-commit code quality tool into all repos.
-    7. Created project website.
-    8. Designed and executed dev+prod web deployments w/ [Caner](#Caner)
-    9. Designed and executed mobile deployments and test pipeline w/ [Ayhan](#Ayhan)
+    1. Working on backend and mobile code improvements.
+    1. Mostly reviewing whole pull-requests of both repos.
+    1. GitHub pre-release processes.
 
  * **Main contributions:**
+
+    1. Created GitHub organization account and managed it.
+    1. Created GitHub organization teams and gave authorizations.
+    1. Created Kanban board in order to track all tasks.
+    1. Defined and applied branch protection rules for both repos.
+    1. Integrated pre-commit code quality tool into all repos.
+    1. Designed and executed dev+prod web deployments w/ [Caner](#Caner)
+    1. Designed and executed mobile deployments and test pipeline w/ [Ayhan](#Ayhan)
+    1. Did end-to-end tests for both web and mobile apps.
+    1. Led the milestone 1 pre-release process.
+
     * **Code-related significant issues**:
 
-        1. Favicon for web ui [**#23**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/23)
-        2. Construct git workflow with new dev branch [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/24)
-        3. Update preview icon and description for web [**#25**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/25)
-        4. Overall Backend Code Refinement [**#36**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/36)
-        5. Single string error message in /user/register endpoint [**#89**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/89)
-        6. AttributeError at `/user/userFollowers/<int>` [**#77**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/77)
-        7. Django Swagger UI backend enhancement [**#37**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/37)
-        8. Mobile CI/CD workflow for dev branch [**#30**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/30)
-        9. Separate CI and CD mobile pipelines [**#35**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/35)
+        1. Construct git workflow with new dev branch [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/24)
+        2. Update preview icon and description for web [**#25**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/25)
+        1. Change image storage type in story content [**#28**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/28)
+        3. Overall Backend Code Refinement [**#36**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/36)
+        4. Single string error message in /user/register endpoint [**#89**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/89)
+        5. AttributeError at `/user/userFollowers/<int>` [**#77**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/77)
+        1. Single string error message in `/user/register` endpoint [**#89**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/89)
+        1. Prepare pre-release for milestone 1 [**#92**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/92)
+        6. Django Swagger UI backend enhancement [**#37**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/37)
+        7. Mobile CI/CD workflow for dev branch [**#30**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/30)
+        8. Separate CI and CD mobile pipelines [**#35**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/35)
     * **Management-related significant issues:**
+        1. Create custom footer for wiki [**#3**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/3)
+        1. Create repository for mobile development [**#20**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/20)
         1. Commits, Branching and Pull Requests Conventions [**#32**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/32)
+        1. Create Scenarios for Milestone 1 [**#38**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/38)
         2. Create issue labels for the mobile project [**#1**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/1)
         3. Discord Webhook to follow mobile GitHub repo activities [**#11**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/11)
 
  * **Pull requests:**
+    1. Update preview icon and description #25 [**#26**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/26)
+    1. Sync dev with main #28 #33 #34 [**#35**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/35)
+    1. Feature/36 overall code refinement [**#55**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/55)
+    1. Feature/89 single string error message [**#90**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/90)
+    1. Dev->Main 0.1.0-alpha [**#93**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/93)
+    1. Feature/30 CI/CD for dev [**#31**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/31)
+    1. Separate CI and CD mobile pipelines #35 [**#37**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/37)
+    1. Dev->Main mobile 0.1.0-alpha [**#43**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/43)
     1. All necessary files pushed to new repository #10 [**#19**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/19)
-    2. [pre-commit.ci] pre-commit autoupdate [**#21**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/21)
-    3. Update preview icon and description #25 [**#26**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/26)
+    1. [pre-commit.ci] pre-commit autoupdate [**#21**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/21) [**13**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/13)
+    1. Update preview icon and description #25 [**#26**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/26)
+    1. Story photo store type changed as URL #28 [**#30**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/30)
+    1. Feature/28 image store type [**#33**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/33)
+    1. Dev->Main PRs [**#34**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/34) [**#65**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/65) [**#102**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/102)
+    1. Add swagger settings and configs [**#43**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/43)
+    1. Update request responses #50 [**#51**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/51)
+    1. Fix user followers request response issues [**#52**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/52) [**#54**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/54)
+    1. Add delete story api View [**#61**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/61)
+    1. Feature/75 frontend refinements #76[**#76**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/76)
+    1. Hotfix/77 attribute error [**#82**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/82)
+    1. Feature/46 timeline frontend [**#91**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/91)
+    1. Merge milestone 1 report [**#94**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/94)
+    1. Update Timeline.js [**#98**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/98)
+    1. Feature/login [**#9**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/9)
+    1. [network_refinement] Refactor network calls with headers [**#24**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/24)
+    1. [Linter] Add lint rules and make fixes related to linting #5 [**#25**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/25)
+    1. [LoginBlocTest] Add login bloc tests #6 [**#26**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/26)
+    1. [LoginGoldenTest] Add login golden test #7 [**#27**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/27)
+    1. [BottomBar] Add bottom navigation bar and landing logic #28 [**#29**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/29)
+    1. [NavBar] Make bottom nav bar persistent across pages #33 [**#34**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/34)
+    1. Feature/23 register [**#36**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/36)
+    1. Feature/21 feed screen [**#38**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/38)
+    1. [Register] Improve register appbar design #39 [**#40**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/40)
+    1. [Network] Allow insecure calls for http requests #41 [**#42**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/pull/42)
+
+ * **Additional information:**
+    1. Shared many informative sources with the team.
+    1. Shared experiences on SDLC.
+    1. Facilitated Kanban methodology from Agile framework.
