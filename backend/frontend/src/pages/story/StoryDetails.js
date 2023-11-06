@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams,useNavigate  } from 'react-router-dom';
 import './StoryDetails.css';
-import { GoogleMap, Marker } from '@react-google-maps/api';
 import withAuth from '../../authCheck';
 import CommentSection from './CommentSection';
 import ReactQuill from 'react-quill';
@@ -15,6 +14,23 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Chip from '@mui/material/Chip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+
+
+function extractLatLngFromWKT(wkt) {
+  const matches = wkt.match(/POINT \(([\d.-]+) ([\d.-]+)\)/);
+  if (matches) {
+      const coords = {
+          lng: parseFloat(matches[1]),
+          lat: parseFloat(matches[2])
+      };
+      console.log("Parsed coordinates:", coords);
+      return coords;
+  }
+  console.log("Failed to parse WKT:", wkt);
+  return null;
+}
 
 function StoryDetails() {
   const [story, setStory] = useState(null);
@@ -41,6 +57,15 @@ function StoryDetails() {
     hour: '2-digit',
     minute: '2-digit',
   };
+
+  const icon = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
 
   const fetchUserDetails = async () => {
     try {
@@ -70,6 +95,7 @@ function StoryDetails() {
         await fetchUserDetails(); // Get the current user ID
         const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
         setStory(response.data);
+        //console.log("story data",response);
         setNumLikes(response.data.likes.length);
         if (userId && response.data.likes.includes(userId)) {
           setLiked(true);
@@ -134,19 +160,15 @@ function StoryDetails() {
 
 
   function StoryMarkers({ locations, handleMarkerClick }) {
-    const markers = locations.map((location, index) => (
-      <Marker
-        key={index}
-        position={{
-          lat: parseFloat(location.latitude),
-          lng: parseFloat(location.longitude),
-        }}
-        onClick={() => handleMarkerClick(location)}
-      />
-    ));
-
-    return <>{markers}</>;
-  }
+    return locations.map((location, index) => {
+        const coords = extractLatLngFromWKT(location.geom);
+        return (
+            <Marker key={index} position={coords} eventHandlers={{ click: () => handleMarkerClick(location) }} icon={icon}>
+                <Popup>{location.name}</Popup>
+            </Marker>
+        );
+    });
+}
 
   const handleLikeDislike = async () => {
     try {
@@ -208,6 +230,7 @@ function StoryDetails() {
 
   return (
     <div className="story-details-wrapper">
+      {console.log(story)}
       {story ? (
         <Box sx={{ borderRadius: "10px", boxShadow: "0 0 10px rgba(0,0,0,0.2)", p: 2, backgroundColor: "#f5f5f5" }}>
           <Typography variant="h4" align="center" gutterBottom sx={{ mt: 1, mb: 3 }}>
@@ -247,22 +270,25 @@ function StoryDetails() {
               </div>
             </div>
             <div className="right-side">
-              {story.location_ids.length > 0 && (
-                <>
-                  <div className="storydetail-story-map">
-                    <GoogleMap
-                      mapContainerStyle={{ height: "400px", width: "400px" }}
-                      zoom={12}
-                      center={{
-                        lat: parseFloat(story.location_ids[0].latitude),
-                        lng: parseFloat(story.location_ids[0].longitude),
-                      }}
-                    >
-                      <StoryMarkers locations={story.location_ids} handleMarkerClick={handleMarkerClick} />
-
-                    </GoogleMap>
-                  </div>
-                </>
+            {story && story.location_ids && story.location_ids.length > 0 && (
+                <div className="storydetail-story-map">
+                  {(() => {
+                    const coords = extractLatLngFromWKT(story.location_ids[0].geom);
+                    return (
+                      <MapContainer
+                        center={coords}
+                        zoom={12}
+                        style={{ height: '400px', width: '400px' }}
+                      >
+                        <TileLayer
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        />
+                        <StoryMarkers locations={story.location_ids} handleMarkerClick={handleMarkerClick} />
+                      </MapContainer>
+                    );
+                  })()}
+                </div>
               )}
               <div className="author-date-container">
               <div>

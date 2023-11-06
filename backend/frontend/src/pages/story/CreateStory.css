@@ -73,3 +73,8 @@
 .long-boxes .MuiOutlinedInput-root {
   background-color: white;
 }
+
+.geo-search-control {
+  z-index: 1000; /* or any sufficiently high value */
+  position: relative; /* or absolute, depending on your layout needs */
+}

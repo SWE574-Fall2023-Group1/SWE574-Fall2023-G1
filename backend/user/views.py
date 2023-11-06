@@ -28,6 +28,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 import logging
 
+
 logger = logging.getLogger('django')
 
 class UserRegistrationView(views.APIView):
@@ -140,28 +141,30 @@ class LogoutAPIView(views.APIView):
 
 class CreateStoryView(views.APIView):
     @swagger_auto_schema(request_body=StorySerializer)
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
+        # Extract the relevant data from the request.
+        cookie_value = request.COOKIES.get('refreshToken')
+        if not cookie_value:
+            return Response({'success': False, 'msg': 'Authentication cookie missing'}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            cookie_value = request.COOKIES['refreshToken']
-            try:
-                user_id = decode_refresh_token(cookie_value)
-            except:
-                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            request_data = json.loads(request.body)
+        request_data = request.data
+        request_data['author'] = user_id  # Include the author in the request data
 
-            request_data['content'] = convert_base64_to_url(request_data['content'])
+        # Create the story instance.
+        story_serializer = StorySerializer(data=request_data)
+        logger.warning(f"serializer:{story_serializer}")
+        logger.warning(f"is_valid: {story_serializer.is_valid()}")
+        if story_serializer.is_valid():
+            story_serializer.save()
+            return Response(story_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(story_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            request_data['author'] = user_id
-            serializer = StorySerializer(data=request_data)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-        except RequestDataTooBig:
-            return Response({'success':False ,'msg': 'Uploaded data is too large.'}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
 
 custom_schema_update_story = openapi.Schema(
     type=openapi.TYPE_OBJECT,

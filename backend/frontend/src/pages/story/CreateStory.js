@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { GoogleMap, Autocomplete, Marker } from '@react-google-maps/api';
+// import { GoogleMap, Autocomplete, Marker } from '@react-google-maps/api';
 import withAuth from '../../authCheck';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -9,6 +9,11 @@ import './CreateStory.css'
 import {TextField, Select, MenuItem, InputLabel, FormControl, Button, List, ListItem, ListItemText,Checkbox, FormControlLabel } from '@mui/material';
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
+import 'leaflet-search/dist/leaflet-search.min.css';
+import 'leaflet-search';
+import 'leaflet/dist/leaflet.css';
+import StoryMap from './StoryMap';
+
 function CreateStory() {
 
   const [title, setTitle] = useState('');
@@ -25,13 +30,18 @@ function CreateStory() {
   const [end_date, setEndDate] = useState(null);
   const [decade, setDecade] = useState(null);
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
-  const [searchBox, setSearchBox] = useState(null);
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
-
+  const reverseGeocode = async (lat, lng) => {
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+      return response.data.display_name;
+    } catch (error) {
+      console.error("Error reverse geocoding:", error);
+      return null;
+    }
+  };
   const navigate = useNavigate();
-  const autocompleteRef = useRef(null);
-  const inputRef = useRef(null);
 
   Quill.register('modules/imageCompress', ImageCompress);
 
@@ -67,31 +77,12 @@ function CreateStory() {
     "image",
     "video"
   ];
+  const [isComponentMounted, setIsComponentMounted] = useState(false);
 
-  const handleLocationSelect = () => {
-    if (!autocompleteRef.current) {
-      return;
-    }
-
-    const place = autocompleteRef.current.getPlace();
-
-    if (!place || !place.geometry || !place.geometry.location) {
-      return;
-    }
-
-    const locationData = {
-      name: place.name,
-      latitude: Number(place.geometry.location.lat().toFixed(6)),
-      longitude: Number(place.geometry.location.lng().toFixed(6)),
-    };
-    setLocations([...location_ids, locationData]);
-    setMapCenter({ lat: locationData.latitude, lng: locationData.longitude });
-
-    // Clear the input value
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  };
+  useEffect(() => {
+    setIsComponentMounted(true);
+    return () => setIsComponentMounted(false);
+  }, []);
 
   useEffect(() => {
     setSeasonName(null);
@@ -104,31 +95,6 @@ function CreateStory() {
     setDecade(null);
   }, [date_type]);
 
-  const handleMapClick = async (e) => {
-    const { latLng } = e;
-    const lat = latLng.lat();
-    const lng = latLng.lng();
-    try {
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`);
-      const { results } = response.data;
-      if (results.length > 0) {
-        const locationData = {
-          name: results[0].formatted_address,
-          latitude: Number(lat.toFixed(6)),
-          longitude: Number(lng.toFixed(6))
-        };
-        setLocations([...location_ids, locationData]);
-
-        setMapCenter({ lat: locationData.latitude, lng: locationData.longitude }); //can be excluded so that map not always clicked
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleMapLoad = (map) => {
-    setSearchBox(new window.google.maps.places.SearchBox(map.getDiv()));
-  };
 
   const handleLocationRemove = (index) => {
     setLocations(location_ids.filter((loc, i) => i !== index));
@@ -141,16 +107,48 @@ function CreateStory() {
     }
   };
 
+
+
   const editorPlaceholder = firstClick ? 'Enter your content here' : '';
+  const handleMapClick = async (latlng) => {
+    console.log("latlng",latlng)
+    const name = await reverseGeocode(latlng.lat, latlng.lng);
+    const geoJsonLocation = {
+      type: 'Feature',
+      geometry: {
+        type: 'Point', // Or 'Circle' or 'Rectangle' depending on the shape
+        coordinates: [latlng.lng, latlng.lat] // GeoJSON uses [longitude, latitude] order
+      },
+      properties: {
+        name: name,
+        shape: 'Point' // This should be dynamic based on the user's choice of shape
+      }
+    };
+    console.log(geoJsonLocation)
+    setLocations(prevLocations => [...prevLocations, geoJsonLocation]);
+  };
+
+  const handleSearchMapClick = async (latlng) => {
+    handleMapClick(latlng);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Location IDs before sending:', location_ids);
+
+    // No need to stringify the individual location objects
+    // Just send them as they are in the array
+    const formattedLocations = location_ids; // This should be an array of GeoJSON objects
+
+    console.log('Formatted Locations:', formattedLocations);
+
     try {
       const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, {
         title: title,
         content: content,
         story_tags: story_tags,
-        location_ids: location_ids,
+        // Send the GeoJSON objects for locations
+        location_ids: formattedLocations, // Directly use the array of objects here
         date_type: date_type,
         season_name: season_name,
         start_year: start_year,
@@ -170,6 +168,10 @@ function CreateStory() {
       console.log(error);
     }
   };
+
+
+
+
 
   return (
     <div>
@@ -379,50 +381,30 @@ function CreateStory() {
                     </FormControl>
                 </div>
             }
-
-          <Autocomplete
-            className='date-type'
-            onLoad={(autocomplete) => {
-              autocompleteRef.current = autocomplete;
-            }}
-            onPlaceChanged={handleLocationSelect}
-          >
-            <TextField
-              className='date-box'
-              type="search"
-              label="Locations"
-              variant="outlined"
-              inputRef={inputRef}
-            />
-          </Autocomplete>
           <br/>
           <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Create Story</Button>
           </form>
           </div>
 
           <div className='create-story-map'>
-            <GoogleMap
-              mapContainerStyle={{ height: '400px', width: '400px' }}
-              center={mapCenter}
-              zoom={1}
-              onClick={handleMapClick}
-              onLoad={handleMapLoad}
-            >
-              {location_ids.map((loc, index) => (
-                <Marker
-                  key={index}
-                  position={{ lat: loc.latitude, lng: loc.longitude }}
-                  onClick={() => {
-                  }}
-                />
-              ))}
-            </GoogleMap>
+          {isComponentMounted && (
+          <StoryMap
+                isComponentMounted={isComponentMounted}
+                mapCenter={mapCenter}
+                locations={location_ids}
+                handleMapClick={(e) => handleMapClick(e.latlng)}
+                handleSearchMapClick={handleSearchMapClick}
+                handleLocationRemove={handleLocationRemove}
+            />
+            )}
             <div className="location-list-wrapper">
             <div className="location-list-container">
               <List>
-                {location_ids.map((loc, index) => (
+              {location_ids.map((loc, index) => (
                   <ListItem key={index}>
-                    <ListItemText style={{ marginRight: "16px" }}>{loc.name || `${loc.latitude}, ${loc.longitude}`}</ListItemText>
+                    <ListItemText style={{ marginRight: "16px" }}>
+                      {loc.properties.name || `${loc.geometry.coordinates[1]}, ${loc.geometry.coordinates[0]}`}
+                    </ListItemText>
                     <Button variant="contained" size="small" color="primary" onClick={() => handleLocationRemove(index)}>Remove</Button>
                   </ListItem>
                 ))}

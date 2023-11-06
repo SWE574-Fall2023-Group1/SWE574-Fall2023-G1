@@ -6,7 +6,12 @@ from .functions import *
 import urllib.parse
 from django.contrib.auth.hashers import make_password
 import os
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from django.contrib.gis.geos import *
+import json
+import logging
 
+logger = logging.getLogger('django')
 
 class UserRegisterSerializer(serializers.ModelSerializer):
 
@@ -121,18 +126,27 @@ class UserPhotoSerializer(serializers.ModelSerializer):
         ret.update({'success': True, 'msg': 'User photo got.'})
         return ret
 
-class LocationSerializer(serializers.ModelSerializer):
+class LocationSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'name', 'latitude', 'longitude']
+        geo_field = "geometry"
+        fields = '__all__'
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret.update({'success': True, 'msg': 'Location got.'})
         return ret
 
+    def create(self, validated_data):
+        geometry_data = validated_data.pop('geometry')
+        # Convert the geometry dictionary to a GEOSGeometry object
+        validated_data['geometry'] = GEOSGeometry(str(geometry_data))
+        return super(LocationSerializer, self).create(validated_data)
+
 class StorySerializer(serializers.ModelSerializer):
-    location_ids = LocationSerializer(many=True)
+    location_ids = serializers.ListField(
+        child=LocationSerializer(), write_only=True
+    )
     author_username = serializers.StringRelatedField(source='author.username')
 
     class Meta:
@@ -163,17 +177,17 @@ class StorySerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def create(self, validated_data, **kwargs):
-        #location_data = validated_data.pop('location_ids')
-        #locations = [Location.objects.create(**location) for location in location_data]
-
-        location_data = validated_data.pop('location_ids')
-        for location in location_data:
-            location['name'] = urllib.parse.quote(location['name'], safe='')
-            locations = [Location.objects.create(**location) for location in location_data]
-
+    def create(self, validated_data):
+        location_data = validated_data.pop('location_ids', [])
         story = Story.objects.create(**validated_data)
-        story.location_ids.set(locations)
+
+        # Handle creation of Location objects and associate with the story
+        for location_dict in location_data:
+            # Create Location instances from the provided data
+            location_serializer = LocationSerializer(data=location_dict)
+            if location_serializer.is_valid(raise_exception=True):
+                location_instance = location_serializer.save()
+                story.location_ids.add(location_instance)
 
         return story
 
