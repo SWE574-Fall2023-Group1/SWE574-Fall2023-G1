@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { GoogleMap, Autocomplete, Marker } from '@react-google-maps/api';
 import withAuth from '../../authCheck';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -9,6 +8,7 @@ import './CreateStory.css'
 import {TextField, Select, MenuItem, InputLabel, FormControl, Button, List, ListItem, ListItemText,Checkbox, FormControlLabel } from '@mui/material';
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
+import StoryMap from './StoryMap';
 function CreateStory() {
 
   const [title, setTitle] = useState('');
@@ -25,7 +25,6 @@ function CreateStory() {
   const [end_date, setEndDate] = useState(null);
   const [decade, setDecade] = useState(null);
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
-  const [searchBox, setSearchBox] = useState(null);
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
 
@@ -68,31 +67,6 @@ function CreateStory() {
     "video"
   ];
 
-  const handleLocationSelect = () => {
-    if (!autocompleteRef.current) {
-      return;
-    }
-
-    const place = autocompleteRef.current.getPlace();
-
-    if (!place || !place.geometry || !place.geometry.location) {
-      return;
-    }
-
-    const locationData = {
-      name: place.name,
-      latitude: Number(place.geometry.location.lat().toFixed(6)),
-      longitude: Number(place.geometry.location.lng().toFixed(6)),
-    };
-    setLocations([...location_ids, locationData]);
-    setMapCenter({ lat: locationData.latitude, lng: locationData.longitude });
-
-    // Clear the input value
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  };
-
   useEffect(() => {
     setSeasonName(null);
     setYear(null);
@@ -103,36 +77,8 @@ function CreateStory() {
     setEndDate(null);
     setDecade(null);
   }, [date_type]);
+  const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY; // Securely manage this
 
-  const handleMapClick = async (e) => {
-    const { latLng } = e;
-    const lat = latLng.lat();
-    const lng = latLng.lng();
-    try {
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`);
-      const { results } = response.data;
-      if (results.length > 0) {
-        const locationData = {
-          name: results[0].formatted_address,
-          latitude: Number(lat.toFixed(6)),
-          longitude: Number(lng.toFixed(6))
-        };
-        setLocations([...location_ids, locationData]);
-
-        setMapCenter({ lat: locationData.latitude, lng: locationData.longitude }); //can be excluded so that map not always clicked
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleMapLoad = (map) => {
-    setSearchBox(new window.google.maps.places.SearchBox(map.getDiv()));
-  };
-
-  const handleLocationRemove = (index) => {
-    setLocations(location_ids.filter((loc, i) => i !== index));
-  };
 
   const handleEditorClick = () => {
     if (firstClick) {
@@ -379,56 +325,18 @@ function CreateStory() {
                     </FormControl>
                 </div>
             }
-
-          <Autocomplete
-            className='date-type'
-            onLoad={(autocomplete) => {
-              autocompleteRef.current = autocomplete;
-            }}
-            onPlaceChanged={handleLocationSelect}
-          >
-            <TextField
-              className='date-box'
-              type="search"
-              label="Locations"
-              variant="outlined"
-              inputRef={inputRef}
-            />
-          </Autocomplete>
           <br/>
           <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Create Story</Button>
           </form>
           </div>
 
           <div className='create-story-map'>
-            <GoogleMap
-              mapContainerStyle={{ height: '400px', width: '400px' }}
-              center={mapCenter}
-              zoom={1}
-              onClick={handleMapClick}
-              onLoad={handleMapLoad}
-            >
-              {location_ids.map((loc, index) => (
-                <Marker
-                  key={index}
-                  position={{ lat: loc.latitude, lng: loc.longitude }}
-                  onClick={() => {
-                  }}
-                />
-              ))}
-            </GoogleMap>
-            <div className="location-list-wrapper">
-            <div className="location-list-container">
-              <List>
-                {location_ids.map((loc, index) => (
-                  <ListItem key={index}>
-                    <ListItemText style={{ marginRight: "16px" }}>{loc.name || `${loc.latitude}, ${loc.longitude}`}</ListItemText>
-                    <Button variant="contained" size="small" color="primary" onClick={() => handleLocationRemove(index)}>Remove</Button>
-                  </ListItem>
-                ))}
-              </List>
-            </div>
-          </div>
+          <StoryMap
+                mapContainerStyle={{ height: '400px', width: '100%' }}
+                initialCenter={mapCenter}
+                zoom={1}
+                apiKey={googleMapsApiKey}
+              />
           </div>
 
         </div>
