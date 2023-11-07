@@ -27,6 +27,7 @@ from .functions import *
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 import logging
+from django.contrib.gis.geos import GEOSGeometry
 
 logger = logging.getLogger('django')
 
@@ -150,6 +151,16 @@ class CreateStoryView(views.APIView):
 
             request_data = json.loads(request.body)
 
+            # Modify the location data to be compatible with GeoDjango
+            if 'location_ids' in request_data:
+                for location in request_data['location_ids']:
+                    # Example for a circle, your actual implementation may vary
+                    if location['type'] == 'circle':
+                        # Assuming the 'circle' type has 'center' and 'radius' keys
+                        center = GEOSGeometry(json.dumps(location['center']))
+                        location['point'] = center
+                        location['radius'] = location['radius']  # Assuming radius is a simple numeric value
+
             request_data['content'] = convert_base64_to_url(request_data['content'])
 
             request_data['author'] = user_id
@@ -158,10 +169,10 @@ class CreateStoryView(views.APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         except RequestDataTooBig:
-            return Response({'success':False ,'msg': 'Uploaded data is too large.'}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
+            return Response({'success': False, 'msg': 'Uploaded data is too large.'}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
 
 custom_schema_update_story = openapi.Schema(
     type=openapi.TYPE_OBJECT,

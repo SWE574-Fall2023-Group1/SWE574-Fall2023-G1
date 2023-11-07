@@ -6,7 +6,8 @@ from .functions import *
 import urllib.parse
 from django.contrib.auth.hashers import make_password
 import os
-
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from django.contrib.gis.geos import Point, LineString, Polygon
 
 class UserRegisterSerializer(serializers.ModelSerializer):
 
@@ -121,10 +122,21 @@ class UserPhotoSerializer(serializers.ModelSerializer):
         ret.update({'success': True, 'msg': 'User photo got.'})
         return ret
 
-class LocationSerializer(serializers.ModelSerializer):
+class LocationSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'name', 'latitude', 'longitude']
+        fields = ['id', 'name', 'point', 'line', 'polygon', 'circle', 'radius']
+        geo_field = "geometry"  # You can use a generic geometry field to cover all types
+
+    def get_geometry(self):
+        if self.instance.circle and self.instance.radius:
+            # Create a buffer around the point to simulate a circle
+            return self.instance.circle.buffer(self.instance.radius)
+        if self.instance.line:
+            return self.instance.line
+        if self.instance.polygon:
+            return self.instance.polygon
+        return self.instance.point
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -164,17 +176,27 @@ class StorySerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data, **kwargs):
-        #location_data = validated_data.pop('location_ids')
-        #locations = [Location.objects.create(**location) for location in location_data]
-
         location_data = validated_data.pop('location_ids')
+        locations = []
         for location in location_data:
-            location['name'] = urllib.parse.quote(location['name'], safe='')
-            locations = [Location.objects.create(**location) for location in location_data]
+            # Determine the type and create the corresponding geometry
+            if location.get('type') == 'point':
+                geom = Point(location['longitude'], location['latitude'])
+            elif location.get('type') == 'line':
+                geom = LineString(location['coordinates'])
+            elif location.get('type') == 'polygon':
+                geom = Polygon(location['coordinates'])
+            elif location.get('type') == 'circle':
+                geom = Point(location['longitude'], location['latitude'])
+                loc_instance = Location.objects.create(name=location['name'], circle=geom, radius=location['radius'])
+                locations.append(loc_instance)
+                continue
+            # For point, line, and polygon
+            loc_instance = Location.objects.create(name=location['name'], geometry=geom)
+            locations.append(loc_instance)
 
         story = Story.objects.create(**validated_data)
         story.location_ids.set(locations)
-
         return story
 
     def to_representation(self, instance):
