@@ -9,6 +9,7 @@ import {TextField, Select, MenuItem, InputLabel, FormControl, Button, List, List
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
 import StoryMap from './StoryMap';
+
 function CreateStory() {
 
   const [title, setTitle] = useState('');
@@ -27,10 +28,10 @@ function CreateStory() {
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
+  const [drawnLocations, setDrawnLocations] = useState([]);
+
 
   const navigate = useNavigate();
-  const autocompleteRef = useRef(null);
-  const inputRef = useRef(null);
 
   Quill.register('modules/imageCompress', ImageCompress);
 
@@ -87,6 +88,10 @@ function CreateStory() {
     }
   };
 
+  const handleAddLocation = (location) => {
+    // Here you would update your state that tracks drawn locations
+    setDrawnLocations([...drawnLocations, location]);
+  };
   const editorPlaceholder = firstClick ? 'Enter your content here' : '';
 
   const handleSubmit = async (e) => {
@@ -331,11 +336,13 @@ function CreateStory() {
           </div>
 
           <div className='create-story-map'>
+
           <StoryMap
                 mapContainerStyle={{ height: '400px', width: '100%' }}
                 initialCenter={mapCenter}
                 zoom={1}
                 apiKey={googleMapsApiKey}
+                onAddLocation={handleAddLocation}
               />
           </div>
 
