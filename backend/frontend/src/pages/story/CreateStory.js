@@ -28,7 +28,6 @@ function CreateStory() {
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
-  const [drawnLocations, setDrawnLocations] = useState([]);
 
 
   const navigate = useNavigate();
@@ -89,13 +88,18 @@ function CreateStory() {
   };
 
   const handleAddLocation = (location) => {
-    // Here you would update your state that tracks drawn locations
-    setDrawnLocations([...drawnLocations, location]);
+    console.log('Selected location:', location); // This will log the location to the console
+    // Assuming the `location` structure matches what your backend expects for `location_ids`
+    setLocations(location_ids => {
+      // Appending the new location to the previous locations array
+      return [...location_ids, location];
+    });
   };
   const editorPlaceholder = firstClick ? 'Enter your content here' : '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("request location",location_ids)
     try {
       const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, {
         title: title,

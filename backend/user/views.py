@@ -27,7 +27,6 @@ from .functions import *
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 import logging
-from django.contrib.gis.geos import GEOSGeometry
 
 logger = logging.getLogger('django')
 
@@ -151,28 +150,19 @@ class CreateStoryView(views.APIView):
 
             request_data = json.loads(request.body)
 
-            # Modify the location data to be compatible with GeoDjango
-            if 'location_ids' in request_data:
-                for location in request_data['location_ids']:
-                    # Example for a circle, your actual implementation may vary
-                    if location['type'] == 'circle':
-                        # Assuming the 'circle' type has 'center' and 'radius' keys
-                        center = GEOSGeometry(json.dumps(location['center']))
-                        location['point'] = center
-                        location['radius'] = location['radius']  # Assuming radius is a simple numeric value
-
+            # Convert base64 content to URL, your existing logic here...
             request_data['content'] = convert_base64_to_url(request_data['content'])
 
-            request_data['author'] = user_id
+            request_data['author'] = user_id  # make sure `user_id` is defined above as per your auth logic
             serializer = StorySerializer(data=request_data)
 
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-        except RequestDataTooBig:
-            return Response({'success': False, 'msg': 'Uploaded data is too large.'}, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
+        except Exception as e:
+            # Handle any other exceptions
+            return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 custom_schema_update_story = openapi.Schema(
     type=openapi.TYPE_OBJECT,
