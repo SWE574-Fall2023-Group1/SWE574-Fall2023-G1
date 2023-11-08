@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams,useNavigate  } from 'react-router-dom';
 import './StoryDetails.css';
-import { GoogleMap, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker, Polyline, Polygon, Circle } from '@react-google-maps/api';
 import withAuth from '../../authCheck';
 import CommentSection from './CommentSection';
 import ReactQuill from 'react-quill';
@@ -69,17 +69,41 @@ function StoryDetails() {
       try {
         await fetchUserDetails(); // Get the current user ID
         const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
-        setStory(response.data);
+
+        // Parse geometry for each location
+        const modifiedLocations = response.data.location_ids.map(location => {
+          // Parse the geometry JSON string into an object
+          const geometry = JSON.parse(location.geometry);
+
+          // Depending on the geometry type, process the coordinates accordingly
+          let coordinates;
+          if (geometry.type === "Point") {
+            coordinates = { lat: geometry.coordinates[1], lng: geometry.coordinates[0] };
+          } else if (geometry.type === "LineString" || geometry.type === "Polygon") {
+            coordinates = geometry.coordinates[0].map(coord => ({ lat: coord[1], lng: coord[0] }));
+          } else if (geometry.type === "Circle") {
+            coordinates = { center: { lat: geometry.coordinates[1], lng: geometry.coordinates[0] }, radius: location.radius };
+          }
+
+          // Return the modified location with the parsed coordinates
+          return {
+            ...location,
+            coordinates: coordinates
+          };
+        });
+
+        // Update the story state with the new location details including parsed coordinates
+        setStory({ ...response.data, location_ids: modifiedLocations });
+
+        // Determine if the user has liked the story
         setNumLikes(response.data.likes.length);
-        if (userId && response.data.likes.includes(userId)) {
-          setLiked(true);
-        } else {
-          setLiked(false);
-        }
+        setLiked(userId && response.data.likes.includes(userId));
+
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchStory();
   }, [userId]);
 
@@ -132,20 +156,52 @@ function StoryDetails() {
   };
 
 
+  const parseSRID = (sridString) => {
+    // Remove the SRID=4326; part
+    const coordsString = sridString.split(';')[1];
+
+    // Determine the geometry type (POINT, LINESTRING, POLYGON)
+    const geomType = coordsString.split(' ')[0];
+
+    // Extract the coordinates, removing the geometry type and extra parentheses
+    const coordsArray = coordsString.replace(geomType, '').replace(/[\(\)]/g, '').split(',').map(coord => {
+      const points = coord.trim().split(' ');
+      return { lat: parseFloat(points[1]), lng: parseFloat(points[0]) };
+    });
+
+    // Based on the geometry type, return the appropriate structure
+    switch (geomType) {
+      case 'POINT':
+        return coordsArray[0];
+      case 'LINESTRING':
+      case 'POLYGON':
+        return coordsArray;
+      default:
+        console.error('Unsupported geometry type:', geomType);
+        return null;
+    }
+  };
 
   function StoryMarkers({ locations, handleMarkerClick }) {
-    const markers = locations.map((location, index) => (
-      <Marker
-        key={index}
-        position={{
-          lat: parseFloat(location.latitude),
-          lng: parseFloat(location.longitude),
-        }}
-        onClick={() => handleMarkerClick(location)}
-      />
-    ));
+    const shapes = locations.map((location, index) => {
+      if (location.point) {
+        const coords = parseSRID(location.point);
+        return <Marker key={index} position={coords} onClick={() => handleMarkerClick(location)} />;
+      } else if (location.line) {
+        const path = parseSRID(location.line);
+        return <Polyline key={index} path={path} options={{ strokeColor: "#FF0000" }} onClick={() => handleMarkerClick(location)} />;
+      } else if (location.polygon) {
+        const paths = parseSRID(location.polygon);
+        return <Polygon key={index} paths={paths} options={{ fillColor: "#FFFF00" }} onClick={() => handleMarkerClick(location)} />;
+      } else if (location.circle) {
+        const center = parseSRID(location.circle);
+        return <Circle key={index} center={center} radius={parseFloat(location.radius)} options={{ fillColor: "#0088FF" }} onClick={() => handleMarkerClick(location)} />;
+      } else {
+        return null;
+      }
+    });
 
-    return <>{markers}</>;
+    return <>{shapes}</>;
   }
 
   const handleLikeDislike = async () => {
@@ -252,10 +308,10 @@ function StoryDetails() {
                   <div className="storydetail-story-map">
                     <GoogleMap
                       mapContainerStyle={{ height: "400px", width: "400px" }}
-                      zoom={12}
+                      zoom={2}
                       center={{
-                        lat: parseFloat(story.location_ids[0].latitude),
-                        lng: parseFloat(story.location_ids[0].longitude),
+                        lat: 0,
+                        lng: 0,
                       }}
                     >
                       <StoryMarkers locations={story.location_ids} handleMarkerClick={handleMarkerClick} />
