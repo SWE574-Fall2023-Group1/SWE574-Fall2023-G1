@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
 import { List, ListItem, ListItemText, Button, TextField } from '@mui/material';
 
-const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation }) => {
+const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation }) => {
   const [locations, setLocations] = React.useState([]);
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const autocompleteRef = useRef(null);
@@ -69,21 +69,22 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
 //     setSearchBox(new window.google.maps.places.SearchBox(map.getDiv()));
 //   };
 
-const handleLocationRemove = (index) => {
-  // Remove the location from the locations state
-  setLocations(locations.filter((_, i) => i !== index));
+  const handleLocationRemove = (index) => {
+    // Remove the visual marker or overlay from the map
+    const overlayToRemove = drawnItems[index];
+    if (overlayToRemove) {
+      overlayToRemove.setMap(null); // This should remove the overlay from the map
+    }
 
-  // Get the overlay associated with the location to be removed
-  const overlayToRemove = drawnItems[index];
+    // Update the drawnItems and locations state to reflect the removal
+    const updatedDrawnItems = drawnItems.filter((_, i) => i !== index);
+    const updatedLocations = locations.filter((_, i) => i !== index);
 
-  // Check if the overlay exists and remove it from the map
-  if (overlayToRemove) {
-    overlayToRemove.setMap(null);
-  }
+    setDrawnItems(updatedDrawnItems);
+    setLocations(updatedLocations);
+    onRemoveLocation(index);
 
-  // Update the drawnItems state to remove the overlay reference
-  setDrawnItems(drawnItems.filter((_, i) => i !== index));
-};
+  };
 
 
   const handleMapLoad = (map) => {

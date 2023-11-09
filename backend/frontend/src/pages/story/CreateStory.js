@@ -95,6 +95,12 @@ function CreateStory() {
       return [...location_ids, location];
     });
   };
+
+  const handleRemoveLocation = (index) => {
+    const updatedLocations = location_ids.filter((_, i) => i !== index);
+    setLocations(updatedLocations); // Update the location_ids state
+  };
+
   const editorPlaceholder = firstClick ? 'Enter your content here' : '';
 
   const handleSubmit = async (e) => {
@@ -347,6 +353,7 @@ function CreateStory() {
                 zoom={1}
                 apiKey={googleMapsApiKey}
                 onAddLocation={handleAddLocation}
+                onRemoveLocation={handleRemoveLocation} // Pass the callback to StoryMap
               />
           </div>
 
