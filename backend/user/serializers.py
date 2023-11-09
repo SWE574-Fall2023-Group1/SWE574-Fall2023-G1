@@ -123,24 +123,9 @@ class UserPhotoSerializer(serializers.ModelSerializer):
         return ret
 
 class LocationSerializer(serializers.ModelSerializer):
-    geometry = serializers.SerializerMethodField()
-
     class Meta:
         model = Location
-        fields = ['id', 'name', 'point', 'line', 'polygon', 'circle', 'radius', 'geometry']
-
-    def get_geometry(self, obj):
-        if obj.circle and obj.radius:
-            # Create a buffer around the circle to represent the area
-            return obj.circle.buffer(obj.radius).geojson
-        elif obj.line:
-            return obj.line.geojson
-        elif obj.polygon:
-            return obj.polygon.geojson
-        elif obj.point:
-            return obj.point.geojson
-        # If none of these, return None or a sensible default
-        return None
+        fields = ['id', 'name', 'point', 'line', 'polygon', 'circle', 'radius']
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

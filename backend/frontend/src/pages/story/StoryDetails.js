@@ -64,48 +64,60 @@ function StoryDetails() {
 
 
 
-  useEffect(() => {
-    const fetchStory = async () => {
-      try {
-        await fetchUserDetails(); // Get the current user ID
-        const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
+useEffect(() => {
+  const fetchStory = async () => {
+    try {
+      await fetchUserDetails(); // Get the current user ID
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
 
-        // Parse geometry for each location
-        const modifiedLocations = response.data.location_ids.map(location => {
-          // Parse the geometry JSON string into an object
-          const geometry = JSON.parse(location.geometry);
-
-          // Depending on the geometry type, process the coordinates accordingly
-          let coordinates;
-          if (geometry.type === "Point") {
-            coordinates = { lat: geometry.coordinates[1], lng: geometry.coordinates[0] };
-          } else if (geometry.type === "LineString" || geometry.type === "Polygon") {
-            coordinates = geometry.coordinates[0].map(coord => ({ lat: coord[1], lng: coord[0] }));
-          } else if (geometry.type === "Circle") {
-            coordinates = { center: { lat: geometry.coordinates[1], lng: geometry.coordinates[0] }, radius: location.radius };
-          }
-
-          // Return the modified location with the parsed coordinates
-          return {
-            ...location,
-            coordinates: coordinates
+      // Parse location fields for each location
+      const modifiedLocations = response.data.location_ids.map(location => {
+        let coordinates;
+        if (location.point) {
+          const pointCoords = location.point.slice(17).slice(0, -1).split(' ');
+          coordinates = { lat: parseFloat(pointCoords[1]), lng: parseFloat(pointCoords[0]) };
+        } else if (location.line) {
+          const lineCoords = location.line.slice(17).slice(0, -1).split(', ');
+          coordinates = lineCoords.map(coord => {
+            const [lng, lat] = coord.split(' ');
+            return { lat: parseFloat(lat), lng: parseFloat(lng) };
+          });
+        } else if (location.polygon) {
+          const polyCoords = location.polygon.slice(17).slice(0, -1).split(', ');
+          coordinates = polyCoords[0].split(', ').map(coord => {
+            const [lng, lat] = coord.split(' ');
+            return { lat: parseFloat(lat), lng: parseFloat(lng) };
+          });
+        } else if (location.circle && location.radius) {
+          const circleCoords = location.circle.slice(17).slice(0, -1).split(' ');
+          coordinates = {
+            center: { lat: parseFloat(circleCoords[1]), lng: parseFloat(circleCoords[0]) },
+            radius: parseFloat(location.radius)
           };
-        });
+        }
 
-        // Update the story state with the new location details including parsed coordinates
-        setStory({ ...response.data, location_ids: modifiedLocations });
+        // Return the modified location with the parsed coordinates
+        return {
+          ...location,
+          coordinates: coordinates
+        };
+      });
 
-        // Determine if the user has liked the story
-        setNumLikes(response.data.likes.length);
-        setLiked(userId && response.data.likes.includes(userId));
+      // Update the story state with the new location details including parsed coordinates
+      setStory({ ...response.data, location_ids: modifiedLocations });
 
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      // Determine if the user has liked the story
+      setNumLikes(response.data.likes.length);
+      setLiked(userId && response.data.likes.includes(userId));
 
-    fetchStory();
-  }, [userId]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchStory();
+}, [userId]);
+
 
   // useEffect(()=>{
   //   console.log(story,"story")

@@ -88,7 +88,7 @@ const StorySearch = () => {
           size: pageSize,
           time_type: timeType,
           time_value: JSON.stringify(timeValueObj),
-          location: JSON.stringify(locationSearch),
+          location: JSON.stringify(locationSearch.geometry),
           radius_diff: radiusDiff,
           date_diff: dateDiff,
         },
@@ -267,41 +267,40 @@ const StorySearch = () => {
   };
 
   const handleLocationSelect = () => {
-    if (!autocompleteRef.current) {
-      return;
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
+      if (place && place.geometry) {
+        const locationData = {
+          geometry: {
+            type: "Point",
+            coordinates: [
+              place.geometry.location.lng(),
+              place.geometry.location.lat(),
+            ],
+          },
+          name: place.name,
+        };
+
+        setLocationSearch(locationData);
+        setMapCenter({
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        });
+      }
     }
-
-    const place = autocompleteRef.current.getPlace();
-
-    if (!place || !place.geometry || !place.geometry.location) {
-      return;
-    }
-
-    const locationData = {
-      name: place.name,
-      latitude: Number(place.geometry.location.lat().toFixed(6)),
-      longitude: Number(place.geometry.location.lng().toFixed(6)),
-    };
-
-    setLocationSearch(locationData);
-    setMapCenter({ lat: locationData.latitude, lng: locationData.longitude });
   };
 
   useEffect(() => {
     setMarkerPosition(mapCenter);
   }, [mapCenter]);
 
-  const handleMarker = (e) => {
-    const newPosition = {
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
+  const handleMarker = (event) => {
+    const position = {
+      type: "Point",
+      coordinates: [event.latLng.lng(), event.latLng.lat()],
     };
-    setMarkerPosition(newPosition);
-    setLocationSearch({
-      name: 'Custom Location',
-      latitude: Number(newPosition.lat.toFixed(6)),
-      longitude: Number(newPosition.lng.toFixed(6)),
-    });
+
+    setLocationSearch({ geometry: position });
   };
 
   const renderDateDiffInput = () => {
@@ -447,6 +446,14 @@ const StorySearch = () => {
             onClick={(e) => handleMarker(e)}
           >
           </GoogleMap>
+          {locationSearch && (
+              <Marker
+                position={{
+                  lat: locationSearch.geometry.coordinates[1],
+                  lng: locationSearch.geometry.coordinates[0],
+                }}
+              />
+            )}
         </div>
         <br />
         <Button variant="contained" type="submit" className="btn btn-primary middle">Search Story</Button>

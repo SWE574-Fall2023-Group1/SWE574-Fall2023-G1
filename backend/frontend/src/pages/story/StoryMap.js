@@ -180,6 +180,7 @@ const handleLocationRemove = (index) => {
           longitude: event.overlay.getCenter().lng(),
           radius: event.overlay.getRadius(),
         };
+        console.log(event.overlay.getRadius())
         break;
 
       default:
