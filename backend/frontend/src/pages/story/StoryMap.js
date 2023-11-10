@@ -49,21 +49,45 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
       return;
     }
 
-    const locationData = {
+    // Create a new location object with the name and coordinates
+    const newLocation = {
       name: place.name,
+      point: {
+        type: 'Point',
+        coordinates: [
+          Number(place.geometry.location.lng().toFixed(6)),
+          Number(place.geometry.location.lat().toFixed(6))
+        ]
+      },
       latitude: Number(place.geometry.location.lat().toFixed(6)),
-      longitude: Number(place.geometry.location.lng().toFixed(6)),
+      longitude: Number(place.geometry.location.lng().toFixed(6))
     };
-    console.log("Map Clicked Location:", locationData);
 
-    setLocations([...locations, locationData]);
-    setMapCenter({ lat: locationData.latitude, lng: locationData.longitude });
+    // Update the locations state with the new location
+    setLocations(prevLocations => {
+      const updatedLocations = [...prevLocations, newLocation];
+      console.log("New locations array:", updatedLocations); // This should log the updated array
+      return updatedLocations;
+    });
 
-    // Clear the input value
+    // Update the map center to the new location
+    setMapCenter({
+      lat: newLocation.latitude,
+      lng: newLocation.longitude
+    });
+
+    // Clear the input field after selecting a place
     if (inputRef.current) {
       inputRef.current.value = "";
     }
+
+    // If there's a callback for adding a new location, call it
+    if (onAddLocation) {
+      onAddLocation(newLocation);
+    }
   };
+
+
 
 //   const handleMapLoad = (map) => {
 //     setSearchBox(new window.google.maps.places.SearchBox(map.getDiv()));
