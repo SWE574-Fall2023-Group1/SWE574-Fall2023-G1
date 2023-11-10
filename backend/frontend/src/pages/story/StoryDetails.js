@@ -53,13 +53,47 @@ function StoryDetails() {
   };
 
 
-  const handleMarkerClick = ({ name, latitude, longitude }) => {
-    const floatLatitude = parseFloat(latitude);
-    const floatLongitude = parseFloat(longitude);
+  const handleMarkerClick = (location) => {
+    let locationData = {};
 
-    const url = `/timeline/${(JSON.stringify({ name, latitude: floatLatitude, longitude: floatLongitude }))}`;
-    navigate(url);
+    if (location.point) {
+        const coords = location.point.slice(17).slice(0, -1).split(' ');
+        locationData = { latitude: parseFloat(coords[1]), longitude: parseFloat(coords[0]), type: 'Point' };
+    }
+    else if (location.line) {
+        const lineCoords = location.line.slice(17).slice(0, -1).split(', ');
+        locationData = {
+            type: 'LineString',
+            coordinates: lineCoords.map(coord => {
+                const [lng, lat] = coord.split(' ');
+                return { lat: parseFloat(lat), lng: parseFloat(lng) };
+            })
+        };
+    }
+    else if (location.polygon) {
+        const polyCoords = location.polygon.slice(17).slice(0, -1).split(', ');
+        locationData = {
+            type: 'Polygon',
+            coordinates: polyCoords.map(coord => {
+                const [lng, lat] = coord.split(' ');
+                return { lat: parseFloat(lat), lng: parseFloat(lng) };
+            })
+        };
+    }
+    else if (location.circle && location.radius) {
+        const circleCoords = location.circle.slice(17).slice(0, -1).split(' ');
+        locationData = {
+            type: 'Circle',
+            center: { lat: parseFloat(circleCoords[1]), lng: parseFloat(circleCoords[0]) },
+            radius: parseFloat(location.radius)
+        };
+    }
+
+    const locationJSON = JSON.stringify(locationData);
+    console.log("locationJSON",locationJSON)
+    navigate(`/timeline/${locationJSON}`);
 };
+
 
 
 

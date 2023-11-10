@@ -774,28 +774,108 @@ class SearchStoryByLocationView(views.APIView):
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         user = get_object_or_404(User, pk=user_id)
 
-        location = request.query_params.get('location', '')
-        radius_diff = float(request.query_params.get('radius_diff', ''))
+        #logger.warning(f"Query Params {request.query_params.get()}")
+        location_json = request.query_params.get('location', '')
+        radius_diff = float(request.query_params.get('radius_diff', '5'))
+        utm_srid = 32633
 
-        #print(tag_search)
-        query_filter = Q()
-        if location != "null":
-            location = json.loads(location)
-            lat = location['latitude']
-            lng = location['longitude']
-            radius = radius_diff  # radius set for near search
+        if location_json != "null":
+            location_data = json.loads(location_json)
+            geom_type = location_data.get("type")
 
-            query_filter &= Q(
-                location_ids__latitude__range=(lat - radius / 110.574, lat + radius / 110.574),
-                location_ids__longitude__range=(lng - radius / (111.320 * cos(radians(lat))), lng + radius / (111.320 * cos(radians(lat))))
-            )
+            # Constructing the appropriate geometry based on the type
+            if geom_type == "Point":
+                center = Point(location_data["longitude"], location_data["latitude"], srid=4326)
+
+                # Transform the point to a UTM coordinate system
+                  # Adjust this based on your location
+                center.transform(utm_srid)
+
+                # Create the buffer in the UTM system (assuming radius_diff is in kilometers)
+                buffer_area = center.buffer(radius_diff)
+
+                # Transform the buffer back to WGS 84
+                buffer_area.transform(4326)
+
+                logger.warning(f"Point Buffer: {buffer_area}")
+
+            elif geom_type == "LineString":
+                # Filter out any null coordinates and ensure they are in the correct format
+                line_coords = []
+                for coord in location_data["coordinates"]:
+                    if coord["lat"] is not None and coord["lng"] is not None:
+                        line_coords.append((float(coord["lng"]), float(coord["lat"])))
+
+                if not line_coords:
+                    return Response({'success': False, 'msg': 'Invalid line coordinates'}, status=status.HTTP_400_BAD_REQUEST)
+
+                try:
+                    geom = LineString(line_coords, srid=4326)
+
+                    # Transform to UTM, create buffer, and transform back
+                    # Adjust based on your location
+                    geom.transform(utm_srid)
+                    buffer_area = geom.buffer(radius_diff)
+                    buffer_area.transform(4326)
+
+                    logger.warning(f"Line Buffer: {buffer_area}")
+                except Exception as e:
+                    logger.error(f"Error creating LineString: {e}")
+                    return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-        stories = Story.objects.filter(query_filter)
-        logger.warning(stories)
-        stories = sorted(stories, key=lambda story: self.extract_timestamp(story), reverse=True)
 
-        # Serialize the stories
+            elif geom_type == "Polygon":
+                # Filter out any null coordinates and ensure the polygon is closed
+                poly_coords = [(coord["lng"], coord["lat"]) for coord in location_data["coordinates"] if coord["lat"] is not None and coord["lng"] is not None]
+
+                if poly_coords and poly_coords[0] != poly_coords[-1]:
+                    poly_coords.append(poly_coords[0])  # Close the polygon
+
+                try:
+                    geom = Polygon(poly_coords, srid=4326)
+                    buffer_area = geom  # No buffer needed for a polygon
+                    logger.warning(f"Polygon Buffer: {buffer_area}")
+                except Exception as e:
+                    logger.error(f"Error creating polygon: {e}")
+                    return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+            elif geom_type == "Circle":
+                center = Point(location_data["center"]["lng"], location_data["center"]["lat"], srid=4326)
+                radius = location_data["radius"]
+
+                # Transform the center point to UTM coordinate system
+                utm_srid = 32633  # Adjust this based on your location
+                center.transform(utm_srid)
+
+                # Create the buffer in UTM system
+                buffer_area = center.buffer(radius)  # Radius is assumed to be in meters
+
+                # Transform the buffer back to WGS 84
+                buffer_area.transform(4326)
+
+                logger.warning(f"Circle Buffer: {buffer_area}")
+
+            else:
+                return Response({'success': False, 'msg': 'Invalid geometry type'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Query filter using intersects lookup
+            query_filter = Q(location_ids__point__intersects=buffer_area) | \
+                           Q(location_ids__line__intersects=buffer_area) | \
+                           Q(location_ids__polygon__intersects=buffer_area)
+
+            for location in Location.objects.filter(circle__isnull=False):
+                circle_center = GEOSGeometry(location.circle, srid=4326)
+                circle_center.transform(utm_srid)  # Transform to UTM coordinate system
+                circle_area = circle_center.buffer(location.radius)
+                circle_area.transform(4326)  # Transform back to WGS 84
+
+                if circle_area.intersects(buffer_area):
+                    query_filter |= Q(location_ids=location.id)  # Add to query filter if intersects
+
+        stories = Story.objects.filter(query_filter).distinct()
+
         serializer = StorySerializer(stories, many=True)
 
         # Page sizes and numbers

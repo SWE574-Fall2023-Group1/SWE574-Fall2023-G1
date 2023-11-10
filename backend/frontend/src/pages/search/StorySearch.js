@@ -44,11 +44,19 @@ const StorySearch = () => {
   };
 
   const handleStoryClickWithLocation = async (locationSearch) => {
-    const locationJSON = JSON.stringify(locationSearch);
 
+    // Extract latitude and longitude from the coordinates array
+    const latitude = locationSearch.geometry.coordinates[1];
+    const longitude = locationSearch.geometry.coordinates[0];
+
+    // Construct the locationJSON in the desired format
+    const locationJSON = JSON.stringify({
+      latitude: latitude,
+      longitude: longitude,
+      type: locationSearch.geometry.type
+    });
 
     const url = `/timeline/${locationJSON}`;
-    //console.log(url); // Add this line
 
     navigate(url);
   };
