@@ -709,7 +709,7 @@ class SearchStoryByLocationView(views.APIView):
                 return timezone.make_aware(datetime(year, 1, 1))
 
         elif story.date_type == Story.NORMAL_DATE:
-            logger.warning(story.date)
+            logger.info(story.date)
             return story.date
 
         elif story.date_type == Story.INTERVAL_DATE:
@@ -748,7 +748,7 @@ class SearchStoryByLocationView(views.APIView):
 
 
         stories = Story.objects.filter(query_filter)
-        logger.warning(stories)
+        logger.info(stories)
         stories = sorted(stories, key=lambda story: self.extract_timestamp(story), reverse=True)
 
         # Serialize the stories
