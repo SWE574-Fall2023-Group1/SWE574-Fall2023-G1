@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import withAuth from '../../authCheck';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -11,6 +11,34 @@ import Quill from 'quill'
 import StoryMap from './StoryMap';
 
 function CreateStory() {
+
+  const { storyId } = useParams(); // Get story ID from URL
+  const isEditMode = storyId != null;
+
+  useEffect(() => {
+    if (isEditMode) {
+      axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${storyId}`, { withCredentials: true })
+        .then(response => {
+          const storyInfo = response.data;
+          setTitle(storyInfo.title);
+          setContent(storyInfo.content);
+          setStoryTags(storyInfo.story_tags.join(", "));
+          setLocations(storyInfo.location_ids.map(location => ({ ...location, id: location.id.toString() })));
+          setDateType(storyInfo.date_type);
+          setSeasonName(storyInfo.season_name);
+          setYear(storyInfo.year);
+          setStartYear(storyInfo.start_year);
+          setEndYear(storyInfo.end_year);
+          setDate(storyInfo.date);
+          setStartDate(storyInfo.start_date);
+          setEndDate(storyInfo.end_date);
+          setDecade(storyInfo.decade);
+          setIncludeTime(storyInfo.include_time);
+          // ... handle other fields as needed ...
+        })
+        .catch(error => console.error('Error fetching story:', error));
+    }
+  }, [storyId, isEditMode]);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -105,32 +133,41 @@ function CreateStory() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("request location",location_ids)
-    try {
-      const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, {
-        title: title,
-        content: content,
-        story_tags: story_tags,
-        location_ids: location_ids,
-        date_type: date_type,
-        season_name: season_name,
-        start_year: start_year,
-        end_year: end_year,
-        year: year,
-        date: date,
-        start_date: start_date,
-        end_date: end_date,
-        decade: decade,
-        include_time: include_time
-      }, { withCredentials: true });
-      console.log(response.data);
 
-      navigate(`/story/${response.data.id}`);
+    const storyData = {
+      title: title,
+      content: content,
+      story_tags: story_tags,
+      location_ids: location_ids,
+      date_type: date_type,
+      season_name: season_name,
+      start_year: start_year,
+      end_year: end_year,
+      year: year,
+      date: date,
+      start_date: start_date,
+      end_date: end_date,
+      decade: decade,
+      include_time: include_time
+    };
+
+    try {
+      let response;
+      if (isEditMode) {
+        // Update existing story
+        response = await axios.put(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyUpdate/${storyId}`, storyData, { withCredentials: true });
+        navigate(`/story/${storyId}`);
+      } else {
+        // Create new story
+        response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, storyData, { withCredentials: true });
+        navigate(`/story/${response.data.id}`);
+      }
 
     } catch (error) {
-      console.log(error);
+      console.error('Error submitting story:', error);
     }
   };
+
 
   return (
     <div>
