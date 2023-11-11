@@ -26,7 +26,7 @@ const StorySearch = () => {
   const [endDate, setEndDate] = useState('');
   const [locationSearch, setLocationSearch] = useState(null);
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
-  const [markerPosition, setMarkerPosition] = useState(mapCenter);
+  const [markerPosition, setMarkerPosition] = useState({ lat: 0, lng: 0 }); // Separate state for marker position
   const [radiusDiff, setRadiusDiff] = useState(25);
   const [dateDiff, setDateDiff] = useState(2);
   const [showLocationSearch, setShowLocationSearch] = useState(false);
@@ -294,21 +294,26 @@ const StorySearch = () => {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
         });
+        setMarkerPosition({
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        });
       }
     }
   };
 
-  useEffect(() => {
-    setMarkerPosition(mapCenter);
-  }, [mapCenter]);
+  // useEffect(() => {
+  //   setMarkerPosition(mapCenter);
+  // }, [mapCenter]);
 
   const handleMarker = (event) => {
-    const position = {
-      type: "Point",
-      coordinates: [event.latLng.lng(), event.latLng.lat()],
+    const newPosition = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
     };
 
-    setLocationSearch({ geometry: position });
+    setLocationSearch({ geometry: { type: "Point", coordinates: [newPosition.lng, newPosition.lat] } });
+    setMarkerPosition(newPosition);
   };
 
   const renderDateDiffInput = () => {
@@ -455,12 +460,15 @@ const StorySearch = () => {
           >
           </GoogleMap>
           {locationSearch && (
+              <>
+              {console.log('Marker Position:', {
+                lat: locationSearch.geometry.coordinates[1],
+                lng: locationSearch.geometry.coordinates[0],
+              })}
               <Marker
-                position={{
-                  lat: locationSearch.geometry.coordinates[1],
-                  lng: locationSearch.geometry.coordinates[0],
-                }}
+                position={{markerPosition}}
               />
+            </>
             )}
         </div>
         <br />
