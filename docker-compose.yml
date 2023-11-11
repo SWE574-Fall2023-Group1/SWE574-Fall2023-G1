@@ -24,7 +24,7 @@ services:
       - backend
 
   db:
-    image: "postgres:15"
+    image: "postgis/postgis:15-3.4"
     env_file:
       - ./backend/backend/.env
     ports:

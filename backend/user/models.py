@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 from datetime import timedelta
 from django.utils import timezone
 from ckeditor.fields import RichTextField
+from django.contrib.gis.db import models as gis_models
 
 class User(AbstractUser):
     email = models.EmailField(verbose_name="e-mail", max_length = 100, unique = True)
@@ -18,8 +19,11 @@ class User(AbstractUser):
 
 class Location(models.Model):
     name = models.CharField(max_length=255)
-    latitude = models.DecimalField(max_digits=19, decimal_places=10)
-    longitude = models.DecimalField(max_digits=19, decimal_places=10)
+    point = gis_models.PointField(geography=True, blank=True, null=True)
+    line = gis_models.LineStringField(geography=True, blank=True, null=True)
+    polygon = gis_models.PolygonField(geography=True, blank=True, null=True)  # Can be used for rectangles too
+    circle = gis_models.PointField(geography=True, blank=True, null=True)  # Represented as a point with radius
+    radius = models.DecimalField(max_digits=19, decimal_places=10, blank=True, null=True)  # Used with circle
 
     def __str__(self):
         return self.name

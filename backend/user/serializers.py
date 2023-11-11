@@ -6,7 +6,8 @@ from .functions import *
 import urllib.parse
 from django.contrib.auth.hashers import make_password
 import os
-
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from django.contrib.gis.geos import Point, LineString, Polygon, LinearRing
 
 class UserRegisterSerializer(serializers.ModelSerializer):
 
@@ -124,12 +125,14 @@ class UserPhotoSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'name', 'latitude', 'longitude']
+        fields = ['id', 'name', 'point', 'line', 'polygon', 'circle', 'radius']
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret.update({'success': True, 'msg': 'Location got.'})
+        ret.update({'success': True, 'msg': 'Location ok.'})
         return ret
+
+
 
 class StorySerializer(serializers.ModelSerializer):
     location_ids = LocationSerializer(many=True)
@@ -163,19 +166,42 @@ class StorySerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def create(self, validated_data, **kwargs):
-        #location_data = validated_data.pop('location_ids')
-        #locations = [Location.objects.create(**location) for location in location_data]
-
+    def create(self, validated_data):
         location_data = validated_data.pop('location_ids')
+        locations = []
         for location in location_data:
-            location['name'] = urllib.parse.quote(location['name'], safe='')
-            locations = [Location.objects.create(**location) for location in location_data]
+            loc_instance = None
+            if location.get('point'):
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    point=Point(location['point']['coordinates'], srid=4326)
+                )
+            elif location.get('line'):
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    line=LineString(location['line']['coordinates'], srid=4326)
+                )
+            elif location.get('polygon'):
+                # Assuming location['polygon']['coordinates'] is an array containing one array of coordinates
+                outer_ring_coords = location['polygon']['coordinates'][0]
+                outer_ring = LinearRing(outer_ring_coords)
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    polygon=Polygon(outer_ring, srid=4326)
+                )
+            elif location.get('circle'):
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    circle=Point(location['circle']['coordinates'], srid=4326),
+                    radius=location['radius']
+                )
+            if loc_instance:
+                locations.append(loc_instance)
 
         story = Story.objects.create(**validated_data)
         story.location_ids.set(locations)
-
         return story
+
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
