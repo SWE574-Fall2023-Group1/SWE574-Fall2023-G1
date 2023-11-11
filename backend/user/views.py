@@ -650,7 +650,7 @@ class SearchStoryView(views.APIView):
 
         stories = Story.objects.filter(query_filter)
 
-        if location != "null":
+        if location != "null" and location != "":
             location = json.loads(location)
             location_point = GEOSGeometry(json.dumps(location), srid=4326)
                 # Transform the point to a projected coordinate system where units are meters (e.g., UTM)
@@ -819,7 +819,7 @@ class SearchStoryByLocationView(views.APIView):
                 center.transform(utm_srid)
 
                 # Create the buffer in the UTM system (assuming radius_diff is in kilometers)
-                buffer_area = center.buffer(radius_diff)
+                buffer_area = center.buffer(radius_diff*1000)
 
                 # Transform the buffer back to WGS 84
                 buffer_area.transform(4326)
@@ -842,7 +842,7 @@ class SearchStoryByLocationView(views.APIView):
                     # Transform to UTM, create buffer, and transform back
                     # Adjust based on your location
                     geom.transform(utm_srid)
-                    buffer_area = geom.buffer(radius_diff)
+                    buffer_area = geom.buffer(radius_diff*1000)
                     buffer_area.transform(4326)
 
                     logger.warning(f"Line Buffer: {buffer_area}")
