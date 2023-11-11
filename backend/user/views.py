@@ -153,20 +153,31 @@ class CreateStoryView(views.APIView):
                 return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
             request_data = json.loads(request.body)
-
-            # Convert base64 content to URL, your existing logic here...
             request_data['content'] = convert_base64_to_url(request_data['content'])
-
-            request_data['author'] = user_id  # make sure `user_id` is defined above as per your auth logic
+            request_data['author'] = user_id
             serializer = StorySerializer(data=request_data)
 
             if serializer.is_valid():
-                serializer.save()
+                story = serializer.save()
+
+                # Get the author of the story
+                author = story.author
+
+                # For each follower of the author, create an activity
+                for follower in author.followers.all():
+
+                    Activity.objects.create(
+                        user=follower,
+                        activity_type='new_story',
+                        target_story=story,
+                        target_user=author
+                    )
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Handle any other exceptions
             return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 custom_schema_update_story = openapi.Schema(
     type=openapi.TYPE_OBJECT,
@@ -202,25 +213,36 @@ class UpdateStoryView(views.APIView):
 
 class LikeStoryView(views.APIView):
     def post(self, request, pk):
-
         cookie_value = request.COOKIES['refreshToken']
         try:
-            user_id = decode_refresh_token(cookie_value)
+            liker_id = decode_refresh_token(cookie_value)
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        story = Story.objects.get(pk=pk)
-        # Check if the user has already liked the story
-        if user_id in story.likes.all().values_list('id', flat=True):
-            # If the user has already liked the story, remove the like
-            story.likes.remove(user_id)
+        liker = get_object_or_404(User, pk=liker_id)
+        story = get_object_or_404(Story, pk=pk)
+        author = story.author
+
+        # Check if the liker has already liked the story
+        if liker in story.likes.all():
+            # If the liker has already liked the story, remove the like
+            story.likes.remove(liker)
             story.save()
-            return Response({'success':True ,'msg': 'Disliked.'}, status=status.HTTP_201_CREATED)
+
+            # Log the activity of unliking the story for the author
+            Activity.objects.create(user=author, activity_type='story_unliked', target_story=story, target_user=liker)
+
+            return Response({'success': True, 'msg': 'Disliked.'}, status=status.HTTP_201_CREATED)
         else:
-            # If the user has not liked the story, add a new like
-            story.likes.add(user_id)
+            # If the liker has not liked the story, add a new like
+            story.likes.add(liker)
             story.save()
-            return Response({'success':True ,'msg': 'Liked.'}, status=status.HTTP_201_CREATED)
+
+            # Log the activity of liking the story for the author
+            Activity.objects.create(user=author, activity_type='story_liked', target_story=story, target_user=liker)
+
+            return Response({'success': True, 'msg': 'Liked.'}, status=status.HTTP_201_CREATED)
+
 
 class StoryDetailView(views.APIView): ##need to add auth here?
     def get(self, request, pk):
@@ -321,6 +343,8 @@ class FollowUserView(views.APIView):
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         try:
             user_to_follow = User.objects.get(pk=id)
+            follower = get_object_or_404(User, pk=user_id)
+
         except User.DoesNotExist:
             return Response({'success':False ,'msg': 'User does not exists.'}, status=status.HTTP_404_NOT_FOUND)
         if user_id == user_to_follow.id:
@@ -328,9 +352,12 @@ class FollowUserView(views.APIView):
 
         if user_to_follow.followers.filter(pk=user_id).exists():
             user_to_follow.followers.remove(user_id)
+            Activity.objects.create(user=user_to_follow, activity_type='unfollowed_user', target_user=follower)
+
             return Response({'success':True ,'msg': 'Unfollowed'}, status=status.HTTP_201_CREATED)
         else:
             user_to_follow.followers.add(user_id)
+            Activity.objects.create(user=user_to_follow, activity_type='followed_user', target_user=follower)
 
             return Response({'success':True ,'msg': 'Followed'}, status=status.HTTP_201_CREATED)
 
@@ -623,7 +650,7 @@ class SearchStoryView(views.APIView):
 
         stories = Story.objects.filter(query_filter)
 
-        if location != "null":
+        if location != "null" and location != "":
             location = json.loads(location)
             location_point = GEOSGeometry(json.dumps(location), srid=4326)
                 # Transform the point to a projected coordinate system where units are meters (e.g., UTM)
@@ -792,7 +819,7 @@ class SearchStoryByLocationView(views.APIView):
                 center.transform(utm_srid)
 
                 # Create the buffer in the UTM system (assuming radius_diff is in kilometers)
-                buffer_area = center.buffer(radius_diff)
+                buffer_area = center.buffer(radius_diff*1000)
 
                 # Transform the buffer back to WGS 84
                 buffer_area.transform(4326)
@@ -815,7 +842,7 @@ class SearchStoryByLocationView(views.APIView):
                     # Transform to UTM, create buffer, and transform back
                     # Adjust based on your location
                     geom.transform(utm_srid)
-                    buffer_area = geom.buffer(radius_diff)
+                    buffer_area = geom.buffer(radius_diff*1000)
                     buffer_area.transform(4326)
 
                     logger.warning(f"Line Buffer: {buffer_area}")
@@ -885,3 +912,34 @@ class SearchStoryByLocationView(views.APIView):
             'msg' : 'Stories successfully got',
             'stories': serializer.data
         }, status=status.HTTP_200_OK)
+
+
+class ActivityStreamView(views.APIView):
+    def get(self, request):
+
+        cookie_value = request.COOKIES['refreshToken']
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        user = get_object_or_404(User, pk=user_id)
+
+        activities = Activity.objects.filter(user_id=user_id).order_by('-date')
+        serializer = ActivitySerializer(activities, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, activity_id):
+        try:
+            user_id = decode_refresh_token(request.COOKIES['refreshToken'])
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Fetch the activity and ensure it belongs to the requesting user
+        activity = get_object_or_404(Activity, pk=activity_id, user_id=user_id)
+
+        # Update the 'viewed' field of the activity
+        activity.viewed = True
+        activity.save()
+
+        return Response({'success': True, 'msg': 'Activity marked as viewed'}, status=status.HTTP_200_OK)
