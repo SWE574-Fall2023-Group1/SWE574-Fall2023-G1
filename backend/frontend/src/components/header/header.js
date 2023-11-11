@@ -107,7 +107,7 @@ function Header() {
             <Route path="/SearchUserResults/:searchQuery" element={<SearchUserResults />} />
             <Route path="/story_search" element={<StorySearch />} />
             <Route path="/timeline/:locationJSON" element={<LocationSearch />} />
-
+            <Route path="/edit-story/:storyId" element={<CreateStory />} />
             </>
             )}
           </Routes>
