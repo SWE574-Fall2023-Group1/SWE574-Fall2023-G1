@@ -50,4 +50,8 @@ urlpatterns = [
     path("passwordReset/<token>/<uidb64>", ResetPassword.as_view()),
     path('api/swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('storySearchByLocation', SearchStoryByLocationView.as_view()),
+    path('activities', ActivityStreamView.as_view(), name='activity-stream'),
+    path('activities/<int:activity_id>', ActivityStreamView.as_view(), name='activity-detail'),
+
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
