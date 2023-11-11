@@ -85,6 +85,8 @@ djangorestframework==3.14.0
     #   django-elasticsearch-dsl-drf
     #   django-rest-swagger
     #   drf-yasg
+djangorestframework-gis==1.0
+    # via -r requirements.in
 djangorestframework-jwt==1.11.0
     # via -r requirements.in
 drf-yasg==1.21.7

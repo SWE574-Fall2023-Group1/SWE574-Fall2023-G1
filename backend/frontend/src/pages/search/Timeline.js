@@ -22,6 +22,9 @@ const LocationSearch = () => {
     const handleSearch = async () => {
       if (locationJSON) {
         try {
+          const locationData = JSON.parse(locationJSON);
+          setLocationName(determineLocationName(locationData)); // Update location name based on type
+
           const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
             params: {
               location: locationJSON,
@@ -31,10 +34,6 @@ const LocationSearch = () => {
           });
 
           setLocationStories(response.data.stories);
-
-          const locationData = JSON.parse(locationJSON);
-          setLocationName(locationData.name);
-
         } catch (error) {
           console.error('Error fetching location stories:', error);
           setLocationStories([]);
@@ -44,6 +43,21 @@ const LocationSearch = () => {
 
     handleSearch();
   }, [locationJSON, radiusDiff]);
+
+  const determineLocationName = (locationData) => {
+    switch (locationData.type) {
+      case 'Point':
+        return `Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}`;
+      case 'LineString':
+        return 'Line Location';
+      case 'Polygon':
+        return 'Polygon Location';
+      case 'Circle':
+        return `Circle Location with center at Latitude: ${locationData.center.lat}, Longitude: ${locationData.center.lng}`;
+      default:
+        return 'Unknown Location';
+    }
+  };
 
   const handleStoryClick = async (id) => {
     navigate(`/story/${id}`);
