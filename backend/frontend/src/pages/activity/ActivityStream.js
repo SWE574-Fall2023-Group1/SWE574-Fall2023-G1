@@ -62,7 +62,7 @@ function ActivityStream() {
       if (activity.activity_type === 'followed_user' || activity.activity_type === 'unfollowed_user') {
         navigate(`/user-profile/${activity.target_user}`);
       } else if (activity.activity_type === 'new_story' || activity.activity_type === 'story_liked' || activity.activity_type === 'story_unliked' ) {
-        navigate(`/story-details/${activity.target_story}`);
+        navigate(`/story/${activity.target_story}`);
       }
       // Add more cases as needed
     } catch (error) {
