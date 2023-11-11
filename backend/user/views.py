@@ -603,7 +603,7 @@ class SearchStoryView(views.APIView):
         tag_search = request.query_params.get('tag', '')
 
 
-        logger.warning(f"locationsearch{location}")
+        logger.info(f"locationsearch: {location}")
         #print(tag_search)
         query_filter = Q()
         if title_search:
@@ -656,7 +656,7 @@ class SearchStoryView(views.APIView):
                 # Transform the point to a projected coordinate system where units are meters (e.g., UTM)
             utm_srid = 32633  # Example: UTM zone 33N SRID
             location_point.transform(utm_srid)
-            logger.warning(f"location_point{location_point}")
+            logger.info(f"location_point: {location_point}")
 
             radius = radius_diff * 1000  # Assuming radius_diff is in kilometers, convert to meters
 
@@ -666,7 +666,7 @@ class SearchStoryView(views.APIView):
             # Transform the search area back to WGS 84 if necessary
             search_area.transform(4326)
 
-            logger.warning(f"searcharea{search_area}")
+            logger.info(f"search_area: {search_area}")
 
             # Start with a base queryset for all locations
             location_query = Q()
@@ -689,10 +689,10 @@ class SearchStoryView(views.APIView):
                 circle_center.transform(utm_srid)
                 circle_area = circle_center.buffer(location.radius)
                 circle_area.transform(4326)
-                logger.warning(f"circle_area{circle_area}")
-                logger.warning(f"search_area{search_area}")
+                logger.info(f"circle_area: {circle_area}")
+                logger.info(f"search_area: {search_area}")
                 if circle_area.intersects(search_area):
-                    logger.warning("caner")
+                    logger.info("circle_area intersects with (search_area)")
                     location_query |= Q(location_ids__id=location.id)
 
             stories = stories.filter(location_query)
@@ -780,7 +780,7 @@ class SearchStoryByLocationView(views.APIView):
                 return timezone.make_aware(datetime(year, 1, 1))
 
         elif story.date_type == Story.NORMAL_DATE:
-            logger.warning(story.date)
+            logger.info(story.date)
             return story.date
 
         elif story.date_type == Story.INTERVAL_DATE:
@@ -801,7 +801,7 @@ class SearchStoryByLocationView(views.APIView):
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
         user = get_object_or_404(User, pk=user_id)
 
-        #logger.warning(f"Query Params {request.query_params.get()}")
+        #logger.info(f"Query Params {request.query_params.get()}")
         location_json = request.query_params.get('location', '')
         radius_diff = float(request.query_params.get('radius_diff', '5'))
         utm_srid = 32633
@@ -815,7 +815,7 @@ class SearchStoryByLocationView(views.APIView):
                 center = Point(location_data["longitude"], location_data["latitude"], srid=4326)
 
                 # Transform the point to a UTM coordinate system
-                  # Adjust this based on your location
+                # Adjust this based on your location
                 center.transform(utm_srid)
 
                 # Create the buffer in the UTM system (assuming radius_diff is in kilometers)
@@ -824,7 +824,7 @@ class SearchStoryByLocationView(views.APIView):
                 # Transform the buffer back to WGS 84
                 buffer_area.transform(4326)
 
-                logger.warning(f"Point Buffer: {buffer_area}")
+                logger.info(f"Point Buffer: {buffer_area}")
 
             elif geom_type == "LineString":
                 # Filter out any null coordinates and ensure they are in the correct format
@@ -845,7 +845,7 @@ class SearchStoryByLocationView(views.APIView):
                     buffer_area = geom.buffer(radius_diff*1000)
                     buffer_area.transform(4326)
 
-                    logger.warning(f"Line Buffer: {buffer_area}")
+                    logger.info(f"Line Buffer: {buffer_area}")
                 except Exception as e:
                     logger.error(f"Error creating LineString: {e}")
                     return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -862,7 +862,7 @@ class SearchStoryByLocationView(views.APIView):
                 try:
                     geom = Polygon(poly_coords, srid=4326)
                     buffer_area = geom  # No buffer needed for a polygon
-                    logger.warning(f"Polygon Buffer: {buffer_area}")
+                    logger.info(f"Polygon Buffer: {buffer_area}")
                 except Exception as e:
                     logger.error(f"Error creating polygon: {e}")
                     return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -882,7 +882,7 @@ class SearchStoryByLocationView(views.APIView):
                 # Transform the buffer back to WGS 84
                 buffer_area.transform(4326)
 
-                logger.warning(f"Circle Buffer: {buffer_area}")
+                logger.info(f"Circle Buffer: {buffer_area}")
 
             else:
                 return Response({'success': False, 'msg': 'Invalid geometry type'}, status=status.HTTP_400_BAD_REQUEST)
