@@ -176,28 +176,23 @@ custom_schema_update_story = openapi.Schema(
     required=['content'],
 )
 class UpdateStoryView(views.APIView):
-    @swagger_auto_schema(request_body=custom_schema_update_story)
     def put(self, request, pk):
-
-        cookie_value = request.COOKIES['refreshToken']
-        try:
-            user_id = decode_refresh_token(cookie_value)
-        except:
+        cookie_value = request.COOKIES.get('refreshToken')
+        if not cookie_value:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        story = get_object_or_404(Story, pk=pk)
+        user_id = decode_refresh_token(cookie_value)
+        story = get_object_or_404(Story, pk=pk, author=user_id)
 
-        content = request.data.get("content")
-        if content is not None:
-            # Convert base64 encoded images in the content to URLs
-            updated_content = convert_base64_to_url(content)
+        serializer = StoryUpdateSerializer(story, data=request.data)
+        if serializer.is_valid():
+            updated_story = serializer.save()
+            # Set the author explicitly
+            updated_story.author_id = user_id
+            updated_story.save()
+            return Response({'success': True, 'msg': 'Story updated successfully.', 'data': serializer.data}, status=status.HTTP_200_OK)
 
-            story.content = updated_content
-            story.save()
-            return Response({'success':True ,'msg': 'Update story content successfull.'}, status=status.HTTP_201_CREATED)
-
-        return Response({'success':False ,'msg': 'Update content failed.'}, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response({'success': False, 'msg': 'Update failed.', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LikeStoryView(views.APIView):
