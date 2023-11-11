@@ -87,6 +87,8 @@ const StorySearch = () => {
     }
 
     try {
+      const locationParam = locationSearch && locationSearch.geometry ? JSON.stringify(locationSearch.geometry) : null;
+
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearch`, {
         params: {
           title: titleSearch,
@@ -96,7 +98,7 @@ const StorySearch = () => {
           size: pageSize,
           time_type: timeType,
           time_value: JSON.stringify(timeValueObj),
-          location: JSON.stringify(locationSearch.geometry),
+          location: locationParam,
           radius_diff: radiusDiff,
           date_diff: dateDiff,
         },
