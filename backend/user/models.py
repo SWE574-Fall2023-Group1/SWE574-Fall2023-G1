@@ -108,6 +108,8 @@ class Activity(models.Model):
         ('story_unliked', 'Story Unliked'),
         ('followed_user', 'Followed User'),
         ('unfollowed_user', 'Unfollowed User'),
+        ('new_commented_on_story', 'Comment on Story'),
+        ('new_comment_on_comment', 'Comment a Story You Commented Before'),
         # Add more types as needed
     ]
 

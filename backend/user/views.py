@@ -279,30 +279,49 @@ class StoryDetailView(views.APIView): ##need to add auth here?
             return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 class CreateCommentView(views.APIView):
     @swagger_auto_schema(request_body=CommentSerializer)
-    def post(self, request, id):
-
-        cookie_value = request.COOKIES['refreshToken']
+    def post(self, request, story_id):
+        cookie_value = request.COOKIES.get('refreshToken')
         try:
             user_id = decode_refresh_token(cookie_value)
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        try:
-            story = Story.objects.get(pk=id)
-        except Story.DoesNotExist:
-            return Response({'success':False ,'msg': 'Story does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        story = get_object_or_404(Story, pk=story_id)
+        commenter = get_object_or_404(User, pk=user_id)
 
         data = {
             'comment_author': user_id,
-            'story': id,
+            'story': story_id,
             'text': request.data.get('text')
         }
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+
+            # Create an activity for the story's author if the commenter is not the author
+            if story.author != commenter:
+                Activity.objects.create(
+                    user=story.author,
+                    activity_type='new_commented_on_story',
+                    target_story=story,
+                    target_user=commenter
+                )
+
+            # Create activities for other commenters on the story
+            previous_commenters = Comment.objects.filter(story=story).exclude(comment_author=commenter).values_list('comment_author', flat=True).distinct()
+            for previous_commenter_id in previous_commenters:
+                previous_commenter = User.objects.get(pk=previous_commenter_id)
+                if previous_commenter != story.author:
+                    Activity.objects.create(
+                        user=previous_commenter,
+                        activity_type='new_comment_on_comment',
+                        target_story=story,
+                        target_user=commenter
+                    )
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class StoryCommentsView(views.APIView):
     def get(self, request, id):
