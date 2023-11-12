@@ -44,6 +44,12 @@ function ActivityStream() {
     if (activityType === 'unfollowed_user') {
       formattedType = activityType.replace('_user', ' you!'); // 'story_liked' -> 'liked'
     }
+    if (activityType === 'new_commented_on_story') {
+      formattedType = activityType.replace('new_commented_on_story', ' Commented on your story!'); // 'story_liked' -> 'liked'
+    }
+    if (activityType === 'new_comment_on_comment') {
+      formattedType = activityType.replace('new_comment_on_comment', ' Commented on a story you have commented!'); // 'story_liked' -> 'liked'
+    }
 
     return formattedType.charAt(0).toUpperCase() + formattedType.slice(1); // Capitalize the first letter
   }
@@ -61,7 +67,7 @@ function ActivityStream() {
       // Navigate to the relevant page based on activity type
       if (activity.activity_type === 'followed_user' || activity.activity_type === 'unfollowed_user') {
         navigate(`/user-profile/${activity.target_user}`);
-      } else if (activity.activity_type === 'new_story' || activity.activity_type === 'story_liked' || activity.activity_type === 'story_unliked' ) {
+      } else if (activity.activity_type === 'new_story' || activity.activity_type === 'story_liked' || activity.activity_type === 'story_unliked' || activity.activity_type === 'new_commented_on_story' || activity.activity_type === 'new_comment_on_comment' ) {
         navigate(`/story/${activity.target_story}`);
       }
       // Add more cases as needed

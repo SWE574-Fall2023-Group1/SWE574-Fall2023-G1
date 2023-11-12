@@ -27,7 +27,7 @@ urlpatterns = [
     path('like/<int:pk>',LikeStoryView.as_view()),
     path('storyGet/<int:pk>', StoryDetailView.as_view()),
     path('storyGetbyAuthor/<int:user_id>', StoryAuthorView.as_view()),
-    path('comment/<int:id>',CreateCommentView.as_view(),name="comment"),
+    path('comment/<int:story_id>', CreateCommentView.as_view(), name='create_comment'),
     path('commentsByStory/<int:id>',StoryCommentsView.as_view()),
     path('followByUser/<int:id>',FollowUserView.as_view()),
     path('userFollowers',UserFollowersView.as_view()),
