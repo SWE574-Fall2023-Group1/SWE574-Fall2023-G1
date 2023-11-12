@@ -28,8 +28,8 @@ else
 	./hack/env-files.sh
 endif
 
-compose-up:
+compose-up: env-files
 	docker-compose up -d --build
 
-compose-down:
+compose-down: env-files
 	docker-compose down --remove-orphans
