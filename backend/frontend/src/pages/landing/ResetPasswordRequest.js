@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function ResetPasswordRequest() {
   const [email, setEmail] = useState('');
   const [showMessage, setShowMessage] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();

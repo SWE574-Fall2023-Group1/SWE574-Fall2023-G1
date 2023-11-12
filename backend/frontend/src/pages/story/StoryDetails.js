@@ -29,10 +29,10 @@ function StoryDetails() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState('');
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   // const PHOTOS_PER_PAGE = 3;
-  const COMMENTS_PER_PAGE = 5;
+  // const COMMENTS_PER_PAGE = 5;
 
   const options = {
     year: 'numeric',
