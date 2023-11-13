@@ -100,3 +100,25 @@ class PasswordResetToken(models.Model):
             self.token = get_random_string(length=64)
             self.expires_at = timezone.now() + timedelta(hours=24)
         super().save(*args, **kwargs)
+
+class Activity(models.Model):
+    TYPE_CHOICES = [
+        ('new_story', 'New Story Created'),
+        ('story_liked', 'Story Liked'),
+        ('story_unliked', 'Story Unliked'),
+        ('followed_user', 'Followed User'),
+        ('unfollowed_user', 'Unfollowed User'),
+        ('new_commented_on_story', 'Comment on Story'),
+        ('new_comment_on_comment', 'Comment a Story You Commented Before'),
+        # Add more types as needed
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
+    activity_type = models.CharField(max_length=30, choices=TYPE_CHOICES)
+    date = models.DateTimeField(auto_now_add=True)
+    target_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='user_activities')
+    target_story = models.ForeignKey(Story, on_delete=models.SET_NULL, null=True, blank=True, related_name='story_activities')
+    viewed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.activity_type}"

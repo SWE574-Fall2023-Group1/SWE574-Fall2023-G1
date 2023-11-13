@@ -18,6 +18,7 @@ import mainPhoto from '../../assets/images/homePage4.png'
 import ResetPasswordRequest from '../../pages/landing/ResetPasswordRequest';
 import ResetPasswordMain from '../../pages/landing/ResetPasswordMain';
 import LocationSearch from '../../pages/search/Timeline';
+import ActivityStream from '../../pages/activity/ActivityStream';
 
 
 function Header() {
@@ -65,6 +66,7 @@ function Header() {
                 <Link to="/story_search" className="nav-item nav-link">Search Stories</Link>
                 <Link to="/create-story" className="nav-item nav-link">Create Story</Link>
                 <Link to="/user-profile" className="nav-item nav-link">User Profile</Link>
+                <Link to="/activity-stream" className="nav-item nav-link">Activity Stream</Link>
                 <>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginLeft: '40vw' }}>
                   <UserSearch />
@@ -108,6 +110,7 @@ function Header() {
             <Route path="/story_search" element={<StorySearch />} />
             <Route path="/timeline/:locationJSON" element={<LocationSearch />} />
             <Route path="/edit-story/:storyId" element={<CreateStory />} />
+            <Route path="/activity-stream" element={<ActivityStream />} />
             </>
             )}
           </Routes>

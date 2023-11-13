@@ -180,7 +180,7 @@ JWT_AUTH = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
 
 backend_host_ip = env('BACKEND_HOST_IP')
@@ -226,4 +226,32 @@ SWAGGER_SETTINGS = {
             'type': 'basic'
         }
     }
- }
+}
+
+valid_log_levels = ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
+default_log_level = 'WARNING'
+try:
+    django_log_level = env("DJANGO_LOG_LEVEL", default=default_log_level).upper()
+    django_log_level = default_log_level if django_log_level not in valid_log_levels else django_log_level
+except ValueError:
+    django_log_level = default_log_level
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": django_log_level,
+            "propagate": False,
+        },
+    },
+}
