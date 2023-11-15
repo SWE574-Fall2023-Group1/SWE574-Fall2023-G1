@@ -25,7 +25,9 @@ function StoryDetails() {
   const [numLikes, setNumLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [userId, setUserId] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [username, setUsername] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState('');
   const [open, setOpen] = React.useState(false);
@@ -274,7 +276,7 @@ useEffect(() => {
 
   const handleSaveButtonClick = async () => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyUpdate/${id}`,
         { content: editedContent },
         { withCredentials: true }

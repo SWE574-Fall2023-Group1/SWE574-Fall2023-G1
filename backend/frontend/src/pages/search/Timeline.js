@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './Timeline.css';
 
 const LocationSearch = () => {
+  // eslint-disable-next-line no-unused-vars
   const [radiusDiff, setRadiusDiff] = useState(5);
   const [locationStories, setLocationStories] = useState([]);
   const [locationName, setLocationName] = useState('');
