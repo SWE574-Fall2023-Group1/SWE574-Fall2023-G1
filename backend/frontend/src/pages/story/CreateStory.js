@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import withAuth from '../../authCheck';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
-import {TextField, Select, MenuItem, InputLabel, FormControl, Button, List, ListItem, ListItemText,Checkbox, FormControlLabel } from '@mui/material';
+import {TextField, Select, MenuItem, InputLabel, FormControl, Button, Checkbox, FormControlLabel } from '@mui/material';
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
 import StoryMap from './StoryMap';
@@ -25,6 +25,7 @@ function CreateStory() {
   const [start_date, setStartDate] = useState(null);
   const [end_date, setEndDate] = useState(null);
   const [decade, setDecade] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);

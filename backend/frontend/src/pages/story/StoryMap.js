@@ -1,19 +1,22 @@
 // StoryMap.js
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import { GoogleMap, Autocomplete, Marker, useJsApiLoader, DrawingManager } from '@react-google-maps/api';
+import { GoogleMap, Autocomplete, Marker, useJsApiLoader } from '@react-google-maps/api';
 import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
 import { List, ListItem, ListItemText, Button, TextField } from '@mui/material';
 
 const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation }) => {
   const [locations, setLocations] = React.useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const autocompleteRef = useRef(null);
   const inputRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
   const [drawingManager, setDrawingManager] = useState(null);
   const libraries = ['places', 'drawing'];
   const [drawnItems, setDrawnItems] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: apiKey,
     libraries,
