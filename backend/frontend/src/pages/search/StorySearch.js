@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 import styles from './StorySearch.css';
 import './StorySearch.css';
 import withAuth from '../../authCheck';
-import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, List, ListItem, ListItemText, Switch, FormControlLabel } from '@mui/material';
+import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, Switch, FormControlLabel } from '@mui/material';
 
 const StorySearch = () => {
   const [titleSearch, setTitleSearch] = useState('');
@@ -14,6 +14,7 @@ const StorySearch = () => {
   const [stories, setStories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  // eslint-disable-next-line no-unused-vars
   const [pageSize, setPageSize] = useState(10);
   const [timeType, setTimeType] = useState('');
   const [seasonName, setSeasonName] = useState('');
@@ -25,6 +26,7 @@ const StorySearch = () => {
   const [decade, setDecade] = useState('');
   const [endDate, setEndDate] = useState('');
   const [locationSearch, setLocationSearch] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [markerPosition, setMarkerPosition] = useState({ lat: 0, lng: 0 }); // Separate state for marker position
   const [radiusDiff, setRadiusDiff] = useState(25);
@@ -39,6 +41,7 @@ const StorySearch = () => {
     navigate(`/story/${id}`);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleUserClick = async (id) => {
     navigate(`/user-profile/${id}`);
   };
