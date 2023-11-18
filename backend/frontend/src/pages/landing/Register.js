@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import './landing.css';
+import mainPhoto from '../../assets/images/homePage4.png'
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -14,6 +15,11 @@ function Register() {
   const [passwordAgain, setPasswordAgain] = useState('');
 
   const navigate = useNavigate();
+
+  const navigatetologin = (e) => {
+    navigate('/login');
+    return;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,33 +52,124 @@ function Register() {
   return (
     <>
       {/* <form onSubmit={handleSubmit}> */}
-        <h1>Register</h1>
-        <div>
-          {/* <label>Username:</label>
-          <input type="text" className="form-control" onChange={(e) => setUsername(e.target.value)} /> */}
-          <TextField id="register-username" label="Username" variant="outlined" onChange={(e) => setUsername(e.target.value)} />
+      <div style={{width: '100%', height: '100%', position: 'relative'}}>
+        <div style={{width: 960, height: 1005, left: 550, top: 0, position: 'absolute', background: 'white', borderTopLeftRadius: 40, borderTopRightRadius: 40, overflow: 'hidden'}}>
+            <div style={{width: 339, height: 53, left: 304, top: 140, position: 'absolute', color: '#2C2A2A', fontSize: 40, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>Create Account</div>
+                 {/* <button type="submit" className="btn btn-primary">Register</button> */}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  className="register-button"
+                  style={{
+                    width: 473,
+                    height: 53,
+                    paddingLeft: 40,
+                    paddingRight: 40,
+                    paddingTop: 15,
+                    paddingBottom: 15,
+                    left: 312,
+                    top: 570,
+                    position: 'absolute',
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 10,
+                    display: 'inline-flex',
+                    cursor: 'pointer', // Add this to make it look clickable
+                    fontSize: 16,
+                    fontFamily: 'Inter',
+                    fontWeight: '700',
+                    wordWrap: 'break-word',
+                    textTransform: 'none',
+                    backgroundColor: 'purple',
+                  }}
+                >
+                  Create Account
+              </Button>
+            <div style={{ width: 473, height: 59, left: 304, top: 240, position: 'absolute', background: 'white', borderRadius: 8, padding: 8 }}>
+                <TextField
+                    id="register-username"
+                    label="Username"
+                    onChange={(e) => setUsername(e.target.value)}
+                    style={{
+                        width: '100%',
+                        height: '100%', // Set height to '100%'
+                        color: '#7C7A7A',
+                        borderRadius: 8,
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: '500',
+                        wordWrap: 'break-word',
+                        boxSizing: 'border-box', // Include padding and borders in the total width and height
+                    }}
+                />
+            </div>
+              <div style={{width: 473, height: 59, left: 304, top: 320, position: 'absolute', background: 'white', borderRadius: 8, padding: 8}}>
+                    <TextField
+                            id="register-email"
+                            label="E-Mail"
+                            onChange={(e) => setEmail(e.target.value)}
+                            style={{
+                                width: '100%',
+                                height: '100%', // Set height to '100%'
+                                color: '#7C7A7A',
+                                borderRadius: 8,
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                fontWeight: '500',
+                                wordWrap: 'break-word',
+                                boxSizing: 'border-box', // Include padding and borders in the total width and height
+                            }}
+                    />
+                </div>
+            <div style={{width: 473, height: 59, left: 304, top: 400, position: 'absolute', background: 'white', borderRadius: 8, padding: 8}}>
+                {/* <label>Password:</label>
+                  <input type="password" className="form-control" onChange={(e) => setPassword(e.target.value)} /> */}
+                <TextField
+                                id="register-password"
+                                label="Password"
+                                type="password"
+                                onChange={(e) => setPassword(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    height: '100%', // Set height to '100%'
+                                    color: '#7C7A7A',
+                                    borderRadius: 8,
+                                    fontSize: 16,
+                                    fontFamily: 'Inter',
+                                    fontWeight: '500',
+                                    wordWrap: 'break-word',
+                                    boxSizing: 'border-box', // Include padding and borders in the total width and height
+                                }}
+                      />
+            </div>
+            <div style={{width: 473, height: 59, left: 304, top: 480, position: 'absolute', background: 'white', borderRadius: 8, padding: 8}} >
+                  {/* <label>Password Again:</label>
+                   <input type="password" className="form-control" onChange={(e) => setPasswordAgain(e.target.value)} /> */}
+                  <TextField
+                                      id="register-password-again"
+                                      label="Password Again"
+                                      type="password"
+                                      onChange={(e) => setPasswordAgain(e.target.value)}
+                                      style={{
+                                          width: '100%',
+                                          height: '100%', // Set height to '100%'
+                                          color: '#7C7A7A',
+                                          borderRadius: 8,
+                                          fontSize: 16,
+                                          fontFamily: 'Inter',
+                                          fontWeight: '500',
+                                          wordWrap: 'break-word',
+                                          boxSizing: 'border-box', // Include padding and borders in the total width and height
+                                      }}
+                            />
+            </div>
+            <div style={{left: 307, top: 632, position: 'absolute'}}><span style={{color: '#7C7A7A', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', wordWrap: 'break-word' }} >Already have an account? </span><button onClick= {navigatetologin} style= {{color: '#AF49FF', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', wordWrap: 'break-word', cursor: 'pointer', border: 'none', background:'none'}} >Login</button></div>
         </div>
-        <br/>
-        <div>
-          {/* <label>Email:</label>
-          <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} /> */}
-          <TextField id="register-email" label="E-Mail" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <br/>
-        <div>
-          {/* <label>Password:</label>
-          <input type="password" className="form-control" onChange={(e) => setPassword(e.target.value)} /> */}
-          <TextField id="register-password" label="Password" variant="outlined" type='password' onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        <br/>
-        <div>
-          {/* <label>Password Again:</label>
-          <input type="password" className="form-control" onChange={(e) => setPasswordAgain(e.target.value)} /> */}
-          <TextField id="register-password-again" label="Password Again" variant="outlined" type='password' onChange={(e) => setPasswordAgain(e.target.value)} />
-        </div>
-        <br/>
-        {/* <button type="submit" className="btn btn-primary">Register</button> */}
-        <Button variant="contained" onClick={handleSubmit} className="register-button" >Register</Button>
+        <img style={{width: 449, height: 400, left: 310, top: 200, position: 'absolute'}} src={mainPhoto} />
+      </div>
+
       {/* </form> */}
       <ToastContainer />
     </>
