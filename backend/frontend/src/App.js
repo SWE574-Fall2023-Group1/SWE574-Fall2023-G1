@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from 'react';
+import React from 'react';
 import Header from './components/header/header';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 

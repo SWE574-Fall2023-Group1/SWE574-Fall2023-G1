@@ -44,11 +44,8 @@ const UserProfileOthers = () => {
       try {
 
         const currentUser = await getCurrentUser();
-
-        if (Number(id) === currentUser) {
+        if (Number(id) === currentUser.user_id) {
           setIsMe(true);
-          //navigate('/user-profile');
-          //return;
         }
 
         const userDetailsResponse = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userDetails/${id}`, {
@@ -82,8 +79,9 @@ const UserProfileOthers = () => {
         console.log('Followers response:', followersResponse.data);
 
         const isCurrentUserFollowing = followersResponse.data.some(
-            (follower) => follower.id === currentUser
+            (follower) => follower.id === currentUser.user_id
         );
+
         setIsFollowing(isCurrentUserFollowing);
 
         setFollowerCount(followersResponse.data.length);
@@ -110,12 +108,12 @@ const UserProfileOthers = () => {
         headers: {},
         withCredentials: true,
       });
-      if (response.data === "followed") {
+      if (response.data.msg === 'Followed') {
+        setFollowerCount(followerCount + 1);
         setIsFollowing(true);
-        setFollowerCount((prevCount) => prevCount + 1);
-      } else if (response.data === "unfollowed") {
+      } else {
+        setFollowerCount(followerCount - 1);
         setIsFollowing(false);
-        setFollowerCount((prevCount) => prevCount - 1);
       }
     } catch (error) {
       console.error('Error following/unfollowing user:', error);

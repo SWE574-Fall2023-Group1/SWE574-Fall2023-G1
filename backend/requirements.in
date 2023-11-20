@@ -25,3 +25,4 @@ django-storages
 Pillow
 django-rest-swagger
 drf-yasg
+djangorestframework-gis
