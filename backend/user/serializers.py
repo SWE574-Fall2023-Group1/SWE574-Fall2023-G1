@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from user.models import User,Story,Location,Comment #, Date, SpecificDate, Decade, Season
+from user.models import User,Story,Location,Comment,Activity #, Date, SpecificDate, Decade, Season
 from rest_framework.fields import CharField
 from .functions import *
 import urllib.parse
@@ -235,7 +235,6 @@ class CommentGetSerializer(serializers.ModelSerializer):
         ret.update({'success': True, 'msg': 'Comment details got.'})
         return ret
 
-
 class StoryUpdateSerializer(serializers.ModelSerializer):
     location_ids = LocationSerializer(many=True)
 
@@ -304,3 +303,12 @@ class StoryUpdateSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         ret.update({'success': True, 'msg': 'Story ok.'})
         return ret
+
+class ActivitySerializer(serializers.ModelSerializer):
+    user_username = serializers.CharField(source='user.username', read_only=True)
+    target_user_username = serializers.CharField(source='target_user.username', read_only=True, allow_null=True)
+    target_story_title = serializers.CharField(source='target_story.title', read_only=True, allow_null=True)
+
+    class Meta:
+        model = Activity
+        fields = ['id', 'user', 'user_username', 'activity_type', 'date', 'viewed', 'target_user', 'target_user_username', 'target_story', 'target_story_title']
