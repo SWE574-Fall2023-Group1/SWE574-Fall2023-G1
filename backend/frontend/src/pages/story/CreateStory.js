@@ -9,11 +9,17 @@ import {TextField, Select, MenuItem, InputLabel, FormControl, Button, List, List
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
 import StoryMap from './StoryMap';
+let postHeader = null;
 
 function CreateStory() {
 
   const { storyId } = useParams(); // Get story ID from URL
   const isEditMode = storyId != null;
+  if (isEditMode) {
+    postHeader = 'Edit Story';
+  } else {
+    postHeader = 'Create Story';
+  }
 
   useEffect(() => {
     if (isEditMode) {
@@ -171,7 +177,7 @@ function CreateStory() {
 
   return (
     <div>
-      <h1 className="big-heading">Create Story</h1>
+      <h1 className="big-heading">{postHeader}</h1>
       <div className='create-story-container'>
       <div className="create-story-content">
           <form>
@@ -378,7 +384,7 @@ function CreateStory() {
                 </div>
             }
           <br/>
-          <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Create Story</Button>
+          <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
           </form>
           </div>
 
