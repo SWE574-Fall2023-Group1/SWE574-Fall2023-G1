@@ -97,6 +97,10 @@ function CreateStory() {
     });
   };
 
+  const handleUpdateLocations = (updatedLocations) => {
+    setLocations(updatedLocations);
+  };
+
   const handleRemoveLocation = (index) => {
     const updatedLocations = location_ids.filter((_, i) => i !== index);
     setLocations(updatedLocations); // Update the location_ids state
@@ -354,7 +358,8 @@ function CreateStory() {
                 zoom={1}
                 apiKey={googleMapsApiKey}
                 onAddLocation={handleAddLocation}
-                onRemoveLocation={handleRemoveLocation} // Pass the callback to StoryMap
+                onRemoveLocation={handleRemoveLocation}
+                onUpdateLocations={handleUpdateLocations}
               />
           </div>
 
