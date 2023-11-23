@@ -33,3 +33,7 @@ compose-up: env-files
 
 compose-down: env-files
 	docker-compose down --remove-orphans
+
+up: compose-up
+
+down: compose-down
