@@ -32,7 +32,7 @@ MEDIA_URL = '/'
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (env("DJANGO_DEBUG", default="true").lower() == "true")
 
 ALLOWED_HOSTS = [
     'localhost',
