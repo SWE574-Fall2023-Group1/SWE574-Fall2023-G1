@@ -290,7 +290,8 @@ class CreateCommentView(views.APIView):
         commenter = get_object_or_404(User, pk=user_id)
 
         data = {
-            'comment_author': user_id,
+            'comment_author_id': user_id,
+            'comment_author': commenter.username,
             'story': story_id,
             'text': request.data.get('text')
         }
