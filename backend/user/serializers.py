@@ -209,13 +209,33 @@ class StorySerializer(serializers.ModelSerializer):
         return ret
 
 class CommentSerializer(serializers.ModelSerializer):
+    comment_author = serializers.CharField(write_only=True)
+
     class Meta:
         model = Comment
         fields = ['id', 'comment_author', 'story', 'text', 'date']
 
+    def validate_comment_author(self, value):
+        try:
+            User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User with this username does not exist.")
+        return value
+
+    def create(self, validated_data):
+        # Use the username to find the User instance
+        username = validated_data.pop('comment_author')
+        user = User.objects.get(username=username)
+
+        # Create the Comment instance with the correct User
+        comment = Comment.objects.create(comment_author=user, **validated_data)
+        return comment
+
     def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret.update({'success': True, 'msg': 'Comment create.'})
+        # Get the detailed representation using CommentGetSerializer
+        ret = CommentGetSerializer(instance).data
+        # Add the success and message fields
+        ret.update({'success': True, 'msg': 'Comment created.'})
         return ret
 
 class CommentGetSerializer(serializers.ModelSerializer):
@@ -235,6 +255,7 @@ class CommentGetSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         ret.update({'success': True, 'msg': 'Comment details got.'})
         return ret
+
 class ActivitySerializer(serializers.ModelSerializer):
     user_username = serializers.CharField(source='user.username', read_only=True)
     target_user_username = serializers.CharField(source='target_user.username', read_only=True, allow_null=True)

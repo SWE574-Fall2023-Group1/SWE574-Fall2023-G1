@@ -289,9 +289,9 @@ class CreateCommentView(views.APIView):
         story = get_object_or_404(Story, pk=story_id)
         commenter = get_object_or_404(User, pk=user_id)
 
+
         data = {
-            'comment_author_id': user_id,
-            'comment_author': commenter.username,
+            'comment_author': commenter.username,  # Use only the username here
             'story': story_id,
             'text': request.data.get('text')
         }
@@ -309,7 +309,7 @@ class CreateCommentView(views.APIView):
                 )
 
             # Create activities for other commenters on the story
-            previous_commenters = Comment.objects.filter(story=story).exclude(comment_author=commenter).values_list('comment_author', flat=True).distinct()
+            previous_commenters = Comment.objects.filter(story=story).exclude(comment_author=commenter).values_list('comment_author_id', flat=True).distinct()
             for previous_commenter_id in previous_commenters:
                 previous_commenter = User.objects.get(pk=previous_commenter_id)
                 if previous_commenter != story.author:
@@ -319,7 +319,7 @@ class CreateCommentView(views.APIView):
                         target_story=story,
                         target_user=commenter
                     )
-
+            logger.warning(f"Serializer: {serializer.data}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
