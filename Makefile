@@ -8,14 +8,18 @@ help:
 	@echo "--------------------------------------------------------------------"
 	@echo "        This Makefile assumes you have Docker and Docker Compose    "
 	@echo "--------------------------------------------------------------------"
-	@echo "  targets: compose-up, compose-down, env-files, help                "
+	@echo "  targets: up, down, env-files, pre-commit, help                    "
 	@echo "--------------------------------------------------------------------"
 	@echo "    Local system up:                                                "
+	@echo "          > make up;                                                "
 	@echo "          > make compose-up;                                        "
 	@echo "    Local system down:                                              "
+	@echo "          > make down;                                              "
 	@echo "          > make compose-down;                                      "
 	@echo "    Local environment files:                                        "
 	@echo "          > make env-files;                                         "
+	@echo "    Run pre-commit for all files:                                   "
+	@echo "          > make pre-commit;                                        "
 	@echo "    Help:                                                           "
 	@echo "          > make;                                                   "
 	@echo "          > make help;                                              "
@@ -33,3 +37,11 @@ compose-up: env-files
 
 compose-down: env-files
 	docker-compose down --remove-orphans
+
+up: compose-up
+
+down: compose-down
+
+pre-commit:
+	@pre-commit install
+	pre-commit run --all-files
