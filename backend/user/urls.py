@@ -27,7 +27,7 @@ urlpatterns = [
     path('like/<int:pk>',LikeStoryView.as_view()),
     path('storyGet/<int:pk>', StoryDetailView.as_view()),
     path('storyGetbyAuthor/<int:user_id>', StoryAuthorView.as_view()),
-    path('comment/<int:id>',CreateCommentView.as_view(),name="comment"),
+    path('comment/<int:story_id>', CreateCommentView.as_view(), name='create_comment'),
     path('commentsByStory/<int:id>',StoryCommentsView.as_view()),
     path('followByUser/<int:id>',FollowUserView.as_view()),
     path('userFollowers',UserFollowersView.as_view()),
@@ -50,4 +50,8 @@ urlpatterns = [
     path("passwordReset/<token>/<uidb64>", ResetPassword.as_view()),
     path('api/swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('storySearchByLocation', SearchStoryByLocationView.as_view()),
+    path('activities', ActivityStreamView.as_view(), name='activity-stream'),
+    path('activities/<int:activity_id>', ActivityStreamView.as_view(), name='activity-detail'),
+
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

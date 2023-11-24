@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 from datetime import timedelta
 from django.utils import timezone
 from ckeditor.fields import RichTextField
+from django.contrib.gis.db import models as gis_models
 
 class User(AbstractUser):
     email = models.EmailField(verbose_name="e-mail", max_length = 100, unique = True)
@@ -18,8 +19,11 @@ class User(AbstractUser):
 
 class Location(models.Model):
     name = models.CharField(max_length=255)
-    latitude = models.DecimalField(max_digits=19, decimal_places=10)
-    longitude = models.DecimalField(max_digits=19, decimal_places=10)
+    point = gis_models.PointField(geography=True, blank=True, null=True)
+    line = gis_models.LineStringField(geography=True, blank=True, null=True)
+    polygon = gis_models.PolygonField(geography=True, blank=True, null=True)  # Can be used for rectangles too
+    circle = gis_models.PointField(geography=True, blank=True, null=True)  # Represented as a point with radius
+    radius = models.DecimalField(max_digits=19, decimal_places=10, blank=True, null=True)  # Used with circle
 
     def __str__(self):
         return self.name
@@ -96,3 +100,25 @@ class PasswordResetToken(models.Model):
             self.token = get_random_string(length=64)
             self.expires_at = timezone.now() + timedelta(hours=24)
         super().save(*args, **kwargs)
+
+class Activity(models.Model):
+    TYPE_CHOICES = [
+        ('new_story', 'New Story Created'),
+        ('story_liked', 'Story Liked'),
+        ('story_unliked', 'Story Unliked'),
+        ('followed_user', 'Followed User'),
+        ('unfollowed_user', 'Unfollowed User'),
+        ('new_commented_on_story', 'Comment on Story'),
+        ('new_comment_on_comment', 'Comment a Story You Commented Before'),
+        # Add more types as needed
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
+    activity_type = models.CharField(max_length=30, choices=TYPE_CHOICES)
+    date = models.DateTimeField(auto_now_add=True)
+    target_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='user_activities')
+    target_story = models.ForeignKey(Story, on_delete=models.SET_NULL, null=True, blank=True, related_name='story_activities')
+    viewed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.activity_type}"

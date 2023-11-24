@@ -1,12 +1,13 @@
 # serializers.py
 from rest_framework import serializers
-from user.models import User,Story,Location,Comment #, Date, SpecificDate, Decade, Season
+from user.models import User,Story,Location,Comment,Activity #, Date, SpecificDate, Decade, Season
 from rest_framework.fields import CharField
 from .functions import *
 import urllib.parse
 from django.contrib.auth.hashers import make_password
 import os
-
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from django.contrib.gis.geos import Point, LineString, Polygon, LinearRing
 
 class UserRegisterSerializer(serializers.ModelSerializer):
 
@@ -124,12 +125,14 @@ class UserPhotoSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'name', 'latitude', 'longitude']
+        fields = ['id', 'name', 'point', 'line', 'polygon', 'circle', 'radius']
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret.update({'success': True, 'msg': 'Location got.'})
+        ret.update({'success': True, 'msg': 'Location ok.'})
         return ret
+
+
 
 class StorySerializer(serializers.ModelSerializer):
     location_ids = LocationSerializer(many=True)
@@ -163,19 +166,42 @@ class StorySerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def create(self, validated_data, **kwargs):
-        #location_data = validated_data.pop('location_ids')
-        #locations = [Location.objects.create(**location) for location in location_data]
-
+    def create(self, validated_data):
         location_data = validated_data.pop('location_ids')
+        locations = []
         for location in location_data:
-            location['name'] = urllib.parse.quote(location['name'], safe='')
-            locations = [Location.objects.create(**location) for location in location_data]
+            loc_instance = None
+            if location.get('point'):
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    point=Point(location['point']['coordinates'], srid=4326)
+                )
+            elif location.get('line'):
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    line=LineString(location['line']['coordinates'], srid=4326)
+                )
+            elif location.get('polygon'):
+                # Assuming location['polygon']['coordinates'] is an array containing one array of coordinates
+                outer_ring_coords = location['polygon']['coordinates'][0]
+                outer_ring = LinearRing(outer_ring_coords)
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    polygon=Polygon(outer_ring, srid=4326)
+                )
+            elif location.get('circle'):
+                loc_instance = Location.objects.create(
+                    name=location['name'],
+                    circle=Point(location['circle']['coordinates'], srid=4326),
+                    radius=location['radius']
+                )
+            if loc_instance:
+                locations.append(loc_instance)
 
         story = Story.objects.create(**validated_data)
         story.location_ids.set(locations)
-
         return story
+
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -183,13 +209,33 @@ class StorySerializer(serializers.ModelSerializer):
         return ret
 
 class CommentSerializer(serializers.ModelSerializer):
+    comment_author = serializers.CharField(write_only=True)
+
     class Meta:
         model = Comment
         fields = ['id', 'comment_author', 'story', 'text', 'date']
 
+    def validate_comment_author(self, value):
+        try:
+            User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User with this username does not exist.")
+        return value
+
+    def create(self, validated_data):
+        # Use the username to find the User instance
+        username = validated_data.pop('comment_author')
+        user = User.objects.get(username=username)
+
+        # Create the Comment instance with the correct User
+        comment = Comment.objects.create(comment_author=user, **validated_data)
+        return comment
+
     def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret.update({'success': True, 'msg': 'Comment create.'})
+        # Get the detailed representation using CommentGetSerializer
+        ret = CommentGetSerializer(instance).data
+        # Add the success and message fields
+        ret.update({'success': True, 'msg': 'Comment created.'})
         return ret
 
 class CommentGetSerializer(serializers.ModelSerializer):
@@ -209,3 +255,12 @@ class CommentGetSerializer(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         ret.update({'success': True, 'msg': 'Comment details got.'})
         return ret
+
+class ActivitySerializer(serializers.ModelSerializer):
+    user_username = serializers.CharField(source='user.username', read_only=True)
+    target_user_username = serializers.CharField(source='target_user.username', read_only=True, allow_null=True)
+    target_story_title = serializers.CharField(source='target_story.title', read_only=True, allow_null=True)
+
+    class Meta:
+        model = Activity
+        fields = ['id', 'user', 'user_username', 'activity_type', 'date', 'viewed', 'target_user', 'target_user_username', 'target_story', 'target_story_title']

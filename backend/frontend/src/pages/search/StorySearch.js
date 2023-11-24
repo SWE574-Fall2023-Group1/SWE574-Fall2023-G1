@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 import styles from './StorySearch.css';
 import './StorySearch.css';
 import withAuth from '../../authCheck';
-import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, List, ListItem, ListItemText, Switch, FormControlLabel } from '@mui/material';
+import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, Switch, FormControlLabel } from '@mui/material';
 
 const StorySearch = () => {
   const [titleSearch, setTitleSearch] = useState('');
@@ -14,6 +14,7 @@ const StorySearch = () => {
   const [stories, setStories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  // eslint-disable-next-line no-unused-vars
   const [pageSize, setPageSize] = useState(10);
   const [timeType, setTimeType] = useState('');
   const [seasonName, setSeasonName] = useState('');
@@ -25,8 +26,9 @@ const StorySearch = () => {
   const [decade, setDecade] = useState('');
   const [endDate, setEndDate] = useState('');
   const [locationSearch, setLocationSearch] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
-  const [markerPosition, setMarkerPosition] = useState(mapCenter);
+  const [markerPosition, setMarkerPosition] = useState({ lat: 0, lng: 0 }); // Separate state for marker position
   const [radiusDiff, setRadiusDiff] = useState(25);
   const [dateDiff, setDateDiff] = useState(2);
   const [showLocationSearch, setShowLocationSearch] = useState(false);
@@ -39,16 +41,25 @@ const StorySearch = () => {
     navigate(`/story/${id}`);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleUserClick = async (id) => {
     navigate(`/user-profile/${id}`);
   };
 
   const handleStoryClickWithLocation = async (locationSearch) => {
-    const locationJSON = JSON.stringify(locationSearch);
 
+    // Extract latitude and longitude from the coordinates array
+    const latitude = locationSearch.geometry.coordinates[1];
+    const longitude = locationSearch.geometry.coordinates[0];
+
+    // Construct the locationJSON in the desired format
+    const locationJSON = JSON.stringify({
+      latitude: latitude,
+      longitude: longitude,
+      type: locationSearch.geometry.type
+    });
 
     const url = `/timeline/${locationJSON}`;
-    //console.log(url); // Add this line
 
     navigate(url);
   };
@@ -79,6 +90,8 @@ const StorySearch = () => {
     }
 
     try {
+      const locationParam = locationSearch && locationSearch.geometry ? JSON.stringify(locationSearch.geometry) : null;
+
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearch`, {
         params: {
           title: titleSearch,
@@ -88,7 +101,7 @@ const StorySearch = () => {
           size: pageSize,
           time_type: timeType,
           time_value: JSON.stringify(timeValueObj),
-          location: JSON.stringify(locationSearch),
+          location: locationParam,
           radius_diff: radiusDiff,
           date_diff: dateDiff,
         },
@@ -267,41 +280,45 @@ const StorySearch = () => {
   };
 
   const handleLocationSelect = () => {
-    if (!autocompleteRef.current) {
-      return;
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
+      if (place && place.geometry) {
+        const locationData = {
+          geometry: {
+            type: "Point",
+            coordinates: [
+              place.geometry.location.lng(),
+              place.geometry.location.lat(),
+            ],
+          },
+          name: place.name,
+        };
+
+        setLocationSearch(locationData);
+        setMapCenter({
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        });
+        setMarkerPosition({
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        });
+      }
     }
-
-    const place = autocompleteRef.current.getPlace();
-
-    if (!place || !place.geometry || !place.geometry.location) {
-      return;
-    }
-
-    const locationData = {
-      name: place.name,
-      latitude: Number(place.geometry.location.lat().toFixed(6)),
-      longitude: Number(place.geometry.location.lng().toFixed(6)),
-    };
-
-    setLocationSearch(locationData);
-    setMapCenter({ lat: locationData.latitude, lng: locationData.longitude });
   };
 
-  useEffect(() => {
-    setMarkerPosition(mapCenter);
-  }, [mapCenter]);
+  // useEffect(() => {
+  //   setMarkerPosition(mapCenter);
+  // }, [mapCenter]);
 
-  const handleMarker = (e) => {
+  const handleMarker = (event) => {
     const newPosition = {
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
     };
+
+    setLocationSearch({ geometry: { type: "Point", coordinates: [newPosition.lng, newPosition.lat] } });
     setMarkerPosition(newPosition);
-    setLocationSearch({
-      name: 'Custom Location',
-      latitude: Number(newPosition.lat.toFixed(6)),
-      longitude: Number(newPosition.lng.toFixed(6)),
-    });
   };
 
   const renderDateDiffInput = () => {
@@ -447,6 +464,17 @@ const StorySearch = () => {
             onClick={(e) => handleMarker(e)}
           >
           </GoogleMap>
+          {locationSearch && (
+              <>
+              {console.log('Marker Position:', {
+                lat: locationSearch.geometry.coordinates[1],
+                lng: locationSearch.geometry.coordinates[0],
+              })}
+              <Marker
+                position={{markerPosition}}
+              />
+            </>
+            )}
         </div>
         <br />
         <Button variant="contained" type="submit" className="btn btn-primary middle">Search Story</Button>

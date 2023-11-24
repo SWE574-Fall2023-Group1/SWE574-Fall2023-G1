@@ -32,7 +32,7 @@ MEDIA_URL = '/'
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (env("DJANGO_DEBUG", default="true").lower() == "true")
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -75,7 +75,6 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
         'APP_DIRS': True,
         'DIRS': [os.path.join(BASE_DIR, 'frontend')],
         'OPTIONS': {
@@ -97,7 +96,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': env("DB_NAME"),
         'USER': env("DB_USER"),
         'PASSWORD': env("DB_PASSWORD"),
@@ -143,9 +142,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'dist'),
-]
+STATICFILES_DIRS = []
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -181,7 +179,7 @@ JWT_AUTH = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE']
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
 
 backend_host_ip = env('BACKEND_HOST_IP')
@@ -227,4 +225,32 @@ SWAGGER_SETTINGS = {
             'type': 'basic'
         }
     }
- }
+}
+
+valid_log_levels = ['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG']
+default_log_level = 'WARNING'
+try:
+    django_log_level = env("DJANGO_LOG_LEVEL", default=default_log_level).upper()
+    django_log_level = default_log_level if django_log_level not in valid_log_levels else django_log_level
+except ValueError:
+    django_log_level = default_log_level
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": django_log_level,
+            "propagate": False,
+        },
+    },
+}

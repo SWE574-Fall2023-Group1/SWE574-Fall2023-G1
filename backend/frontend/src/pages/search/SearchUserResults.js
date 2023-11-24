@@ -4,7 +4,7 @@ import { useParams,useNavigate } from 'react-router-dom';
 import styles from './SearchUserResults.module.css';
 
 
-function SearchUserResults({  }) {
+function SearchUserResults() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const { searchQuery } = useParams();

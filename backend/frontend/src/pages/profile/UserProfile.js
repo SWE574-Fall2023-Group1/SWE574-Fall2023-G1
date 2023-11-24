@@ -52,6 +52,7 @@ const UserProfile = () => {
         withCredentials: true,
       });
 
+
       // Directly set the URL from the response to state
       setProfilePhotoUrl(response.data.photo_url);
 
@@ -64,6 +65,7 @@ const UserProfile = () => {
       }
     }
   };
+  console.log(profilePhotoUrl)
 
   const fetchUserStories = async (user) => {
 
@@ -94,6 +96,8 @@ const UserProfile = () => {
   };
 
   const handleProfilePhotoChange = async (event) => {
+    event.preventDefault(); // Prevent the default behavior of the file input
+
     const file = event.target.files[0];
     if (!file) return;
 
@@ -107,7 +111,8 @@ const UserProfile = () => {
         },
         withCredentials: true,
       });
-      fetchProfilePhoto();
+      await fetchProfilePhoto(); // Wait for the photo to be updated
+
     } catch (error) {
       console.error('Error updating profile photo:', error);
     }
@@ -115,14 +120,16 @@ const UserProfile = () => {
 
   const handleRemoveProfilePhoto = async () => {
     try {
-      await axios.delete(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
-        withCredentials: true,
-      });
-      setProfilePhotoUrl(null);
+        console.log("Removing profile photo..."); // Add this line for debugging
+        await axios.delete(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
+            withCredentials: true,
+        });
+        setProfilePhotoUrl(null);
+        window.location.reload(); // Reload the page
     } catch (error) {
-      console.error('Error removing profile photo:', error);
+        console.error('Error removing profile photo:', error);
     }
-  };
+};
 
   const handleProfileBioChange = async () => {
     try {
@@ -143,38 +150,68 @@ const UserProfile = () => {
   return (
     <div>
       <h1>{user.username}'s Profile</h1>
+
       {profilePhotoUrl && (
         <img
-          src={profilePhotoUrl}
-          alt={`${user.username}'s profile`}
-          className="profile-photo"
+        src={profilePhotoUrl}
+        alt={`${user.username}'s profile`}
+        className="profile-photo"
         />
-      )}
-      <div>
-        <button
-          type="button"
-          className="profile-photo-button"
-          onClick={() => document.getElementById('profile-photo-input').click()}
-        >
-          Upload Profile Photo
-        </button>
-        <span id="profile-photo-filename"></span>
-        <input
-          id="profile-photo-input"
-          type="file"
-          accept="image/jpeg, image/png"
-          onChange={handleProfilePhotoChange}
-        />
-      </div>
-      <br/>
-      <div>
-        <button
-        type="button"
-        className="profile-photo-delete-button"
-        onClick={handleRemoveProfilePhoto}>
-        Remove Profile Photo
-        </button>
-      </div>
+        )}
+
+
+
+{profilePhotoUrl !== defaultProfilePhoto && (
+  <div>
+
+
+<div>
+    <button
+      type="button"
+      className="profile-photo-change-button"
+      onClick={() => document.getElementById('profile-photo-input').click()}
+    >
+      Change Profile Photo
+    </button>
+    <span id="profile-photo-filename"></span>
+    <input
+      id="profile-photo-input"
+      type="file"
+      accept="image/jpeg, image/png"
+      onChange={handleProfilePhotoChange}
+    />
+  </div>
+
+  <div>
+    <button
+      type="button"
+      className="profile-photo-delete-button"
+      onClick={handleRemoveProfilePhoto}
+    >
+      Remove Profile Photo
+    </button>
+    </div>
+  </div>
+)}
+
+{profilePhotoUrl === defaultProfilePhoto && (
+  <div>
+    <button
+      type="button"
+      className="profile-photo-button"
+      onClick={() => document.getElementById('profile-photo-input').click()}
+    >
+      Upload Profile Photo
+    </button>
+    <span id="profile-photo-filename"></span>
+    <input
+      id="profile-photo-input"
+      type="file"
+      accept="image/jpeg, image/png"
+      onChange={handleProfilePhotoChange}
+    />
+  </div>
+)}
 
       {isEditingBio ? (
           <div>
