@@ -106,7 +106,7 @@ function CreateStory() {
     setLocations(updatedLocations); // Update the location_ids state
   };
 
-  const editorPlaceholder = firstClick ? 'Enter your content here' : '';
+  const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -139,7 +139,7 @@ function CreateStory() {
 
   return (
     <div>
-      <h1 className="big-heading">Create Story</h1>
+      <h1 className="big-heading">Create New Memory</h1>
       <div className='create-story-container'>
       <div className="create-story-content">
           <form>
@@ -172,7 +172,7 @@ function CreateStory() {
             <div>
               <TextField
                 variant="outlined"
-                placeholder="Enter tags separating with ','"
+                placeholder="Enter tags separated by commas"
                 className='long-boxes'
                 label="Tags"
                 value={story_tags}
@@ -346,7 +346,7 @@ function CreateStory() {
                 </div>
             }
           <br/>
-          <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Create Story</Button>
+          <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
           </form>
           </div>
 
