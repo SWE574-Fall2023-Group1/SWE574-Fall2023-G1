@@ -346,22 +346,24 @@ function CreateStory() {
                 </div>
             }
           <br/>
+          <div className='create-story-map'>
+
+            <StoryMap
+                  mapContainerStyle={{ height: '400px', width: '100%' }}
+                  initialCenter={mapCenter}
+                  zoom={1}
+                  apiKey={googleMapsApiKey}
+                  onAddLocation={handleAddLocation}
+                  onRemoveLocation={handleRemoveLocation}
+                  onUpdateLocations={handleUpdateLocations}
+                />
+          </div>
+          <br/>
           <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
           </form>
           </div>
 
-          <div className='create-story-map'>
 
-          <StoryMap
-                mapContainerStyle={{ height: '400px', width: '100%' }}
-                initialCenter={mapCenter}
-                zoom={1}
-                apiKey={googleMapsApiKey}
-                onAddLocation={handleAddLocation}
-                onRemoveLocation={handleRemoveLocation}
-                onUpdateLocations={handleUpdateLocations}
-              />
-          </div>
 
         </div>
 
