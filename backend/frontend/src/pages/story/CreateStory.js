@@ -169,6 +169,7 @@ function CreateStory() {
             {/* </div> */}
             <br/>
             <br/>
+            <br/>
             <div>
               <TextField
                 variant="outlined"
@@ -362,6 +363,8 @@ function CreateStory() {
           <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
           </form>
           </div>
+          <br/>
+          <br/>
 
 
 
