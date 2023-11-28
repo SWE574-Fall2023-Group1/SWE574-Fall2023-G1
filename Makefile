@@ -45,3 +45,6 @@ down: compose-down
 pre-commit:
 	@pre-commit install
 	pre-commit run --all-files
+
+git-stats:
+	git log | git shortlog -sne
