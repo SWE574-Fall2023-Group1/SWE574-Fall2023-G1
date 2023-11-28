@@ -1,0 +1,20 @@
+name: Django test pipeline
+on:
+  pull_request:
+  push:
+    branches:
+      - main, dev
+  workflow_dispatch:
+jobs:
+    django-test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        - name: "[CI] Django test"
+          run: |
+            make
+            make up
+            docker compose exec -T backend python manage.py test
+            make git-stats
