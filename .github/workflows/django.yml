@@ -13,10 +13,9 @@ jobs:
           with:
             fetch-depth: 0
         - name: "[CI] Django test"
-          env:
-            DJANGO_DATABASE: test-pipeline
           run: |
             make
+            echo "DJANGO_DATABASE=test-pipeline" >> ./backend/backend/.env.sample
             make up
             docker compose exec -T backend python manage.py test
             make git-stats
