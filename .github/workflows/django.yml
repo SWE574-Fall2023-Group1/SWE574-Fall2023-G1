@@ -13,6 +13,8 @@ jobs:
           with:
             fetch-depth: 0
         - name: "[CI] Django test"
+          env:
+            DJANGO_DATABASE: test-pipeline
           run: |
             make
             make up
