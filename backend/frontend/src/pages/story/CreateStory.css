@@ -39,8 +39,8 @@
 }
 
 .custom-input {
-  width: 500px;
-  height: 200px;
+  width: 1000px;
+  height: 250px;
   resize: both;
   /* overflow: auto;  */
   resize: none;
