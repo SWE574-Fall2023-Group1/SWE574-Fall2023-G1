@@ -348,7 +348,7 @@ function CreateStory() {
             }
           <br/>
           <div className='create-story-map'>
-
+          <text>You can add locations by using the map or typing in the search bar.</text>
             <StoryMap
                   mapContainerStyle={{ height: '400px', width: '100%' }}
                   initialCenter={mapCenter}
@@ -362,7 +362,7 @@ function CreateStory() {
           <br/>
           <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
           <br/>
-          <text>Your can edit your memory as many times as you want after posting.</text>
+          <text>You can edit your memory as many times as you want after posting.</text>
           <br/>
           <br/>
           </form>
