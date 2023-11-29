@@ -142,6 +142,7 @@ function CreateStory() {
       <h1 className="big-heading">Create New Memory</h1>
       <div className='create-story-container'>
       <div className="create-story-content">
+        <div className="formBackground">
           <form>
             {/* <div className="form-group"> */}
               <TextField
@@ -367,7 +368,7 @@ function CreateStory() {
           <br/>
           </form>
           </div>
-
+        </div>
         </div>
 
     </div>

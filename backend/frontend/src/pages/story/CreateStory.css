@@ -73,3 +73,9 @@
 .long-boxes .MuiOutlinedInput-root {
   background-color: white;
 }
+
+.formBackground {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 10px;
+}
