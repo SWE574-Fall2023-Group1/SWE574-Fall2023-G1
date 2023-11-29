@@ -132,3 +132,12 @@ class Activity(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.activity_type}"
+
+class StoryRecommendation(models.Model):
+    story = models.ForeignKey('Story', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    show_count = models.IntegerField(default=0)
+    has_been_shown = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('story', 'user')

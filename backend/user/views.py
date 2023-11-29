@@ -17,9 +17,8 @@ from django.utils import timezone
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
-from .models import User,Story,Comment
+from .models import User,Story,Comment,StoryRecommendation,PasswordResetToken
 from .authentication import *
-from .models import PasswordResetToken
 from django.contrib.auth import authenticate
 from .functions import *
 from drf_yasg.utils import swagger_auto_schema
@@ -29,6 +28,7 @@ from django.contrib.gis.geos import GEOSGeometry, LineString, Polygon
 from django.contrib.gis.measure import D  # 'D' is a shortcut for creating Distance objects
 from django.db.models import F
 import requests
+from .recomFunctions import *
 
 logger = logging.getLogger('django')
 
@@ -254,7 +254,9 @@ class LikeStoryView(views.APIView):
 
             # Log the activity of liking the story for the author
             Activity.objects.create(user=author, activity_type='story_liked', target_story=story, target_user=liker)
+            logger.warning(f"Liker: {liker}")
 
+            update_recommendations(liker)
             return Response({'success': True, 'msg': 'Liked.'}, status=status.HTTP_201_CREATED)
 
 
@@ -997,3 +999,58 @@ class WikidataSearchView(views.APIView):
             return Response({'tags': tags}, status=status.HTTP_200_OK)
         except requests.RequestException as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GetRecommendationsView(views.APIView):
+    def get(self, request, format=None):
+        try:
+            user_id = decode_refresh_token(request.COOKIES['refreshToken'])
+            user = User.objects.get(id=user_id)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        recommendations = StoryRecommendation.objects.filter(
+            user=user
+        ).order_by('show_count')[:3]  # Fetch only the first 5 recommendations
+
+        for recommendation in recommendations:
+            recommendation.show_count += 1
+            recommendation.has_been_shown = True
+            recommendation.save()
+
+        serializer = StorySerializer([rec.story for rec in recommendations], many=True)
+        return Response(
+            {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
+            status=status.HTTP_200_OK
+        )
+
+class GetRecommendationsByUserView(views.APIView):
+    def get(self, request, format=None):
+        try:
+            user_id = decode_refresh_token(request.COOKIES['refreshToken'])
+            user = User.objects.get(id=user_id)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        recommendations = StoryRecommendation.objects.filter(user=user)
+
+        serializer = StoryRecommendationSerializer(recommendations, many=True)
+        return Response(
+            {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
+            status=status.HTTP_200_OK
+        )
+
+class UpdateRecommendationsByUserView(views.APIView):
+    def get(self, request, format=None):
+        try:
+            user_id = decode_refresh_token(request.COOKIES['refreshToken'])
+            user = User.objects.get(id=user_id)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        update_recommendations(user)
+
+        return Response(
+            {'success': True, 'msg': 'Recommendations updated successfully'},
+            status=status.HTTP_200_OK
+        )
