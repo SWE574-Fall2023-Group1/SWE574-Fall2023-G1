@@ -52,6 +52,8 @@ urlpatterns = [
     path('storySearchByLocation', SearchStoryByLocationView.as_view()),
     path('activities', ActivityStreamView.as_view(), name='activity-stream'),
     path('activities/<int:activity_id>', ActivityStreamView.as_view(), name='activity-detail'),
+    path('wikidataSearch', WikidataSearchView.as_view(), name='wikidata_search'),
+
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

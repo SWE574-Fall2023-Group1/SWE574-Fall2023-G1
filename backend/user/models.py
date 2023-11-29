@@ -31,6 +31,16 @@ class Location(models.Model):
 class StoryImage(models.Model):
     image = models.ImageField(upload_to='story_images/')
 
+class Tag(models.Model):
+    name = models.CharField(max_length=255, null=False, blank=False)
+    wikidata_id = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    label = models.CharField(max_length=255, null=True)  # New field for label
+
+
+    def __str__(self):
+        return self.name
+
 class Story(models.Model):
     YEAR_INTERVAL = 'year_interval'
     YEAR = 'year'
@@ -51,7 +61,7 @@ class Story(models.Model):
     title = models.CharField(max_length=255, null=True)
     content = RichTextField(null=True)
     creation_date = models.DateTimeField(null=True,auto_now_add=True)
-    story_tags = models.CharField(max_length=255, null=True)
+    story_tags = models.ManyToManyField(Tag, blank=True)
     location_ids = models.ManyToManyField(Location, blank=True)
     date_type = models.CharField(max_length=20, choices=DATE_TYPES, default=NORMAL_DATE)
     season_name = models.CharField(max_length=255, null=True, blank=True)
