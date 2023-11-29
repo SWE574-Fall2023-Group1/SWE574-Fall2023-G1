@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Chip from '@mui/material/Chip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import Tooltip from '@mui/material/Tooltip';
 
 function StoryDetails() {
   const [story, setStory] = useState(null);
@@ -422,13 +423,11 @@ useEffect(() => {
             <div >
               <Typography variant="subtitle1">Tags</Typography>
               <div className="tags-container">
-                {story.story_tags
-                  .split(",")
-                  .map((tag, index) => (
-                    <div key={index} className="tag-box">
-                      <Typography variant="body1">{tag.trim()}</Typography>
-                    </div>
-                  ))}
+                {story.story_tags.map((tag, index) => (
+                  <Tooltip key={index} title={tag.description || ''}>
+                    <Chip label={tag.label || tag.name} />
+                  </Tooltip>
+                ))}
               </div>
             </div>
           </div>
