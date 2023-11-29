@@ -9,6 +9,9 @@ import {TextField, Select, MenuItem, InputLabel, FormControl, Button, Checkbox, 
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
 import StoryMap from './StoryMap';
+import TagSearch from './TagSearch'; // Adjust the path as needed
+import Chip from '@mui/material/Chip';
+
 
 function CreateStory() {
 
@@ -29,6 +32,26 @@ function CreateStory() {
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
+
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const addTag = (tag) => {
+    console.log("Adding Tag", tag);
+    if (!selectedTags.find(t => t.wikidata_id === tag.wikidata_id)) {
+      setSelectedTags([...selectedTags, tag]);
+      setStoryTags([...story_tags, {
+        name: tag.name, // Include the name of the tag
+        label: tag.label,
+        wikidata_id: tag.wikidata_id,
+        description: tag.description
+      }]);
+    }
+  };
+
+  const removeTag = (tagId) => {
+    console.log("Removing Tag", tagId)
+    setSelectedTags(selectedTags.filter(tag => tag.wikidata_id !== tagId));
+  };
 
 
   const navigate = useNavigate();
@@ -111,6 +134,7 @@ function CreateStory() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("request location",location_ids)
+    console.log("Selected Tags",selectedTags)
     try {
       const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, {
         title: title,
@@ -171,15 +195,16 @@ function CreateStory() {
             <br/>
             <br/>
             <br/>
-            <div>
-              <TextField
-                variant="outlined"
-                placeholder="Enter tags separated by commas"
-                className='long-boxes'
-                label="Tags"
-                value={story_tags}
-                onChange={(e) => setStoryTags(e.target.value)}
-              />
+              <TagSearch onTagSelect={addTag} />
+              <div>
+                {selectedTags.map((tag, index) => (
+                  <Chip
+                    key={index}
+                    label={tag.label}
+                    onDelete={() => removeTag(tag.wikidata_id)}
+                  />
+                ))}
+              </div>
             </div>
             <div style={{ marginTop: '1rem' }}>
             <FormControl variant="outlined" >

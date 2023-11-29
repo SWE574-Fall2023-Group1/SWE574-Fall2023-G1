@@ -25,12 +25,10 @@ from .functions import *
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 import logging
-from django.contrib.gis.db.models.functions import Distance
-from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry, LineString, Polygon
 from django.contrib.gis.measure import D  # 'D' is a shortcut for creating Distance objects
 from django.db.models import F
-from django.core.exceptions import FieldError
+import requests
 
 logger = logging.getLogger('django')
 
@@ -146,37 +144,53 @@ class CreateStoryView(views.APIView):
     @swagger_auto_schema(request_body=StorySerializer)
     def post(self, request):
         try:
+            # Authentication and user retrieval
             cookie_value = request.COOKIES['refreshToken']
-            try:
-                user_id = decode_refresh_token(cookie_value)
-            except:
-                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+            user_id = decode_refresh_token(cookie_value)
 
+            logger.warning(f"Request Data: {request.body}")  # Log the raw request data
+
+            # Request data processing
             request_data = json.loads(request.body)
+            logger.warning(f"Parsed Data: {request_data}")  # Log the raw request data
             request_data['content'] = convert_base64_to_url(request_data['content'])
             request_data['author'] = user_id
-            serializer = StorySerializer(data=request_data)
 
+            # Tags processing
+            tags_data = request_data.pop('story_tags', [])
+            logger.warning(f"Tags Data: {tags_data}")  # Log the raw request data
+
+            tags = []
+            for tag_data in tags_data:
+                tag = Tag.objects.create(
+                    wikidata_id=tag_data['wikidata_id'],
+                    label=tag_data['label'],
+                    name=tag_data['name'],
+                    description=tag_data['description']
+                )
+                tags.append(tag)
+
+            # Serializer processing
+            serializer = StorySerializer(data=request_data)
             if serializer.is_valid():
                 story = serializer.save()
+                story.story_tags.set(tags)  # Associate tags with the story
 
-                # Get the author of the story
-                author = story.author
-
-                # For each follower of the author, create an activity
-                for follower in author.followers.all():
-
+                # Activity creation for each follower
+                for follower in story.author.followers.all():
                     Activity.objects.create(
                         user=follower,
                         activity_type='new_story',
                         target_story=story,
-                        target_user=author
+                        target_user=story.author
                     )
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+
             return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 custom_schema_update_story = openapi.Schema(
@@ -963,3 +977,23 @@ class ActivityStreamView(views.APIView):
         activity.save()
 
         return Response({'success': True, 'msg': 'Activity marked as viewed'}, status=status.HTTP_200_OK)
+
+
+class WikidataSearchView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        search_term = request.GET.get('query', '')
+        if not search_term:
+            return Response({'tags': []}, status=status.HTTP_200_OK)
+
+        logger.warning(f"search term: {search_term}")  # Log the raw request data
+
+        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json'
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.json()
+            tags = [{'id': item['id'], 'label': item['label'], 'description': item.get('description', '')} for item in data.get('search', [])]
+            logger.warning(f"Tags Searched: {tags}")  # Log the raw request data
+            return Response({'tags': tags}, status=status.HTTP_200_OK)
+        except requests.RequestException as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
