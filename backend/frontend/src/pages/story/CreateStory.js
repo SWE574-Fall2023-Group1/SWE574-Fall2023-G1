@@ -361,7 +361,8 @@ function CreateStory() {
                 />
           </div>
           <br/>
-          <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
+          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
+          <br/>
           <br/>
           <text>You can edit your memory as many times as you want after posting.</text>
           <br/>
