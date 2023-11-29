@@ -361,12 +361,12 @@ function CreateStory() {
           </div>
           <br/>
           <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
+          <br/>
+          <text>Your can edit your memory as many times as you want after posting.</text>
+          <br/>
+          <br/>
           </form>
           </div>
-          <br/>
-          <br/>
-
-
 
         </div>
 
