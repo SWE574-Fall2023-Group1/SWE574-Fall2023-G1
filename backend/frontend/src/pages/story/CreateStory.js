@@ -350,7 +350,7 @@ function CreateStory() {
           <div className='create-story-map'>
           <text>You can add locations by using the map or typing in the search bar.</text>
             <StoryMap
-                  mapContainerStyle={{ height: '400px', width: '100%' }}
+                  mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
                   initialCenter={mapCenter}
                   zoom={1}
                   apiKey={googleMapsApiKey}
