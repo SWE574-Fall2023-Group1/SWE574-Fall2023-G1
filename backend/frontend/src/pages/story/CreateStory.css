@@ -45,11 +45,13 @@
   /* overflow: auto;  */
   resize: none;
   margin: 0 auto;
-  border-radius: '4px';
+  border-radius: 10px;
+  background-color: rgb(220, 220, 220);
 }
 
 .ql-editor {
-  background-color: white;
+  background-color: rgb(220, 220, 220);
+  border-radius: 10px;
 }
 
 .date-type {
@@ -58,24 +60,32 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
+  border-radius: 10px;
 }
 
 .date-box {
   width: 200px;
-  background-color: white;
+  background-color: rgb(220, 220, 220);
+  border-radius: 10px;
 }
 
 .long-boxes {
   width: 500px;
-  border-radius: '20px'
+  border-radius: 10px;
+  background-color: rgba(220, 220, 220);
 }
 
 .long-boxes .MuiOutlinedInput-root {
-  background-color: white;
+  background-color: rgb(220, 220, 220);
+  border-radius: 10px;
 }
 
 .formBackground {
   background-color: rgba(0, 0, 0, 0.2);
   padding: 20px;
   border-radius: 10px;
+}
+
+.big-heading {
+  color: rgb(0, 0, 0);
 }

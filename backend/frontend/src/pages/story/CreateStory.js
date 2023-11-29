@@ -371,7 +371,6 @@ function CreateStory() {
           </div>
         </div>
         </div>
-
     </div>
   );
 }
