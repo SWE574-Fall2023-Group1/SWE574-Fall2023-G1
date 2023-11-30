@@ -63,15 +63,18 @@ function Header() {
                   alt="Home Page"
                   style={{ width: '50px', height: '50px' }}
                 /></Link>
-                <Link to="/story_search" className="nav-item nav-link">Search Stories</Link>
-                <Link to="/create-story" className="nav-item nav-link">Create Story</Link>
+                <Link to="/story_search" className="nav-item nav-link">Search Memories</Link>
+                <Link to="/create-story" className="nav-item nav-link">Create Memory</Link>
                 <Link to="/user-profile" className="nav-item nav-link">User Profile</Link>
                 <Link to="/activity-stream" className="nav-item nav-link">Activity Stream</Link>
+
                 <>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginLeft: '40vw' }}>
-                  <UserSearch />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', marginLeft: '35vw',  }}>
+
+                    <UserSearch />
                   <LogoutButton />
                 </div>
+
                 </>
               </>
             )}
