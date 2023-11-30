@@ -34,6 +34,7 @@ endif
 
 compose-up: env-files
 	docker compose up -d --build
+	@sleep 5
 
 compose-down: env-files
 	docker compose down --remove-orphans
