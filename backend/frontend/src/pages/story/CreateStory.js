@@ -195,10 +195,12 @@ function CreateStory() {
             <br/>
             <br/>
             <br/>
-              <TagSearch onTagSelect={addTag} />
+            <div className='tags-bar' id="tags-bar">
+              <TagSearch style={{"background-color": "rgb(240, 240, 240)"}} onTagSelect={addTag} />
               <div>
                 {selectedTags.map((tag, index) => (
-                  <Chip
+                  <Chip 
+                    style={{"background-color": "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}

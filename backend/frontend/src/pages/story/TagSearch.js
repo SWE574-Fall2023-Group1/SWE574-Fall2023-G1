@@ -41,13 +41,16 @@ function TagSearch({ onTagSelect }) {
     };
 
     return (
-        <Box display="flex" flexDirection="column" alignItems="start">
+        <Box display="flex" flexDirection="column" alignItems="center">
             <Autocomplete
                 options={suggestions}
                 getOptionLabel={(option) => option.label}
                 style={{ width: 300 }}
                 renderInput={(params) => (
-                    <TextField {...params} label="Search tags" variant="outlined" />
+                    <TextField {...params} 
+                        label="Search tags" 
+                        variant="outlined" 
+                        style={{"background-color": "rgb(240, 240, 240)"}}/>
                 )}
                 onInputChange={handleSearchChange}
                 onChange={(event, newValue) => {
@@ -75,9 +78,9 @@ function TagSearch({ onTagSelect }) {
                 variant="outlined"
                 value={userLabel}
                 onChange={(e) => setUserLabel(e.target.value)}
-                style={{ marginTop: '10px' }}
+                style={{ marginTop: '10px', "background-color": "rgb(240, 240, 240)"}}
             />
-            <Button onClick={handleAddTag} style={{ marginTop: '10px' }}>Add Tag</Button>
+            <Button onClick={handleAddTag} variant="contained" className="btn btn-primary middle" style={{ marginTop: '10px', borderRadius: 10, backgroundColor: "#7E49FF" }}>Add Tag</Button>
         </Box>
     );
 }
