@@ -48,3 +48,6 @@ pre-commit:
 
 git-stats:
 	git log | git shortlog -sne
+
+django-test: up
+	docker compose exec -T backend python manage.py test
