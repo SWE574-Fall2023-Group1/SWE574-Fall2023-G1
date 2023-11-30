@@ -47,9 +47,9 @@ function TagSearch({ onTagSelect }) {
                 getOptionLabel={(option) => option.label}
                 style={{ width: 300 }}
                 renderInput={(params) => (
-                    <TextField {...params} 
-                        label="Search tags" 
-                        variant="outlined" 
+                    <TextField {...params}
+                        label="Search tags"
+                        variant="outlined"
                         style={{"background-color": "rgb(240, 240, 240)"}}/>
                 )}
                 onInputChange={handleSearchChange}

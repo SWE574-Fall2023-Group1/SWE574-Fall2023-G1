@@ -199,7 +199,7 @@ function CreateStory() {
               <TagSearch style={{"background-color": "rgb(240, 240, 240)"}} onTagSelect={addTag} />
               <div>
                 {selectedTags.map((tag, index) => (
-                  <Chip 
+                  <Chip
                     style={{"background-color": "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
