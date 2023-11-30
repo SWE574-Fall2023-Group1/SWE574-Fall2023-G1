@@ -19,7 +19,6 @@ jobs:
             node -e "const deers = require('deers'); console.log(deers()[new Date().getMinutes()]);" || true
             make
             make up
-            sleep 10
             docker compose ps
             docker network ls
             docker compose logs db
