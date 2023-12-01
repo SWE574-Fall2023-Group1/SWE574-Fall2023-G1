@@ -457,7 +457,7 @@ useEffect(() => {
                       onClick={() => setLiked(!liked)}
                     />
                   </Button>
-                  <Chip label={numLikes} />
+                  <Chip label={numLikes} style={{"font-size": "large"}}/>
                 </div>
               </div>
             </div>
