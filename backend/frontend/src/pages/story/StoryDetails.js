@@ -452,7 +452,7 @@ useEffect(() => {
                     }}
                   >
                     <FavoriteIcon
-                      fontSize="small"
+                      fontSize="large"
                       style={{ color: liked ? 'red' : 'black' }}
                       onClick={() => setLiked(!liked)}
                     />
