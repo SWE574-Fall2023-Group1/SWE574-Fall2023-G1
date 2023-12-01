@@ -184,10 +184,14 @@ class CreateStoryView(views.APIView):
                         target_story=story,
                         target_user=story.author
                     )
-
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({
+                'success': False,
+                'msg': 'Validation Error',
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

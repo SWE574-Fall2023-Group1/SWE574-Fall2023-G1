@@ -148,6 +148,21 @@ class StorySerializer(serializers.ModelSerializer):
                   'story_tags', 'location_ids', 'date_type', 'season_name',
                   'year', 'start_year', 'end_year', 'date', 'creation_date',
                   'start_date', 'end_date', 'decade', 'include_time', 'likes']
+    def validate_title(self, value):
+        if not value:
+            raise serializers.ValidationError("Title field is required.")
+        return value
+
+    def validate_content(self, value):
+        if not value:
+            raise serializers.ValidationError("Content field is required.")
+        return value
+
+    def validate_date_type(self, value):
+        if not value:
+            raise serializers.ValidationError("Date type field is required.")
+        return value
+
     def validate(self, attrs):
         date_type = attrs.get('date_type')
         start_year = attrs.get('start_year')
