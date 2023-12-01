@@ -321,7 +321,7 @@ useEffect(() => {
           <div className="content-container">
           <div className="bottom-container">
             <div >
-              <Typography variant="subtitle1">Story Time</Typography>
+              <Typography variant="subtitle1">Memory Time</Typography>
               <Typography variant="body1" className="info-box">{`${formatDate()}`}</Typography>
             </div>
             {story.season_name && (
