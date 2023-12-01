@@ -379,7 +379,7 @@ useEffect(() => {
                 <>
                   <div className="storydetail-story-map">
                     <GoogleMap
-                      mapContainerStyle={{ height: "400px", width: "400px" }}
+                      mapContainerStyle={{ height: "400px", width: "80%" }}
                       zoom={2}
                       center={{
                         lat: 0,
