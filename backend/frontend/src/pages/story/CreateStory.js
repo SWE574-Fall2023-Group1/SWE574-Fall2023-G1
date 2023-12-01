@@ -129,7 +129,7 @@ function CreateStory() {
     setLocations(updatedLocations); // Update the location_ids state
   };
 
-  const editorPlaceholder = firstClick ? 'Enter your content here' : '';
+  const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -163,9 +163,10 @@ function CreateStory() {
 
   return (
     <div>
-      <h1 className="big-heading">Create Story</h1>
+      <h1 className="big-heading">Create New Memory</h1>
       <div className='create-story-container'>
       <div className="create-story-content">
+        <div className="formBackground">
           <form>
             {/* <div className="form-group"> */}
               <TextField
@@ -193,11 +194,13 @@ function CreateStory() {
             {/* </div> */}
             <br/>
             <br/>
-            <div>
-              <TagSearch onTagSelect={addTag} />
+            <br/>
+            <div className='tags-bar' id="tags-bar">
+              <TagSearch style={{"background-color": "rgb(240, 240, 240)"}} onTagSelect={addTag} />
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
+                    style={{"background-color": "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
@@ -372,25 +375,29 @@ function CreateStory() {
                 </div>
             }
           <br/>
-          <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Create Story</Button>
+          <div className='create-story-map'>
+          <text>You can add locations by using the map or typing in the search bar.</text>
+            <StoryMap
+                  mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
+                  initialCenter={mapCenter}
+                  zoom={1}
+                  apiKey={googleMapsApiKey}
+                  onAddLocation={handleAddLocation}
+                  onRemoveLocation={handleRemoveLocation}
+                  onUpdateLocations={handleUpdateLocations}
+                />
+          </div>
+          <br/>
+          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">Post</Button>
+          <br/>
+          <br/>
+          <text>You can edit your memory as many times as you want after posting.</text>
+          <br/>
+          <br/>
           </form>
           </div>
-
-          <div className='create-story-map'>
-
-          <StoryMap
-                mapContainerStyle={{ height: '400px', width: '100%' }}
-                initialCenter={mapCenter}
-                zoom={1}
-                apiKey={googleMapsApiKey}
-                onAddLocation={handleAddLocation}
-                onRemoveLocation={handleRemoveLocation}
-                onUpdateLocations={handleUpdateLocations}
-              />
-          </div>
-
         </div>
-
+        </div>
     </div>
   );
 }
