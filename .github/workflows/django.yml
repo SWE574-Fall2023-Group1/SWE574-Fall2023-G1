@@ -21,7 +21,8 @@ jobs:
             make
             docker --version
             docker-compose --version
-            make up
+            make env-files
+            docker compose -f docker-compose-pipeline.yml up -d --build
             docker compose ps
             docker network ls
             docker compose logs db
