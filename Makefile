@@ -45,3 +45,7 @@ down: compose-down
 pre-commit:
 	@pre-commit install
 	pre-commit run --all-files
+
+local-frontend: down
+	docker compose up db backend -d --build
+	cd ./backend/frontend && npm install && npm run start
