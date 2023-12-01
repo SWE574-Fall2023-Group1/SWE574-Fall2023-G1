@@ -53,7 +53,7 @@ urlpatterns = [
     path('activities', ActivityStreamView.as_view(), name='activity-stream'),
     path('activities/<int:activity_id>', ActivityStreamView.as_view(), name='activity-detail'),
     path('wikidataSearch', WikidataSearchView.as_view(), name='wikidata_search'),
-
-
-
+    path('recommendations', GetRecommendationsView.as_view(), name='get_recommendations'),
+    path('recommendationsByUsers', GetRecommendationsByUserView.as_view(), name='get_recommendations'),
+    path('updateRecommendationsByUsers', UpdateRecommendationsByUserView.as_view(), name='update_recommendations'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
