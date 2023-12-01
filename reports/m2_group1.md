@@ -49,7 +49,7 @@ The following requirements have been addressed in the current release. For the o
 | NF-1  | The system shall be available as an Android application.                                                                       | <ul><li>[x] </li> |
 
 #### Testing
-    
+
 #### Future Plans
 
 
@@ -80,12 +80,12 @@ The following requirements have been addressed in the current release. For the o
 * [Members and Team Distributions](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki/Team-Members)
 
 #### **Ayhan**
-    
+
  * **Responsibilities:**
 
  * **Main contributions:**
 
-     * **Code-related significant issues:** 
+     * **Code-related significant issues:**
 
      * **Management-related significant issues:**
 
@@ -109,7 +109,7 @@ The following requirements have been addressed in the current release. For the o
 
 
 #### **Caner**
-    
+
  * **Responsibilities:**
 
 * **Main contributions:**
@@ -127,9 +127,9 @@ The following requirements have been addressed in the current release. For the o
  * **Responsibilities:**
 
  * **Main contributions:**
-    
+
     * **Code-related significant issues:**
-    
+
     * **Management-related significant issues:**
 
  * **Pull requests:**
@@ -141,9 +141,9 @@ The following requirements have been addressed in the current release. For the o
  * **Responsibilities:**
 
  * **Main contributions:**
-    
+
      * **Code-related significant issues:**
-    
+
      * **Management-related significant issues:**
 
  * **Pull requests:**
@@ -175,4 +175,3 @@ The following requirements have been addressed in the current release. For the o
  * **Pull requests:**
 
  * **Additional information:**
-
