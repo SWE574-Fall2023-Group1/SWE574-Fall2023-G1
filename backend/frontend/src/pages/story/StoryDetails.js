@@ -314,7 +314,7 @@ useEffect(() => {
   return (
     <div className="story-details-wrapper">
       {story ? (
-        <Box sx={{ borderRadius: "10px", boxShadow: "0 0 10px rgba(0,0,0,0.2)", p: 2, backgroundColor: "#f5f5f5" }}>
+        <Box sx={{ borderRadius: "10px", p: 2}}>
           <Typography variant="h4" align="center" gutterBottom sx={{ mt: 1, mb: 3 }}>
             {story.title}
           </Typography>

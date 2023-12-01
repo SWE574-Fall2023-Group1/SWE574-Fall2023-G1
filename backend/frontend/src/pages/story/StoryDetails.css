@@ -111,6 +111,7 @@
   .story-details-wrapper {
     max-width: 500px;
     margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0.1);
   }
 
   .info-box {
