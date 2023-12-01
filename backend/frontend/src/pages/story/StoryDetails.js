@@ -36,6 +36,8 @@ function StoryDetails() {
   const handleClose = () => setOpen(false);
   // const PHOTOS_PER_PAGE = 3;
   // const COMMENTS_PER_PAGE = 5;
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
+  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png');
 
   const options = {
     year: 'numeric',
@@ -103,6 +105,7 @@ function StoryDetails() {
 
 useEffect(() => {
   const fetchStory = async () => {
+    fetchProfilePhoto();
     try {
       await fetchUserDetails(); // Get the current user ID
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
@@ -290,6 +293,28 @@ useEffect(() => {
     setOpen(false)
   };
 
+  const fetchProfilePhoto = async () => {
+    try {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
+        headers: {},
+        withCredentials: true,
+      });
+
+
+      // Directly set the URL from the response to state
+      setProfilePhotoUrl(response.data.photo_url);
+
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // Profile photo not found, set the default photo
+        setProfilePhotoUrl(defaultProfilePhoto);
+      } else {
+        console.error('Error fetching profile photo:', error);
+      }
+    }
+  };
+  console.log(profilePhotoUrl)
+
   Quill.register('modules/imageCompress', ImageCompress);
 
   const modules = {
@@ -393,17 +418,23 @@ useEffect(() => {
                 </>
               )}
               <div className="author-date-container">
-              <div>
-                <Typography variant="subtitle1">Author</Typography>
+              <div style={{ display: 'flex', "align-items": 'center'}}>
+                <Typography variant="subtitle1">Author‎  ‎</Typography>
+                <img
+                  src={profilePhotoUrl}
+                  alt={`author's profile`}
+                  className="author-photo"
+                  style={{width: "50px", height: "50px"}}
+                />
                 <Chip
                   label={story.author_username}
                   onClick={() => handleUserClick(story.author)}
                   color="primary"
-                  variant="outlined"
+
                 />
               </div>
-              <div >
-                <Typography variant="subtitle1">Posted On</Typography>
+              <div style={{ display: 'flex', "align-items": 'center'}}>
+                <Typography variant="subtitle1">Posted On‎  ‎</Typography>
                 <Typography variant="body1" className="info-box">
                   {new Date(story.creation_date).toLocaleDateString()}
                 </Typography>
