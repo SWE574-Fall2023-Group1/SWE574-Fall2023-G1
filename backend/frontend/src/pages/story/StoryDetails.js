@@ -341,6 +341,7 @@ useEffect(() => {
               </div>
             </div>
           </div>
+          <br/>
             <div className="left-side">
               <div className="quill-container">
                 <ReactQuill
