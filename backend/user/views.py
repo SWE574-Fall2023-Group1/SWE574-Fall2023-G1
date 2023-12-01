@@ -256,7 +256,7 @@ class LikeStoryView(views.APIView):
             Activity.objects.create(user=author, activity_type='story_liked', target_story=story, target_user=liker)
             logger.warning(f"Liker: {liker}")
 
-            update_recommendations(liker)
+            # update_recommendations(liker) Commented out for now because it may too long
             return Response({'success': True, 'msg': 'Liked.'}, status=status.HTTP_201_CREATED)
 
 
@@ -1031,6 +1031,8 @@ class GetRecommendationsByUserView(views.APIView):
             user = User.objects.get(id=user_id)
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        update_recommendations(user)
 
         recommendations = StoryRecommendation.objects.filter(user=user)
 
