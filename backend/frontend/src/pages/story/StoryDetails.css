@@ -87,7 +87,7 @@
   }
 
   .quill-container {
-    width: 500px;
+    width: 100%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -158,18 +158,18 @@
 }
 
 .content-container {
-  display: flex;
+
   justify-content: space-between;
   margin-top: 16px;
 }
 
 .left-side {
-  width: 50%;
+  width: 100%;
   padding-right: 16px;
 }
 
 .right-side {
-  width: 50%;
+  width: 100%;
   padding-left: 16px;
   display: flex;
   flex-direction: column;
