@@ -54,6 +54,7 @@
 .ql-editor {
   background-color: rgb(240, 240, 240);
   border-radius: 10px;
+  text-align: justify;
 }
 
 .date-type {
