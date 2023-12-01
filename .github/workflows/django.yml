@@ -19,6 +19,8 @@ jobs:
             npm install deers > /dev/null 2>&1
             node -e "const deers = require('deers'); console.log(deers()[new Date().getMinutes()]);" || true
             make
+            docker --version
+            docker-compose --version
             make up
             docker compose ps
             docker network ls
