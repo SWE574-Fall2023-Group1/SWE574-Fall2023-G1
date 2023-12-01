@@ -319,6 +319,28 @@ useEffect(() => {
             {story.title}
           </Typography>
           <div className="content-container">
+          <div className="bottom-container">
+            <div >
+              <Typography variant="subtitle1">Story Time</Typography>
+              <Typography variant="body1" className="info-box">{`${formatDate()}`}</Typography>
+            </div>
+            {story.season_name && (
+              <div>
+                <Typography variant="subtitle1">Season</Typography>
+                <Typography variant="body1" className="info-box">{story.season_name}</Typography>
+              </div>
+            )}
+            <div >
+              <Typography variant="subtitle1">Tags</Typography>
+              <div className="tags-container">
+                {story.story_tags.map((tag, index) => (
+                  <Tooltip key={index} title={tag.description || ''}>
+                    <Chip label={tag.label || tag.name} />
+                  </Tooltip>
+                ))}
+              </div>
+            </div>
+          </div>
             <div className="left-side">
               <div className="quill-container">
                 <ReactQuill
@@ -409,28 +431,7 @@ useEffect(() => {
             </div>
             </div>
           </div>
-          <div className="bottom-container">
-            <div >
-              <Typography variant="subtitle1">Story Time</Typography>
-              <Typography variant="body1" className="info-box">{`${formatDate()}`}</Typography>
-            </div>
-            {story.season_name && (
-              <div>
-                <Typography variant="subtitle1">Season</Typography>
-                <Typography variant="body1" className="info-box">{story.season_name}</Typography>
-              </div>
-            )}
-            <div >
-              <Typography variant="subtitle1">Tags</Typography>
-              <div className="tags-container">
-                {story.story_tags.map((tag, index) => (
-                  <Tooltip key={index} title={tag.description || ''}>
-                    <Chip label={tag.label || tag.name} />
-                  </Tooltip>
-                ))}
-              </div>
-            </div>
-          </div>
+
           <CommentSection
             storyId={id}
             comments={comments}
