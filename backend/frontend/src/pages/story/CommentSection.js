@@ -178,8 +178,9 @@ function CommentSection({ comments, setComments}) {
           onClick={handleCommentSubmit}
           variant="contained"
           color="primary"
+          style={{backgroundColor: "#7E49FF"}}
         >
-          Submit
+          Comment
         </Button>
       </Box>
     </div>
