@@ -160,7 +160,7 @@ function CommentSection({ comments, setComments}) {
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
-          alignItems: 'flex-start',
+          alignItems: 'center',
         }}
       >
         <TextField
