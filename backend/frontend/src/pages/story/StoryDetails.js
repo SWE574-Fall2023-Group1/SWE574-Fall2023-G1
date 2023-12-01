@@ -403,7 +403,7 @@ useEffect(() => {
                 />
               </div>
               <div >
-                <Typography variant="subtitle1">Creation Date</Typography>
+                <Typography variant="subtitle1">Posted On</Typography>
                 <Typography variant="body1" className="info-box">
                   {new Date(story.creation_date).toLocaleDateString()}
                 </Typography>
