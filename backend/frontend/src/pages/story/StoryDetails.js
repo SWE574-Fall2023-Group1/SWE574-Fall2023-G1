@@ -441,7 +441,7 @@ useEffect(() => {
         </Box>
       ) : (
         <Typography variant="h5" align="center">
-          Loading story details...
+          Loading memory details...
         </Typography>
       )}
     </div>
