@@ -150,17 +150,17 @@ class StorySerializer(serializers.ModelSerializer):
                   'start_date', 'end_date', 'decade', 'include_time', 'likes']
     def validate_title(self, value):
         if not value:
-            raise serializers.ValidationError("Title field is required.")
+            raise serializers.ValidationError("Title is missing.")
         return value
 
     def validate_content(self, value):
         if not value:
-            raise serializers.ValidationError("Content field is required.")
+            raise serializers.ValidationError("Content is missing.")
         return value
 
     def validate_date_type(self, value):
         if not value:
-            raise serializers.ValidationError("Date type field is required.")
+            raise serializers.ValidationError("Date type is missing.")
         return value
 
     def validate(self, attrs):

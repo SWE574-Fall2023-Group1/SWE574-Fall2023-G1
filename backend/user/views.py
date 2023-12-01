@@ -186,11 +186,12 @@ class CreateStoryView(views.APIView):
                     )
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
+                error_messages = "\n".join(["{}: {}".format(field, "; ".join(errors)) for field, errors in serializer.errors.items()])
                 return Response({
-                'success': False,
-                'msg': 'Validation Error',
-                'errors': serializer.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
+                    'success': False,
+                    'msg': error_messages,  # Concatenated error messages
+                    'errors': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
