@@ -51,3 +51,7 @@ git-stats:
 
 django-test: up
 	docker compose exec -T backend python manage.py test
+
+local-frontend: down
+	docker compose up db backend -d --build
+	cd ./backend/frontend && npm install && npm run start
