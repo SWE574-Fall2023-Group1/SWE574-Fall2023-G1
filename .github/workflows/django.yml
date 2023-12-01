@@ -1,0 +1,27 @@
+name: Django test pipeline
+on:
+  pull_request:
+  push:
+    branches:
+      - main, dev
+  workflow_dispatch:
+jobs:
+    django-test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        - name: "[CI] Django test"
+          run: |
+            echo
+            npm install deers > /dev/null 2>&1
+            node -e "const deers = require('deers'); console.log(deers()[new Date().getMinutes()]);" || true
+            make
+            make up
+            docker compose ps
+            docker network ls
+            docker compose logs db
+            docker compose logs backend
+            make git-stats
+            docker compose exec -T backend python manage.py test

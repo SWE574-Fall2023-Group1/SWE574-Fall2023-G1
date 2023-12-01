@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from user.models import User,Story,Location,Comment,Activity,Tag #, Date, SpecificDate, Decade, Season
+from user.models import User,Story,Location,Comment,Activity,Tag,StoryRecommendation #, Date, SpecificDate, Decade, Season
 from rest_framework.fields import CharField
 from .functions import *
 import urllib.parse
@@ -278,3 +278,10 @@ class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = ['id', 'user', 'user_username', 'activity_type', 'date', 'viewed', 'target_user', 'target_user_username', 'target_story', 'target_story_title']
+
+class StoryRecommendationSerializer(serializers.ModelSerializer):
+    story = StorySerializer()  # Assuming you already have a StorySerializer
+
+    class Meta:
+        model = StoryRecommendation
+        fields = ['story', 'show_count', 'has_been_shown']
