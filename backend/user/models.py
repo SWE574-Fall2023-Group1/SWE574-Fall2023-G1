@@ -58,8 +58,8 @@ class Story(models.Model):
 
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255, null=True)
-    content = RichTextField(null=True)
+    title = models.CharField(max_length=255, default="Test Title")
+    content = RichTextField(default="Test Content")
     creation_date = models.DateTimeField(null=True,auto_now_add=True)
     story_tags = models.ManyToManyField(Tag, blank=True)
     location_ids = models.ManyToManyField(Location, blank=True)
