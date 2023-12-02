@@ -9,9 +9,10 @@ import {TextField, Select, MenuItem, InputLabel, FormControl, Button, Checkbox, 
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
 import StoryMap from './StoryMap';
-let postHeader = null;
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
+
+let postHeader = null;
 
 function CreateStory() {
 
@@ -166,27 +167,6 @@ function CreateStory() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("request location",location_ids)
-    console.log("Selected Tags",selectedTags)
-    try {
-      const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, {
-        title: title,
-        content: content,
-        story_tags: story_tags,
-        location_ids: location_ids,
-        date_type: date_type,
-        season_name: season_name,
-        start_year: start_year,
-        end_year: end_year,
-        year: year,
-        date: date,
-        start_date: start_date,
-        end_date: end_date,
-        decade: decade,
-        include_time: include_time
-      }, { withCredentials: true });
-      console.log(response.data);
-
     const storyData = {
       title: title,
       content: content,
