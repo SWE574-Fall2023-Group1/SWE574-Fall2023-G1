@@ -5,11 +5,13 @@ import withAuth from '../../authCheck';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
-import {TextField, Select, MenuItem, InputLabel, FormControl, Button, List, ListItem, ListItemText,Checkbox, FormControlLabel } from '@mui/material';
+import {TextField, Select, MenuItem, InputLabel, FormControl, Button, Checkbox, FormControlLabel } from '@mui/material';
 import ImageCompress from 'quill-image-compress';
 import Quill from 'quill'
 import StoryMap from './StoryMap';
 let postHeader = null;
+import TagSearch from './TagSearch'; // Adjust the path as needed
+import Chip from '@mui/material/Chip';
 
 function CreateStory() {
 
@@ -59,9 +61,30 @@ function CreateStory() {
   const [start_date, setStartDate] = useState(null);
   const [end_date, setEndDate] = useState(null);
   const [decade, setDecade] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
+
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const addTag = (tag) => {
+    console.log("Adding Tag", tag);
+    if (!selectedTags.find(t => t.wikidata_id === tag.wikidata_id)) {
+      setSelectedTags([...selectedTags, tag]);
+      setStoryTags([...story_tags, {
+        name: tag.name, // Include the name of the tag
+        label: tag.label,
+        wikidata_id: tag.wikidata_id,
+        description: tag.description
+      }]);
+    }
+  };
+
+  const removeTag = (tagId) => {
+    console.log("Removing Tag", tagId)
+    setSelectedTags(selectedTags.filter(tag => tag.wikidata_id !== tagId));
+  };
 
 
   const navigate = useNavigate();
@@ -130,15 +153,39 @@ function CreateStory() {
     });
   };
 
+  const handleUpdateLocations = (updatedLocations) => {
+    setLocations(updatedLocations);
+  };
+
   const handleRemoveLocation = (index) => {
     const updatedLocations = location_ids.filter((_, i) => i !== index);
     setLocations(updatedLocations); // Update the location_ids state
   };
 
-  const editorPlaceholder = firstClick ? 'Enter your content here' : '';
+  const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("request location",location_ids)
+    console.log("Selected Tags",selectedTags)
+    try {
+      const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, {
+        title: title,
+        content: content,
+        story_tags: story_tags,
+        location_ids: location_ids,
+        date_type: date_type,
+        season_name: season_name,
+        start_year: start_year,
+        end_year: end_year,
+        year: year,
+        date: date,
+        start_date: start_date,
+        end_date: end_date,
+        decade: decade,
+        include_time: include_time
+      }, { withCredentials: true });
+      console.log(response.data);
 
     const storyData = {
       title: title,
@@ -180,6 +227,7 @@ function CreateStory() {
       <h1 className="big-heading">{postHeader}</h1>
       <div className='create-story-container'>
       <div className="create-story-content">
+        <div className="formBackground">
           <form>
             {/* <div className="form-group"> */}
               <TextField
@@ -207,15 +255,19 @@ function CreateStory() {
             {/* </div> */}
             <br/>
             <br/>
-            <div>
-              <TextField
-                variant="outlined"
-                placeholder="Enter tags separating with ','"
-                className='long-boxes'
-                label="Tags"
-                value={story_tags}
-                onChange={(e) => setStoryTags(e.target.value)}
-              />
+            <br/>
+            <div className='tags-bar' id="tags-bar">
+              <TagSearch style={{"background-color": "rgb(240, 240, 240)"}} onTagSelect={addTag} />
+              <div>
+                {selectedTags.map((tag, index) => (
+                  <Chip
+                    style={{"background-color": "rgb(240, 240, 240)"}}
+                    key={index}
+                    label={tag.label}
+                    onDelete={() => removeTag(tag.wikidata_id)}
+                  />
+                ))}
+              </div>
             </div>
             <div style={{ marginTop: '1rem' }}>
             <FormControl variant="outlined" >
@@ -384,24 +436,29 @@ function CreateStory() {
                 </div>
             }
           <br/>
-          <Button variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
+          <div className='create-story-map'>
+          <text>You can add locations by using the map or typing in the search bar.</text>
+            <StoryMap
+                  mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
+                  initialCenter={mapCenter}
+                  zoom={1}
+                  apiKey={googleMapsApiKey}
+                  onAddLocation={handleAddLocation}
+                  onRemoveLocation={handleRemoveLocation}
+                  onUpdateLocations={handleUpdateLocations}
+                />
+          </div>
+          <br/>
+          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
+          <br/>
+          <br/>
+          <text>You can edit your memory as many times as you want after posting.</text>
+          <br/>
+          <br/>
           </form>
           </div>
-
-          <div className='create-story-map'>
-
-          <StoryMap
-                mapContainerStyle={{ height: '400px', width: '100%' }}
-                initialCenter={mapCenter}
-                zoom={1}
-                apiKey={googleMapsApiKey}
-                onAddLocation={handleAddLocation}
-                onRemoveLocation={handleRemoveLocation} // Pass the callback to StoryMap
-              />
-          </div>
-
         </div>
-
+        </div>
     </div>
   );
 }

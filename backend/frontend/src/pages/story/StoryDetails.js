@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Chip from '@mui/material/Chip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import Tooltip from '@mui/material/Tooltip';
 
 function StoryDetails() {
   const [story, setStory] = useState(null);
@@ -25,14 +26,16 @@ function StoryDetails() {
   const [numLikes, setNumLikes] = useState(0);
   const [liked, setLiked] = useState(false);
   const [userId, setUserId] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [username, setUsername] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState('');
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   // const PHOTOS_PER_PAGE = 3;
-  const COMMENTS_PER_PAGE = 5;
+  // const COMMENTS_PER_PAGE = 5;
 
   const options = {
     year: 'numeric',
@@ -271,7 +274,7 @@ useEffect(() => {
 
   const handleSaveButtonClick = async () => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyUpdate/${id}`,
         { content: editedContent },
         { withCredentials: true }
@@ -417,13 +420,11 @@ useEffect(() => {
             <div >
               <Typography variant="subtitle1">Tags</Typography>
               <div className="tags-container">
-                {story.story_tags
-                  .split(",")
-                  .map((tag, index) => (
-                    <div key={index} className="tag-box">
-                      <Typography variant="body1">{tag.trim()}</Typography>
-                    </div>
-                  ))}
+                {story.story_tags.map((tag, index) => (
+                  <Tooltip key={index} title={tag.description || ''}>
+                    <Chip label={tag.label || tag.name} />
+                  </Tooltip>
+                ))}
               </div>
             </div>
           </div>

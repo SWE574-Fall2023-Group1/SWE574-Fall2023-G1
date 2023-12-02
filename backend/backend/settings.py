@@ -29,10 +29,10 @@ MEDIA_URL = '/'
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env("SECRET_KEY", default="SWE574-Fall2023-Group1")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (env("DJANGO_DEBUG", default="true").lower() == "true")
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -95,15 +95,22 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'main': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
-        'PORT': env("DB_PORT"),
-    }
+        'NAME': env("DB_NAME", default='postgres'),
+        'USER': env("DB_USER", default='postgres'),
+        'PASSWORD': env("DB_PASSWORD", default='postgres'),
+        'HOST': env("DB_HOST", default='localhost'),
+        'PORT': env("DB_PORT", default='5432'),
+    },
+    'test-pipeline': {  # for testing in CI pipeline
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
 }
+
+default_database = env('DJANGO_DATABASE', default='main')
+DATABASES['default'] = DATABASES.get(default_database, DATABASES['main'])
 
 
 # Password validation
@@ -142,9 +149,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'dist'),
-]
+STATICFILES_DIRS = []
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

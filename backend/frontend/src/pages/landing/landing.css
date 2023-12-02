@@ -1,8 +1,28 @@
 .register-button {
-    background-color: #363636 !important;
+    background-color: #7E49FF !important;
     color: white !important;
+    width: 473;
+    height: 53;
+    padding-left: 40;
+    padding-right: 40;
+    padding-top: 15;
+    padding-bottom: 15;
+    left: 312;
+    top: 570;
+    position: 'absolute';
+    border-radius: 8;
+    justify-content: 'center';
+    align-items: 'center';
+    gap: 10;
+    display: 'inline-flex';
+    cursor: 'pointer'; /* Add this to make it look clickable */
+    font-size: 16;
+    font-family: 'Inter';
+    font-weight: '700';
+    word-wrap: 'break-word';
+    text-transform: 'none';
   }
   .login-button {
-    background-color: #363636 !important;
+    background-color: #7E49FF !important;
     color: white !important;
   }

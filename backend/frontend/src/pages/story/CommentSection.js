@@ -55,7 +55,7 @@ function CommentSection({ comments, setComments}) {
 
   const handleCommentSubmit = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/comment/${id}`,
         { text: commentText },
         { withCredentials: true }
