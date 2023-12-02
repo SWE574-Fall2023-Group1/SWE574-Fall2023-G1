@@ -512,7 +512,7 @@ const StorySearch = () => {
                   <h3 className="story-title-search" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
                   <p className="story-title-search" onClick={() => handleStoryClick(story.id)}>{(((story.content).slice(3, 100)).slice(0, -4)).concat("...")}</p>
                   <p className="story-author-search">by {story.author_username || 'Unknown'}</p>
-                  <h4 className="story-title-search" onClick={() => handleStoryClick(story.id)}>{(story.creation_date).slice(0, 10)}</h4>
+                  <h4 className="story-title-search">{(story.creation_date).slice(0, 10)}</h4>
                 </div>
               </div>
             ))}
