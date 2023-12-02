@@ -504,7 +504,7 @@ const StorySearch = () => {
       </div>
       {stories.length > 0 && (
         <>  
-          <div style={{"background-color":"rgba(0, 0, 0, 0.2)", "padding":"10px", "border-radius":"10px"}}>
+          <div style={{"background-color":"rgba(0, 0, 0, 0.2)", "padding":"10px", "border-radius":"10px", width:"40%"}}>
             <h3>Search Results:</h3>
             {stories.map(story => (
               <div key={story.id} className="story-box-search">
