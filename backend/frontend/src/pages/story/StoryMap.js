@@ -6,9 +6,10 @@ import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
 import { List, ListItem, ListItemText, Button, TextField } from '@mui/material';
 
-const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation }) => {
+const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation, onUpdateLocations }) => {
   const [locations, setLocations] = React.useState([]);
-  // eslint-disable-next-line no-unused-vars
+  const [editingIndex, setEditingIndex] = useState(null); // Track which location is being edited
+  const [editedName, setEditedName] = useState(''); // Temporary storage for the edited name
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const autocompleteRef = useRef(null);
   const inputRef = useRef(null);
@@ -39,6 +40,25 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleEditClick = (index) => {
+    setEditingIndex(index);
+    setEditedName(locations[index].name);
+  };
+
+  const handleSaveClick = (index) => {
+    const updatedLocations = locations.map((location, locIndex) => {
+      if (index === locIndex) {
+        return { ...location, name: editedName };
+      }
+      return location;
+    });
+    setLocations(updatedLocations);
+    setEditingIndex(null); // Exit editing mode
+
+    // Call the onAddLocation prop with the updated locations array
+    onUpdateLocations(updatedLocations);
   };
 
   const handleSelect = () => {
@@ -352,6 +372,7 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
               inputRef={inputRef}
             />
           </Autocomplete>
+          <br/>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={initialCenter}
@@ -370,13 +391,29 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
       <List>
         {locations.map((location, index) => (
           <ListItem key={index}>
-            <ListItemText style={{ marginRight: "16px" }}>
-              {location.name || `${location.latitude}, ${location.longitude}`}
-            </ListItemText>
+            {editingIndex === index ? (
+              <TextField
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+                style={{ marginRight: "16px" }}
+              />
+            ) : (
+              <ListItemText style={{ marginRight: "16px" }}>
+                {location.name || `${location.latitude}, ${location.longitude}`}
+              </ListItemText>
+            )}
             <Button
               variant="contained"
               size="small"
               color="primary"
+              onClick={() => (editingIndex === index ? handleSaveClick(index) : handleEditClick(index))}
+            >
+              {editingIndex === index ? 'Save' : 'Edit'}
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              color="secondary"
               onClick={() => handleLocationRemove(index)}
             >
               Remove
