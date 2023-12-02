@@ -17,20 +17,18 @@ from django.utils import timezone
 from math import ceil,cos, radians
 from datetime import datetime, timedelta
 from .serializers import *
-from .models import User,Story,Comment
+from .models import User,Story,Comment,StoryRecommendation,PasswordResetToken
 from .authentication import *
-from .models import PasswordResetToken
 from django.contrib.auth import authenticate
 from .functions import *
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 import logging
-from django.contrib.gis.db.models.functions import Distance
-from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry, LineString, Polygon
 from django.contrib.gis.measure import D  # 'D' is a shortcut for creating Distance objects
 from django.db.models import F
-from django.core.exceptions import FieldError
+import requests
+from .recomFunctions import *
 
 logger = logging.getLogger('django')
 
@@ -146,37 +144,58 @@ class CreateStoryView(views.APIView):
     @swagger_auto_schema(request_body=StorySerializer)
     def post(self, request):
         try:
+            # Authentication and user retrieval
             cookie_value = request.COOKIES['refreshToken']
-            try:
-                user_id = decode_refresh_token(cookie_value)
-            except:
-                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+            user_id = decode_refresh_token(cookie_value)
 
+            logger.warning(f"Request Data: {request.body}")  # Log the raw request data
+
+            # Request data processing
             request_data = json.loads(request.body)
+            logger.warning(f"Parsed Data: {request_data}")  # Log the raw request data
             request_data['content'] = convert_base64_to_url(request_data['content'])
             request_data['author'] = user_id
-            serializer = StorySerializer(data=request_data)
 
+            # Tags processing
+            tags_data = request_data.pop('story_tags', [])
+            logger.warning(f"Tags Data: {tags_data}")  # Log the raw request data
+
+            tags = []
+            for tag_data in tags_data:
+                tag = Tag.objects.create(
+                    wikidata_id=tag_data['wikidata_id'],
+                    label=tag_data['label'],
+                    name=tag_data['name'],
+                    description=tag_data['description']
+                )
+                tags.append(tag)
+
+            # Serializer processing
+            serializer = StorySerializer(data=request_data)
             if serializer.is_valid():
                 story = serializer.save()
+                story.story_tags.set(tags)  # Associate tags with the story
 
-                # Get the author of the story
-                author = story.author
-
-                # For each follower of the author, create an activity
-                for follower in author.followers.all():
-
+                # Activity creation for each follower
+                for follower in story.author.followers.all():
                     Activity.objects.create(
                         user=follower,
                         activity_type='new_story',
                         target_story=story,
-                        target_user=author
+                        target_user=story.author
                     )
-
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                error_messages = "\n".join(["{}: {}".format(field, "; ".join(errors)) for field, errors in serializer.errors.items()])
+                return Response({
+                    'success': False,
+                    'msg': error_messages,  # Concatenated error messages
+                    'errors': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 custom_schema_update_story = openapi.Schema(
@@ -240,7 +259,9 @@ class LikeStoryView(views.APIView):
 
             # Log the activity of liking the story for the author
             Activity.objects.create(user=author, activity_type='story_liked', target_story=story, target_user=liker)
+            logger.warning(f"Liker: {liker}")
 
+            # update_recommendations(liker) Commented out for now because it may too long
             return Response({'success': True, 'msg': 'Liked.'}, status=status.HTTP_201_CREATED)
 
 
@@ -963,3 +984,114 @@ class ActivityStreamView(views.APIView):
         activity.save()
 
         return Response({'success': True, 'msg': 'Activity marked as viewed'}, status=status.HTTP_200_OK)
+
+
+class WikidataSearchView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        search_term = request.GET.get('query', '')
+        if not search_term:
+            return Response({'tags': []}, status=status.HTTP_200_OK)
+
+        logger.warning(f"search term: {search_term}")  # Log the raw request data
+
+        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json'
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.json()
+            tags = [{'id': item['id'], 'label': item['label'], 'description': item.get('description', '')} for item in data.get('search', [])]
+            logger.warning(f"Tags Searched: {tags}")  # Log the raw request data
+            return Response({'tags': tags}, status=status.HTTP_200_OK)
+        except requests.RequestException as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GetRecommendationsView(views.APIView):
+    def get(self, request, format=None):
+        try:
+            user_id = decode_refresh_token(request.COOKIES['refreshToken'])
+            user = User.objects.get(id=user_id)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        recommendations = StoryRecommendation.objects.filter(
+            user=user
+        ).order_by('show_count')[:3]  # Fetch only the first 5 recommendations
+
+        for recommendation in recommendations:
+            recommendation.show_count += 1
+            recommendation.has_been_shown = True
+            recommendation.save()
+
+        serializer = StorySerializer([rec.story for rec in recommendations], many=True)
+        return Response(
+            {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
+            status=status.HTTP_200_OK
+        )
+
+class GetRecommendationsByUserView(views.APIView):
+    def get(self, request, format=None):
+        try:
+            user_id = decode_refresh_token(request.COOKIES['refreshToken'])
+            user = User.objects.get(id=user_id)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        update_recommendations(user)
+
+        recommendations = StoryRecommendation.objects.filter(user=user)
+
+        serializer = StoryRecommendationSerializer(recommendations, many=True)
+        return Response(
+            {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
+            status=status.HTTP_200_OK
+        )
+
+class UpdateRecommendationsByUserView(views.APIView):
+    def get(self, request, format=None):
+        try:
+            user_id = decode_refresh_token(request.COOKIES['refreshToken'])
+            user = User.objects.get(id=user_id)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        update_recommendations(user)
+
+        return Response(
+            {'success': True, 'msg': 'Recommendations updated successfully'},
+            status=status.HTTP_200_OK
+        )
+
+class AllStorywithOwnView(views.APIView):
+    def get(self, request):
+
+
+        cookie_value = request.COOKIES['refreshToken']
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        stories = Story.objects.order_by('-creation_date')
+
+        # Get the page number and size
+        page_number = int(request.query_params.get('page', 1))
+        page_size = int(request.query_params.get('size', 3))
+
+        # Paginate the stories
+
+        paginator = Paginator(stories, page_size)
+        total_pages = ceil(paginator.count / page_size)
+        page = paginator.get_page(page_number)
+
+        serializer = StorySerializer(page, many=True)
+
+
+        return Response({
+            'stories': serializer.data,
+            'has_next': page.has_next(),
+            'has_prev': page.has_previous(),
+            'next_page': page.next_page_number() if page.has_next() else None,
+            'prev_page': page.previous_page_number() if page.has_previous() else None,
+            'total_pages': total_pages,
+        }, status=status.HTTP_200_OK)

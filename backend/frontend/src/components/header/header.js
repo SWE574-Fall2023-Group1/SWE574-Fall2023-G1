@@ -19,9 +19,11 @@ import ResetPasswordRequest from '../../pages/landing/ResetPasswordRequest';
 import ResetPasswordMain from '../../pages/landing/ResetPasswordMain';
 import LocationSearch from '../../pages/search/Timeline';
 import ActivityStream from '../../pages/activity/ActivityStream';
+import Recommendations from '../../pages/recom/Recommendations';
 
 
 function Header() {
+  console.log('Rendering Header');
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -67,7 +69,7 @@ function Header() {
                 <Link to="/create-story" className="nav-item nav-link">Create Memory</Link>
                 <Link to="/user-profile" className="nav-item nav-link">User Profile</Link>
                 <Link to="/activity-stream" className="nav-item nav-link">Activity Stream</Link>
-
+                <Link to="/recommendation" className="nav-item nav-link">Recommendations</Link>
                 <>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', marginLeft: '35vw',  }}>
 
@@ -113,6 +115,7 @@ function Header() {
             <Route path="/story_search" element={<StorySearch />} />
             <Route path="/timeline/:locationJSON" element={<LocationSearch />} />
             <Route path="/activity-stream" element={<ActivityStream />} />
+            <Route path="/recommendation" element={<Recommendations />} />
             </>
             )}
           </Routes>
