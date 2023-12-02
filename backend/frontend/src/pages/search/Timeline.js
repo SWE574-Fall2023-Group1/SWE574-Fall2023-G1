@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import Swipeable from 'react-swipeable';
 import './Timeline.css';
+import StoryDetailsBox from './StoryDetailsBox';
 
 const LocationSearch = () => {
-  // eslint-disable-next-line no-unused-vars
   const [radiusDiff, setRadiusDiff] = useState(5);
   const [locationStories, setLocationStories] = useState([]);
   const [locationName, setLocationName] = useState('');
   const { locationJSON } = useParams();
-  const navigate = useNavigate(); // Updated
+  const navigate = useNavigate();
+
 
   const options = {
     year: 'numeric',
@@ -108,28 +110,22 @@ const LocationSearch = () => {
     <div>
       <h2>Memories in {locationName}</h2>
 
-      {locationStories.length > 0 ? (
-        <>
-          <h3>Location Search Results:</h3>
-          <div>
-            {locationStories.map(story => (
-              <div key={story.id} className="story-box-search">
-                <div className="story-details-search">
-                  <h3 className="story-title-search" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-                  <p className="story-date-search">{formatDate(story)}</p> {/* Display the date */}
-                  <p className="story-author-search">by {story.author_username || 'Unknown'}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button onClick={handleGoBack}>Go Back</button>
-        </>
-      ) : (
-        <div>
-          <h1>Sorry, there are no stories on this location.</h1>
-          <h2>Try a different one.</h2>
-        </div>
-      )}
+
+
+      {/* Timeline and Dots */}
+      <div className="timeline">
+  {locationStories.map((story, index) => (
+    <div key={story.id} className="dot" style={{ left: `${(index + 1) * 10}%` }}>
+      <StoryDetailsBox story={story} onClick={() => handleStoryClick(story.id)} />
+      <p className="story-date">{formatDate(story)}</p>
+    </div>
+  ))}
+</div>
+
+
+
+
+      {/* Rest of your component content */}
     </div>
   );
 };
