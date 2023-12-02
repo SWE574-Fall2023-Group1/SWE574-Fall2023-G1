@@ -503,9 +503,9 @@ const StorySearch = () => {
       </form>
       </div>
       {stories.length > 0 && (
-        <>
-          <h3>Search Results:</h3>
-          <div>
+        <>  
+          <div style={{"background-color":"rgba(0, 0, 0, 0.2)", "padding":"10px", "border-radius":"10px"}}>
+            <h3>Search Results:</h3>
             {stories.map(story => (
               <div key={story.id} className="story-box-search">
                 <div className="story-details-search">
