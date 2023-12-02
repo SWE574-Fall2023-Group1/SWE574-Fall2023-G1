@@ -2,7 +2,6 @@ asgiref
 Django
 django-environ
 environ
-psycopg2
 sqlparse
 tzdata
 djangorestframework
