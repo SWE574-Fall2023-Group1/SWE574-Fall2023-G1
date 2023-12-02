@@ -3,7 +3,8 @@ on:
   pull_request:
   push:
     branches:
-      - main, dev
+      - main
+      - dev
   workflow_dispatch:
 jobs:
     django-test:
@@ -18,7 +19,10 @@ jobs:
             npm install deers > /dev/null 2>&1
             node -e "const deers = require('deers'); console.log(deers()[new Date().getMinutes()]);" || true
             make
-            make up
+            docker --version
+            docker-compose --version
+            make env-files
+            docker compose -f docker-compose-pipeline.yml up -d --build
             docker compose ps
             docker network ls
             docker compose logs db
