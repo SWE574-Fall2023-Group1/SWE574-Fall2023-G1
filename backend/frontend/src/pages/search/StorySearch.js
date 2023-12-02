@@ -376,6 +376,7 @@ const StorySearch = () => {
               placeholder="Title"
               className='long-boxes-search'
               label="Search by Title"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               value={titleSearch}
               onChange={(e) => setTitleSearch(e.target.value)}
             />
@@ -386,6 +387,7 @@ const StorySearch = () => {
               placeholder="Author"
               className='long-boxes-search'
               label="Search by Author"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               value={authorSearch}
               onChange={(e) => setAuthorSearch(e.target.value)}
             />
@@ -396,6 +398,7 @@ const StorySearch = () => {
               placeholder="Tag"
               className='long-boxes-search'
               label="Search by Tag"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               value={tagSearch}
               onChange={(e) => setTagSearch(e.target.value)}
             />
@@ -408,6 +411,7 @@ const StorySearch = () => {
                   placeholder="Date Type"
                   id="date-type-search"
                   className='date-box-search'
+                  style={{"border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
                   value={timeType}
                   onChange={(e) => setTimeType(e.target.value)}
                   label="Date Type"
@@ -438,6 +442,7 @@ const StorySearch = () => {
               className='date-box-search'
               type="search"
               label="Location"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               variant="outlined"
             />
 
