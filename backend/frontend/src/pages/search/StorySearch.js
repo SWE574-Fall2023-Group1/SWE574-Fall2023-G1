@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 import styles from './StorySearch.css';
 import './StorySearch.css';
+import '../story/CreateStory.css';
 import withAuth from '../../authCheck';
 import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, Switch, FormControlLabel } from '@mui/material';
 
@@ -353,6 +354,7 @@ const StorySearch = () => {
         }
         label="Location Search"
       />
+      <div style={{display:"flex", "align-items":"flex-start", width:"70%", "flex-wrap":"wrap", "justify-content":"space-around"}}>
       <form onSubmit={handleSearch}>
         {!showLocationSearch && (
           <>
@@ -456,8 +458,10 @@ const StorySearch = () => {
         <div className='search-story-map' >
           <GoogleMap
             mapContainerStyle={{
-              width: '400px',
+              width: '100%',
               height: '400px',
+              "border-radius": '10px', 
+              "border-style": "solid"
             }}
             zoom={2}
             center={markerPosition}
@@ -479,6 +483,7 @@ const StorySearch = () => {
         <br />
         <Button variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
       </form>
+      </div>
       {stories.length > 0 && (
         <>
           <h3>Search Results:</h3>
