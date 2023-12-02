@@ -342,7 +342,7 @@ const StorySearch = () => {
 
   return (
     <div>
-      <h2>Story Search</h2>
+      <h2>Advanced Search</h2>
       <FormControlLabel
         control={
           <Switch
@@ -435,7 +435,7 @@ const StorySearch = () => {
               onClick={() => handleStoryClickWithLocation(locationSearch)}
               className="btn btn-primary middle"
             >
-              Search Story with Location
+              Search Memory with Location
             </Button>
           )}
           <br />
@@ -477,7 +477,7 @@ const StorySearch = () => {
             )}
         </div>
         <br />
-        <Button variant="contained" type="submit" className="btn btn-primary middle">Search Story</Button>
+        <Button variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
       </form>
       {stories.length > 0 && (
         <>
