@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 import styles from './StorySearch.css';
 import './StorySearch.css';
+import '../story/CreateStory.css';
 import withAuth from '../../authCheck';
 import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, Switch, FormControlLabel } from '@mui/material';
 
@@ -342,7 +343,21 @@ const StorySearch = () => {
 
   return (
     <div>
-      <h2>Story Search</h2>
+    <h1>Advanced Search</h1>
+    <div style={{
+      "display": "flex",
+      "flex-wrap": "wrap",
+      "justify-content": "space-around",
+      "align-items": "flex-start",
+    }}>
+      <div style={{
+        width:"40%",
+        "background-color": "rgba(0, 0, 0, 0.2)",
+        "padding": "1rem",
+        "justify-content": "center",
+        "align-items": "center",
+        "border-radius": "10px",
+      }}>
       <FormControlLabel
         control={
           <Switch
@@ -361,6 +376,7 @@ const StorySearch = () => {
               placeholder="Title"
               className='long-boxes-search'
               label="Search by Title"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               value={titleSearch}
               onChange={(e) => setTitleSearch(e.target.value)}
             />
@@ -371,6 +387,7 @@ const StorySearch = () => {
               placeholder="Author"
               className='long-boxes-search'
               label="Search by Author"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               value={authorSearch}
               onChange={(e) => setAuthorSearch(e.target.value)}
             />
@@ -381,6 +398,7 @@ const StorySearch = () => {
               placeholder="Tag"
               className='long-boxes-search'
               label="Search by Tag"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               value={tagSearch}
               onChange={(e) => setTagSearch(e.target.value)}
             />
@@ -393,6 +411,7 @@ const StorySearch = () => {
                   placeholder="Date Type"
                   id="date-type-search"
                   className='date-box-search'
+                  style={{"border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
                   value={timeType}
                   onChange={(e) => setTimeType(e.target.value)}
                   label="Date Type"
@@ -423,6 +442,7 @@ const StorySearch = () => {
               className='date-box-search'
               type="search"
               label="Location"
+              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
               variant="outlined"
             />
 
@@ -435,7 +455,7 @@ const StorySearch = () => {
               onClick={() => handleStoryClickWithLocation(locationSearch)}
               className="btn btn-primary middle"
             >
-              Search Story with Location
+              Search Memory with Location
             </Button>
           )}
           <br />
@@ -456,8 +476,10 @@ const StorySearch = () => {
         <div className='search-story-map' >
           <GoogleMap
             mapContainerStyle={{
-              width: '400px',
+              width: '100%',
               height: '400px',
+              "border-radius": '10px',
+              "border-style": "solid"
             }}
             zoom={2}
             center={markerPosition}
@@ -477,17 +499,20 @@ const StorySearch = () => {
             )}
         </div>
         <br />
-        <Button variant="contained" type="submit" className="btn btn-primary middle">Search Story</Button>
+        <Button style={{backgroundColor: "#7E49FF", fontSize: "24px"}}variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
       </form>
+      </div>
       {stories.length > 0 && (
         <>
-          <h3>Search Results:</h3>
-          <div>
+          <div style={{"background-color":"rgba(0, 0, 0, 0.2)", "padding":"10px", "border-radius":"10px", width:"40%"}}>
+            <h3>Search Results</h3>
             {stories.map(story => (
               <div key={story.id} className="story-box-search">
                 <div className="story-details-search">
                   <h3 className="story-title-search" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
+                  <p className="story-title-search" onClick={() => handleStoryClick(story.id)}>{(((story.content).slice(3, 100)).slice(0, -4)).concat("...")}</p>
                   <p className="story-author-search">by {story.author_username || 'Unknown'}</p>
+                  <h4 className="story-title-search">Posted on {(story.creation_date).slice(0, 10)}</h4>
                 </div>
               </div>
             ))}
@@ -505,6 +530,7 @@ const StorySearch = () => {
           </Button>
         </div>
       )}
+    </div>
     </div>
   );
 };
