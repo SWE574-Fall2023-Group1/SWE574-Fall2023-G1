@@ -1,14 +1,27 @@
+.profile-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  /* overflow: hidden; */
+  object-fit: cover;
+  /* position: 'absolute', */
+}
+
 .story-box {
-    width: 500px;
-    height: 55px;
+    height: 100px;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     background-color: white;
     padding: 1rem;
     margin-bottom: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 14px;
+    border: 0.50px #F2F1F1 solid;
+    left: 300px;
+    top: 490px;
+    /* position: absolute; */
+    justify-content: flex-start;
   }
 
   .story-author-photo {
@@ -30,9 +43,16 @@
     margin-bottom: 0.5rem;
     cursor: pointer;
     text-decoration: none;
-    color: #1e88e5;
+    font-size: 18px;
+    font-family: 'Inter';
     text-align: left;
     transition: color 0.2s ease-in-out;
+    text-transform: capitalize;
+    color: var(--gray-700, var(--gray-700, #323539));
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px; /* 200% */
+    letter-spacing: -0.15px;
   }
 
   .story-title:hover {
@@ -43,8 +63,15 @@
 
   .story-author {
     margin-bottom: 10;
-    text-align: left;
-    font-family: "Comic Sans MS"
+    color: var(--gray-50, var(--gray-50, #858C95));
+    text-align: right;
+    /* Text S / Medium */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+    letter-spacing: -0.1px;
   }
 
   .custom-bio {
@@ -56,6 +83,15 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto;
+    overflow-y: auto;
+    text-Align: left;
+    text-decoration-color: #323539;
+    font-family: Inter;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 184.615% */
+    letter-spacing: -0.13px;
   }
 
   .custom-followers {
