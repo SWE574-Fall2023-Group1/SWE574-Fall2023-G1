@@ -43,6 +43,7 @@ up: compose-up
 down: compose-down
 
 pre-commit:
+	@pip install -U pre-commit
 	@pre-commit install
 	pre-commit run --all-files
 
