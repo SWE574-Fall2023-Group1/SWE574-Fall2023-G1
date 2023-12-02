@@ -113,21 +113,22 @@
 }
 
 .date-type-search .MuiOutlinedInput-root {
-  background-color: white;
+  background-color: rgb(240, 240, 240);
 }
 
 .date-box-search {
   width: 200px;
-  background-color: white;
+  background-color: rgb(240, 240, 240);
 }
 
 .long-boxes-search {
   width: 60%;
-  border-radius: '20px'
+  border-radius: '20px';
+  background-color: rgb(240, 240, 240);
 }
 
 .long-boxes-search .MuiOutlinedInput-root {
-  background-color: white;
+  background-color: rgb(240, 240, 240);
 }
 
 .story-box-search {
