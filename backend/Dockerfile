@@ -1,11 +1,24 @@
-FROM python:3.11
+FROM python:3.11-slim-buster
+
+LABEL maintainer="SWE 574 - Fall 2023 - Group 1"
+
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /backend
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-RUN apt-get update && \
-    apt-get install -y binutils libproj-dev gdal-bin
+
+RUN : \
+    && apt-get update -y \
+    && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get install -y --no-install-recommends \
+        binutils libproj-dev gdal-bin \
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && python -m pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && :
 
 COPY manage.py .
 
