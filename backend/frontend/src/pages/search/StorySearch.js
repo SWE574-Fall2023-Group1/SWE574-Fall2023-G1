@@ -343,7 +343,7 @@ const StorySearch = () => {
 
   return (
     <div>
-    <h2>Advanced Search</h2>
+    <h1>Advanced Search</h1>
     <div style={{
       "display": "flex",
       "flex-wrap": "wrap",
