@@ -16,9 +16,9 @@ function CreateStory() {
   const { storyId } = useParams(); // Get story ID from URL
   const isEditMode = storyId != null;
   if (isEditMode) {
-    postHeader = 'Edit Story';
+    postHeader = 'Edit Memory';
   } else {
-    postHeader = 'Create Story';
+    postHeader = 'Create New Memory';
   }
 
   useEffect(() => {
