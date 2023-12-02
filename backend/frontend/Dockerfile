@@ -1,5 +1,7 @@
 
-FROM node:18
+FROM node:18-buster-slim
+
+LABEL maintainer="SWE 574 - Fall 2023 - Group 1"
 
 WORKDIR /app
 
