@@ -351,7 +351,7 @@ const StorySearch = () => {
       "align-items": "flex-start",
     }}>
       <div style={{
-        width:"60%", 
+        width:"40%", 
         "background-color": "rgba(0, 0, 0, 0.2)", 
         "padding": "1rem",
         "justify-content": "center",
