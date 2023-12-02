@@ -36,6 +36,8 @@ function StoryDetails() {
   const handleClose = () => setOpen(false);
   // const PHOTOS_PER_PAGE = 3;
   // const COMMENTS_PER_PAGE = 5;
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
+  const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png');
 
   const options = {
     year: 'numeric',
@@ -103,6 +105,7 @@ function StoryDetails() {
 
 useEffect(() => {
   const fetchStory = async () => {
+    fetchProfilePhoto();
     try {
       await fetchUserDetails(); // Get the current user ID
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
@@ -290,6 +293,28 @@ useEffect(() => {
     setOpen(false)
   };
 
+  const fetchProfilePhoto = async () => {
+    try {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
+        headers: {},
+        withCredentials: true,
+      });
+
+
+      // Directly set the URL from the response to state
+      setProfilePhotoUrl(response.data.photo_url);
+
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        // Profile photo not found, set the default photo
+        setProfilePhotoUrl(defaultProfilePhoto);
+      } else {
+        console.error('Error fetching profile photo:', error);
+      }
+    }
+  };
+  console.log(profilePhotoUrl)
+
   Quill.register('modules/imageCompress', ImageCompress);
 
   const modules = {
@@ -314,11 +339,34 @@ useEffect(() => {
   return (
     <div className="story-details-wrapper">
       {story ? (
-        <Box sx={{ borderRadius: "10px", boxShadow: "0 0 10px rgba(0,0,0,0.2)", p: 2, backgroundColor: "#f5f5f5" }}>
+        <Box sx={{ borderRadius: "10px", p: 2}}>
           <Typography variant="h4" align="center" gutterBottom sx={{ mt: 1, mb: 3 }}>
             {story.title}
           </Typography>
           <div className="content-container">
+          <div className="bottom-container">
+            <div >
+              <Typography variant="subtitle1">Memory Time</Typography>
+              <Typography variant="body1" className="info-box">{`${formatDate()}`}</Typography>
+            </div>
+            {story.season_name && (
+              <div>
+                <Typography variant="subtitle1">Season</Typography>
+                <Typography variant="body1" className="info-box">{story.season_name}</Typography>
+              </div>
+            )}
+            <div >
+              <Typography variant="subtitle1">Tags</Typography>
+              <div className="tags-container">
+                {story.story_tags.map((tag, index) => (
+                  <Tooltip key={index} title={tag.description || ''}>
+                    <Chip label={tag.label || tag.name} />
+                  </Tooltip>
+                ))}
+              </div>
+            </div>
+          </div>
+          <br/>
             <div className="left-side">
               <div className="quill-container">
                 <ReactQuill
@@ -356,7 +404,7 @@ useEffect(() => {
                 <>
                   <div className="storydetail-story-map">
                     <GoogleMap
-                      mapContainerStyle={{ height: "400px", width: "400px" }}
+                      mapContainerStyle={{ "border-style": "solid", "border-radius": '10px', height: "400px", width: "80%" }}
                       zoom={2}
                       center={{
                         lat: 0,
@@ -370,17 +418,23 @@ useEffect(() => {
                 </>
               )}
               <div className="author-date-container">
-              <div>
-                <Typography variant="subtitle1">Author</Typography>
+              <div style={{ display: 'flex', "align-items": 'center'}}>
+                <Typography variant="subtitle1">Author‎  ‎</Typography>
+                <img
+                  src={profilePhotoUrl}
+                  alt={`author's profile`}
+                  className="author-photo"
+                  style={{width: "50px", height: "50px"}}
+                />
                 <Chip
                   label={story.author_username}
                   onClick={() => handleUserClick(story.author)}
                   color="primary"
-                  variant="outlined"
+
                 />
               </div>
-              <div >
-                <Typography variant="subtitle1">Creation Date</Typography>
+              <div style={{ display: 'flex', "align-items": 'center'}}>
+                <Typography variant="subtitle1">Posted On‎  ‎</Typography>
                 <Typography variant="body1" className="info-box">
                   {new Date(story.creation_date).toLocaleDateString()}
                 </Typography>
@@ -398,39 +452,18 @@ useEffect(() => {
                     }}
                   >
                     <FavoriteIcon
-                      fontSize="small"
+                      fontSize="large"
                       style={{ color: liked ? 'red' : 'black' }}
                       onClick={() => setLiked(!liked)}
                     />
                   </Button>
-                  <Chip label={numLikes} />
+                  <Chip label={numLikes} style={{"font-size": "large"}}/>
                 </div>
               </div>
             </div>
             </div>
           </div>
-          <div className="bottom-container">
-            <div >
-              <Typography variant="subtitle1">Story Time</Typography>
-              <Typography variant="body1" className="info-box">{`${formatDate()}`}</Typography>
-            </div>
-            {story.season_name && (
-              <div>
-                <Typography variant="subtitle1">Season</Typography>
-                <Typography variant="body1" className="info-box">{story.season_name}</Typography>
-              </div>
-            )}
-            <div >
-              <Typography variant="subtitle1">Tags</Typography>
-              <div className="tags-container">
-                {story.story_tags.map((tag, index) => (
-                  <Tooltip key={index} title={tag.description || ''}>
-                    <Chip label={tag.label || tag.name} />
-                  </Tooltip>
-                ))}
-              </div>
-            </div>
-          </div>
+
           <CommentSection
             storyId={id}
             comments={comments}
@@ -439,7 +472,7 @@ useEffect(() => {
         </Box>
       ) : (
         <Typography variant="h5" align="center">
-          Loading story details...
+          Loading memory details...
         </Typography>
       )}
     </div>
