@@ -343,7 +343,21 @@ const StorySearch = () => {
 
   return (
     <div>
-      <h2>Advanced Search</h2>
+    <h2>Advanced Search</h2>
+    <div style={{
+      "display": "flex",
+      "flex-wrap": "wrap",
+      "justify-content": "space-around",
+      "align-items": "flex-start",
+    }}>
+      <div style={{
+        width:"60%", 
+        "background-color": "rgba(0, 0, 0, 0.2)", 
+        "padding": "1rem",
+        "justify-content": "center",
+        "align-items": "center",
+        "border-radius": "10px",
+      }}>
       <FormControlLabel
         control={
           <Switch
@@ -354,7 +368,6 @@ const StorySearch = () => {
         }
         label="Location Search"
       />
-      <div style={{display:"flex", "align-items":"flex-start", width:"70%", "flex-wrap":"wrap", "justify-content":"space-around"}}>
       <form onSubmit={handleSearch}>
         {!showLocationSearch && (
           <>
@@ -481,7 +494,7 @@ const StorySearch = () => {
             )}
         </div>
         <br />
-        <Button variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
+        <Button style={{backgroundColor: "#7E49FF", fontSize: "24px"}}variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
       </form>
       </div>
       {stories.length > 0 && (
@@ -510,6 +523,7 @@ const StorySearch = () => {
           </Button>
         </div>
       )}
+    </div>
     </div>
   );
 };
