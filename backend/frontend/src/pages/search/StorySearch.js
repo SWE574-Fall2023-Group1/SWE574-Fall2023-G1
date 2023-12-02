@@ -351,8 +351,8 @@ const StorySearch = () => {
       "align-items": "flex-start",
     }}>
       <div style={{
-        width:"40%", 
-        "background-color": "rgba(0, 0, 0, 0.2)", 
+        width:"40%",
+        "background-color": "rgba(0, 0, 0, 0.2)",
         "padding": "1rem",
         "justify-content": "center",
         "align-items": "center",
@@ -478,7 +478,7 @@ const StorySearch = () => {
             mapContainerStyle={{
               width: '100%',
               height: '400px',
-              "border-radius": '10px', 
+              "border-radius": '10px',
               "border-style": "solid"
             }}
             zoom={2}
@@ -503,7 +503,7 @@ const StorySearch = () => {
       </form>
       </div>
       {stories.length > 0 && (
-        <>  
+        <>
           <div style={{"background-color":"rgba(0, 0, 0, 0.2)", "padding":"10px", "border-radius":"10px", width:"40%"}}>
             <h3>Search Results</h3>
             {stories.map(story => (
