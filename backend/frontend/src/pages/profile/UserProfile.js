@@ -75,7 +75,7 @@ const UserProfile = () => {
   const fetchUserStories = async (user) => {
 
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${user.id}?page=${currentPage}&size=5`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${user.id}?page=${currentPage}&size=1`, {
         withCredentials: true,
       });
       console.log(response.data)

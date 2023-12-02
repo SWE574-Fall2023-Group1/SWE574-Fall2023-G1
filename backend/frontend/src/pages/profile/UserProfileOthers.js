@@ -124,7 +124,7 @@ const UserProfileOthers = () => {
 
   const fetchUserStories = async () => {
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${id}?page=${currentPage}&size=5`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${id}?page=${currentPage}&size=1`, {
         withCredentials: true,
       });
       setStories(response.data.stories);

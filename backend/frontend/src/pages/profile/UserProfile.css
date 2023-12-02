@@ -90,7 +90,7 @@ input[type="file"] {
   border: 0.50px #F2F1F1 solid;
   left: 300px;
   top: 490px;
-  /* position: absolute; */
+  position: absolute;
   justify-content: flex-start;
 }
 
