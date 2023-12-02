@@ -372,6 +372,7 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
               inputRef={inputRef}
             />
           </Autocomplete>
+          <br/>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={initialCenter}
