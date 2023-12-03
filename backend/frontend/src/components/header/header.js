@@ -167,6 +167,7 @@ function Header() {
                   path="/timeline/:locationJSON"
                   element={<LocationSearch />}
                 />
+                <Route path="/edit-story/:storyId" element={<EditStory />} />
                 <Route path="/activity-stream" element={<ActivityStream />} />
                 <Route path="/recommendation" element={<Recommendations />} />
               </>

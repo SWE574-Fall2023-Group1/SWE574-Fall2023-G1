@@ -206,28 +206,54 @@ custom_schema_update_story = openapi.Schema(
     required=['content'],
 )
 class UpdateStoryView(views.APIView):
-    @swagger_auto_schema(request_body=custom_schema_update_story)
     def put(self, request, pk):
-
-        cookie_value = request.COOKIES['refreshToken']
         try:
+            # Authentication and user retrieval
+            cookie_value = request.COOKIES.get('refreshToken')
+            if not cookie_value:
+                return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
             user_id = decode_refresh_token(cookie_value)
-        except:
-            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+            story = get_object_or_404(Story, pk=pk, author=user_id)
 
-        story = get_object_or_404(Story, pk=pk)
+            logger.warning(f"Request Data: {request.body}")  # Log the raw request data
 
-        content = request.data.get("content")
-        if content is not None:
-            # Convert base64 encoded images in the content to URLs
-            updated_content = convert_base64_to_url(content)
+            # Request data processing
+            request_data = json.loads(request.body)
+            logger.warning(f"Parsed Data: {request_data}")  # Log the parsed request data
+            request_data['content'] = convert_base64_to_url(request_data['content'])
+            request_data['author'] = user_id
 
-            story.content = updated_content
-            story.save()
-            return Response({'success':True ,'msg': 'Update story content successfull.'}, status=status.HTTP_201_CREATED)
+            # Tags processing
+            tags_data = request_data.pop('story_tags', [])
+            logger.warning(f"Tags Data: {tags_data}")  # Log the tags data
 
-        return Response({'success':False ,'msg': 'Update content failed.'}, status=status.HTTP_400_BAD_REQUEST)
+            tags = []
+            try:
+                story = get_object_or_404(Story, pk=pk, author=user_id)
+                serializer = StoryUpdateSerializer(story, data=request_data)
+                if serializer.is_valid():
+                    updated_story = serializer.save()
 
+                    updated_story.story_tags.clear()
+                    # Handling tags
+                    for tag_data in tags_data:
+                        tag = Tag.objects.create(
+                            wikidata_id=tag_data['wikidata_id'],
+                            label=tag_data['label'],
+                            name=tag_data['name'],
+                            description=tag_data['description']
+                        )
+                        updated_story.story_tags.add(tag)
+
+                    updated_story.save()
+                    return Response({'success': True, 'msg': 'Story updated successfully.', 'data': serializer.data}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'success': False, 'msg': 'Update failed.', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class LikeStoryView(views.APIView):
