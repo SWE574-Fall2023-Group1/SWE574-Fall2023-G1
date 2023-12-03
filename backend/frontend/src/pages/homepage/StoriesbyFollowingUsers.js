@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import styles from './StoriesByFollowingsUsers.module.css';
 import withAuth from '../../authCheck';
 import { Button } from '@mui/material';
+import locationIcon from '../../assets/images/location.png'
+import dateIcon from '../../assets/images/date.png'
 
 
 function StoriesByFollowingsUsers() {
@@ -100,15 +102,24 @@ function StoriesByFollowingsUsers() {
       ) : (
         stories.map(story => (
           <div key={story.id} className={styles.storyBox}>
-            <img
-              className={styles.storyAuthorPhoto}
-              src={profilePhotos[story.author]}
-              alt={`${story.author_username || 'Unknown'}'s profile`}
-              onClick={() => handlePhotoClick(story.author)}
-            />
+              <div className={styles.authorSection}>
+                <img
+                  className={styles.storyAuthorPhoto}
+                  src={profilePhotos[story.author]}
+                  alt={`${story.author_username || 'Unknown'}'s profile`}
+                  onClick={() => handlePhotoClick(story.author)}
+                />
+                <div className={styles.authorAndDate}>
+                  <p onClick={() => handlePhotoClick(story.author)} className={styles.storyAuthor}> {story.author_username || 'Unknown'}</p>
+                  <p className={styles.postedOn}>Posted on {new Date(story.creation_date).toLocaleDateString()}</p>
+                </div>
+            </div>
             <div className={styles.storyDetails}>
               <h3 className={styles.storyTitle} onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-              <p className={styles.storyAuthor}>by {story.author_username || 'Unknown'}</p>
+            </div>
+            <div className={styles.dateAndLocation}>
+              <div><img src={dateIcon} style={{ marginRight: 6 }} alt="Date Icon"/>date</div>
+              <div><img src={locationIcon} style={{ marginRight: 9 }} alt="Location Icon"/>location</div>
             </div>
           </div>
         ))
