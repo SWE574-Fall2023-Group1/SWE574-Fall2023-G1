@@ -17,7 +17,7 @@ For further information and documentation, check our [wiki](https://github.com/S
 
 ### URL of Deployed Website
 
-Project URL: [Memories Website](http://35.194.29.12:3000/)
+Project URL: [Memories Website](http://34.66.132.236:3000/)
 
 ---
 
