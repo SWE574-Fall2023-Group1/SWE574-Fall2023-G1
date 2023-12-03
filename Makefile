@@ -33,15 +33,26 @@ else
 endif
 
 compose-up: env-files
-	docker-compose up -d --build
+	docker compose up -d --build
 
 compose-down: env-files
-	docker-compose down --remove-orphans
+	docker compose down --remove-orphans
 
 up: compose-up
 
 down: compose-down
 
 pre-commit:
+	@pip install -U pre-commit
 	@pre-commit install
 	pre-commit run --all-files
+
+git-stats:
+	git log | git shortlog -sne
+
+django-test: up
+	docker compose exec -T backend python manage.py test
+
+local-frontend: down
+	docker compose up db backend -d --build
+	cd ./backend/frontend && npm install && npm run start

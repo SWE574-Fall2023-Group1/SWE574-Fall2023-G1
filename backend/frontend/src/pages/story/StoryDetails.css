@@ -87,7 +87,7 @@
   }
 
   .quill-container {
-    width: 500px;
+    width: 100%;
     height: auto;
     display: flex;
     justify-content: center;
@@ -111,6 +111,7 @@
   .story-details-wrapper {
     max-width: 500px;
     margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0.1);
   }
 
   .info-box {
@@ -158,32 +159,30 @@
 }
 
 .content-container {
-  display: flex;
   justify-content: space-between;
   margin-top: 16px;
 }
 
 .left-side {
-  width: 50%;
-  padding-right: 16px;
+  width: 100%;
 }
 
 .right-side {
-  width: 50%;
-  padding-left: 16px;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .author-date-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   margin-top: 16px;
+  align-items: 'center';
 }
 
 .bottom-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   margin-top: 16px;
 }
 
@@ -228,8 +227,17 @@
   box-shadow: 24px 24px 0 rgba(0, 0, 0, 0.2);
   padding: 16px;
 }
+
 .save-button-container {
   position: absolute;
   bottom: 16px;
   left: 16px;
+}
+
+.author-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-right: 10px;
 }

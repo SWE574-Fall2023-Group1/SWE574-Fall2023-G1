@@ -14,15 +14,12 @@ import Chip from '@mui/material/Chip';
 
 let postHeader = null;
 
-function CreateStory() {
+function EditStory() {
 
   const { storyId } = useParams(); // Get story ID from URL
   const isEditMode = storyId != null;
-  if (isEditMode) {
-    postHeader = 'Edit Memory';
-  } else {
-    postHeader = 'Create New Memory';
-  }
+
+  const postHeader = 'Edit Memory';
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -43,9 +40,56 @@ function CreateStory() {
   const [include_time, setIncludeTime] = useState(false);
 
   const [selectedTags, setSelectedTags] = useState([]);
+  const parseSRID = (sridString) => {
+    if (!sridString) return null;
+
+    // Remove the SRID=4326; part and extract coordinates
+    const coordsString = sridString.split(';')[1];
+
+    // Determine the geometry type (POINT, LINESTRING, POLYGON)
+    const geomType = coordsString.split(' ')[0];
+
+    // Extract the coordinates
+    let coordsArray = coordsString.replace(geomType, '').replace(/[\(\)]/g, '').split(',');
+
+    // Parse coordinates based on geometry type
+    switch (geomType) {
+        case 'POINT':
+            return {
+                type: 'Point',
+                coordinates: coordsArray[0].trim().split(' ').map(Number)
+            };
+        case 'LINESTRING':
+            return {
+                type: 'LineString',
+                coordinates: coordsArray.map(coord => coord.trim().split(' ').map(Number))
+            };
+        case 'POLYGON':
+            return {
+                type: 'Polygon',
+                coordinates: [coordsArray.map(coord => coord.trim().split(' ').map(Number))]
+            };
+        default:
+            console.error('Unsupported geometry type:', geomType);
+            return null;
+    }
+};
+
+const parseLocation = (location) => {
+    return {
+        ...location,
+        point: parseSRID(location.point),
+        line: parseSRID(location.line),
+        polygon: parseSRID(location.polygon),
+        circle: location.circle ? {
+            ...parseSRID(location.circle),
+            radius: parseFloat(location.radius)
+        } : null
+    };
+};
+
 
   useEffect(() => {
-    if (isEditMode) {
       axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${storyId}`, { withCredentials: true })
         .then(response => {
           const storyInfo = response.data;
@@ -62,31 +106,45 @@ function CreateStory() {
             });
           }
           if (storyInfo.location_ids && storyInfo.location_ids.length) {
-            setLocations(storyInfo.location_ids.map(location => ({ ...location, id: location.id.toString() })));
+            const parsedLocations = storyInfo.location_ids.map(parseLocation);
+            setLocations(parsedLocations);
           }
+          console.log('State after setting:', {
+            // ... other state variables ...
+            location_ids: location_ids // or just location_ids if you want to log the original data
+          });
           setDateType(storyInfo.date_type);
+          // eslint-disable-next-line default-case
           switch(storyInfo.date_type) {
             case 'year':
-              setYear(storyInfo.year);
-              setSeasonName(storyInfo.season_name);
-              break;
+                setYear(storyInfo.year);
+                setSeasonName(storyInfo.season_name);
+                break;
             case 'year_interval':
-              setStartYear(storyInfo.start_year);
-              setEndYear(storyInfo.end_year);
-              break;
+                setStartYear(storyInfo.start_year);
+                setEndYear(storyInfo.end_year);
+                break;
+            case 'normal_date':
+                setDate(storyInfo.date);
+                break;
+            case 'interval_date':
+                setStartDate(storyInfo.start_date);
+                setEndDate(storyInfo.end_date);
+                break;
+            case 'decade':
+                setDecade(storyInfo.decade);
+                break;
             }
-          setDate(storyInfo.date);
-          setStartDate(storyInfo.start_date);
-          setEndDate(storyInfo.end_date);
-          setDecade(storyInfo.decade);
           setIncludeTime(storyInfo.include_time);
           // ... handle other fields as needed ...
-          console.log('State after setting:', { year, season_name, start_year, end_year, date, start_date, end_date, decade, location_ids });
-
         })
         .catch(error => console.error('Error fetching story:', error));
     }
-  }, [storyId, isEditMode]);
+  , [storyId, isEditMode]);
+
+  useEffect(() => {
+    console.log("Current locations state:", location_ids);
+    }, [location_ids]);
 
   const addTag = (tag) => {
     console.log("Adding Tag", tag);
@@ -102,9 +160,16 @@ function CreateStory() {
   };
 
   const removeTag = (tagId) => {
-    console.log("Removing Tag", tagId)
-    setSelectedTags(selectedTags.filter(tag => tag.wikidata_id !== tagId));
-  };
+    console.log("Removing Tag", tagId);
+
+    // Remove tag from selectedTags
+    const updatedSelectedTags = selectedTags.filter(tag => tag.wikidata_id !== tagId);
+    setSelectedTags(updatedSelectedTags);
+
+    // Remove tag from story_tags if it's an existing tag (check if it has an id)
+    const updatedStoryTags = story_tags.filter(tag => tag.wikidata_id !== tagId);
+    setStoryTags(updatedStoryTags);
+};
 
 
   const navigate = useNavigate();
@@ -145,15 +210,53 @@ function CreateStory() {
   ];
 
   useEffect(() => {
-    setSeasonName(null);
-    setYear(null);
-    setStartYear(null);
-    setEndYear(null);
-    setDate(null);
-    setStartDate(null);
-    setEndDate(null);
-    setDecade(null);
+    // Reset states based on the selected date type
+    switch(date_type) {
+      case 'year':
+        setStartYear(null);
+        setEndYear(null);
+        setDate(null);
+        setStartDate(null);
+        setEndDate(null);
+        setDecade(null);
+        break;
+      case 'year_interval':
+        setYear(null);
+        setDate(null);
+        setStartDate(null);
+        setEndDate(null);
+        setDecade(null);
+        break;
+      case 'normal_date':
+        setYear(null);
+        setStartYear(null);
+        setEndYear(null);
+        setStartDate(null);
+        setEndDate(null);
+        setDecade(null);
+        break;
+      case 'interval_date':
+        setYear(null);
+        setStartYear(null);
+        setEndYear(null);
+        setDate(null);
+        setDecade(null);
+        break;
+      case 'decade':
+        setYear(null);
+        setStartYear(null);
+        setEndYear(null);
+        setDate(null);
+        setStartDate(null);
+        setEndDate(null);
+        break;
+      default:
+        // Do nothing if date_type is not set or is an unexpected value
+        break;
+    }
   }, [date_type]);
+
+
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY; // Securely manage this
 
 
@@ -184,13 +287,44 @@ function CreateStory() {
 
   const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const prepareLocationData = (location) => {
+    let preparedLocation = {
+        id: location.id,
+        name: location.name,
+        success: location.success,
+        msg: location.msg,
+    };
+
+    // Add non-null fields to the prepared location object
+    if (location.point) {
+        preparedLocation.point = location.point;
+    }
+    if (location.line) {
+        preparedLocation.line = location.line;
+    }
+    if (location.polygon) {
+        preparedLocation.polygon = location.polygon;
+    }
+    if (location.circle) {
+        preparedLocation.circle = location.circle;
+        preparedLocation.radius = location.radius;
+    }
+
+    return preparedLocation;
+    };
+
+    // Before sending the request
+    const preparedLocations = location_ids.map(location => prepareLocationData(location));
+
+
     const storyData = {
       title: title,
       content: content,
       story_tags: story_tags,
-      location_ids: location_ids,
+      location_ids: preparedLocations, // Use the filtered locations
       date_type: date_type,
       season_name: season_name,
       start_year: start_year,
@@ -205,20 +339,14 @@ function CreateStory() {
 
     try {
       let response;
-      if (isEditMode) {
-        // Update existing story
-        response = await axios.put(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyUpdate/${storyId}`, storyData, { withCredentials: true });
-        navigate(`/story/${storyId}`);
-      } else {
-        // Create new story
-        response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyCreate`, storyData, { withCredentials: true });
-        navigate(`/story/${response.data.id}`);
-      }
-
+      // Update existing story
+      response = await axios.put(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyUpdate/${storyId}`, storyData, { withCredentials: true });
+      navigate(`/story/${storyId}`);
     } catch (error) {
       console.error('Error submitting story:', error);
     }
-  };
+};
+
 
 
   return (
@@ -438,14 +566,15 @@ function CreateStory() {
           <br/>
           <div className='create-story-map'>
           <text>You can add locations by using the map or typing in the search bar.</text>
-            <StoryMap
-                  mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
-                  initialCenter={mapCenter}
-                  zoom={1}
-                  apiKey={googleMapsApiKey}
-                  onAddLocation={handleAddLocation}
-                  onRemoveLocation={handleRemoveLocation}
-                  onUpdateLocations={handleUpdateLocations}
+          <StoryMap
+                    mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
+                    initialCenter={mapCenter}
+                    zoom={1}
+                    apiKey={googleMapsApiKey}
+                    location_ids={location_ids}
+                    onAddLocation={handleAddLocation}
+                    onRemoveLocation={handleRemoveLocation}
+                    onUpdateLocations={handleUpdateLocations}
                 />
           </div>
           <br/>
@@ -463,4 +592,4 @@ function CreateStory() {
   );
 }
 
-export default withAuth(CreateStory);
+export default withAuth(EditStory);
