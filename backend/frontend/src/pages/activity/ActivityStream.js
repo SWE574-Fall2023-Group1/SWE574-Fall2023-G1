@@ -2,9 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-//import './ActivityStream.css'; // You should create this CSS file to style your component
+import Grid from '@mui/material/Grid';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentIcon from '@mui/icons-material/Comment';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import withAuth from '../../authCheck';
+
 
 function ActivityStream() {
   const [activities, setActivities] = useState([]);
@@ -76,32 +83,83 @@ function ActivityStream() {
     }
   };
 
+  const getActivityColor = (activityType) => {
+    // Define colors based on activity types
+    switch (activityType) {
+      case 'story_liked':
+        return '#FFFFFF';
+      case 'new_commented_on_story':
+        return '#FFFFFF';
+      case 'followed_user':
+        return '#FFFFFF';
+      case 'unfollowed_user':
+        return '#FFFFFF';
+      default:
+        return '#FFFFFF'; // Default color
+    }
+  };
+
+  const getIconForActivity = (activityType) => {
+    switch (activityType) {
+      case 'story_liked':
+        return <FavoriteIcon color="error" />;
+      case 'new_commented_on_story':
+        return <CommentIcon color="info" />;
+      case 'followed_user':
+        return <PersonAddIcon color="success" />;
+      case 'unfollowed_user':
+        return <PersonRemoveIcon color="disabled" />;
+      default:
+        return null; // No icon for other types
+    }
+  };
+
+  const categorizeActivities = () => {
+    const categorized = {};
+    activities.forEach(activity => {
+      const category = activity.activity_type;
+      if (!categorized[category]) {
+        categorized[category] = [];
+      }
+      categorized[category].push(activity);
+    });
+    return categorized;
+  };
+
+  const renderList = (category, activities) => (
+    <Grid item xs={12} sm={6} md={3} key={category}>
+      <Box>
+        {activities.length > 0 && (
+          <Typography variant="h6" gutterBottom>
+            {getIconForActivity(activities[0].activity_type)}
+          </Typography>
+        )}
+        {activities.map(activity => (
+          <Card key={activity.id} sx={{ width: '100%', my: 1, border: '2px solid #7E49FF', borderRadius: '8px', cursor: 'pointer', backgroundColor: getActivityColor(activity.activity_type), boxShadow: '0 4px 8px rgba(197,180,239,0.2)', animation: 'fadeIn 0.5s ease' }} onClick={() => handleActivityClick(activity)}>
+            <CardContent>
+              <Typography variant="subtitle1">
+                {activity.target_user_username && `${activity.target_user_username} `}
+                {formatActivityType(activity.activity_type)}
+                {activity.target_story_title && ` ${activity.target_story_title}`}
+              </Typography>
+              <Typography variant="caption">
+                {new Date(activity.date).toLocaleString()}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+    </Grid>
+  );
+
   return (
-    <Box sx={{ m: 2 }}>
+    <Box sx={{ m: 'auto', maxWidth: '1200px', height: '100vh', padding: '10px' }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Activity Stream
+      Activity Stream
       </Typography>
-      {activities.length === 0 ? (
-        <Typography variant="body1">No activities found.</Typography>
-      ) : (
-        activities.map(activity => (
-          <Box key={activity.id} sx={{ p: 1, my: 1, border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' }} onClick={() => handleActivityClick(activity)}>
-            <Typography variant="subtitle1">
-              {/* Display user-related information */}
-              {activity.target_user_username && `${activity.target_user_username} `}
-
-              {/* Display activity type */}
-              {formatActivityType(activity.activity_type)}
-
-              {/* Display story-related information */}
-              {activity.target_story_title && ` ${activity.target_story_title}`}
-            </Typography>
-            <Typography variant="caption">
-              {new Date(activity.date).toLocaleString()}
-            </Typography>
-          </Box>
-        ))
-      )}
+      <Grid container spacing={3}>
+        {Object.entries(categorizeActivities()).map(([category, activities]) => renderList(category, activities))}
+      </Grid>
     </Box>
   );
 }

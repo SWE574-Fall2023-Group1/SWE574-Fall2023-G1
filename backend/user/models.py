@@ -58,8 +58,8 @@ class Story(models.Model):
 
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255, null=True)
-    content = RichTextField(null=True)
+    title = models.CharField(max_length=255, default="Test Title")
+    content = RichTextField(default="Test Content")
     creation_date = models.DateTimeField(null=True,auto_now_add=True)
     story_tags = models.ManyToManyField(Tag, blank=True)
     location_ids = models.ManyToManyField(Location, blank=True)
@@ -132,3 +132,12 @@ class Activity(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.activity_type}"
+
+class StoryRecommendation(models.Model):
+    story = models.ForeignKey('Story', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    show_count = models.IntegerField(default=0)
+    has_been_shown = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('story', 'user')

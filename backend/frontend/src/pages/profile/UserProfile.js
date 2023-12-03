@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import './UserProfile.css';
 import withAuth from '../../authCheck';
 import { TextField, Button, Paper } from '@mui/material';
+import addnewphoto from '../../assets/images/addnewphoto.png'
+import deletephoto from '../../assets/images/deletephoto.png'
+import tick from '../../assets/images/tick.png'
+import edit from '../../assets/images/edit.png'
 
 
 const UserProfile = () => {
@@ -18,6 +22,7 @@ const UserProfile = () => {
   const [updatedBio, setUpdatedBio] = useState(null);
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [defaultProfilePhoto] = useState('https://i.stack.imgur.com/l60Hf.png');
+  const [inputValue, setInputValue] = useState('');
 
   const navigate = useNavigate();
 
@@ -70,7 +75,7 @@ const UserProfile = () => {
   const fetchUserStories = async (user) => {
 
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${user.id}?page=${currentPage}&size=5`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${user.id}?page=${currentPage}&size=1`, {
         withCredentials: true,
       });
       console.log(response.data)
@@ -131,6 +136,30 @@ const UserProfile = () => {
     }
 };
 
+const capitalizeFirstLetter = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+
+  const handleKeyPress = (event) => {
+    const { key, target } = event;
+
+    // Check if the pressed key is Enter (Return)
+    if (key === 'Enter') {
+      // Prevent default behavior (new line)
+      event.preventDefault();
+
+      // Check if the content is non-empty
+      const newValue = target.value + '\n';
+      if (newValue.trim() === '\n') {
+        return;
+      }
+
+      // Update the input value
+      setInputValue(newValue);
+    }
+  }
+
   const handleProfileBioChange = async () => {
     try {
       await axios.put(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/biography`, { biography: updatedBio }, {
@@ -149,10 +178,9 @@ const UserProfile = () => {
 
   return (
     <div>
-      <h1>{user.username}'s Profile</h1>
-
+        <div style={{left: 800, top: -270, position: 'absolute', color: '#262626', fontSize: 36, fontFamily: 'Roboto', fontWeight: '400', lineHeight: 25, wordWrap: 'break-word'}}>{user.username} <img src={tick}/></div>
       {profilePhotoUrl && (
-        <img
+        <img style={{left: 390, top: 120, position: 'absolute'}}
         src={profilePhotoUrl}
         alt={`${user.username}'s profile`}
         className="profile-photo"
@@ -171,7 +199,7 @@ const UserProfile = () => {
       className="profile-photo-change-button"
       onClick={() => document.getElementById('profile-photo-input').click()}
     >
-      Change Profile Photo
+     <div style={{left: 581, top: 170, position: 'absolute', color: '#111111', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}}><img src={addnewphoto} style={{ marginRight: 6 }} alt="Add New Photo Icon"/>  Add new photo</div>
     </button>
     <span id="profile-photo-filename"></span>
     <input
@@ -188,20 +216,21 @@ const UserProfile = () => {
       className="profile-photo-delete-button"
       onClick={handleRemoveProfilePhoto}
     >
-      Remove Profile Photo
+     <div style={{left: 583, top: 202, position: 'absolute', color: '#111111', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}}><img src={deletephoto} style={{ marginRight: 7 }} alt="Delete Photo Icon"/> Delete photo</div>
     </button>
     </div>
   </div>
 )}
 
 {profilePhotoUrl === defaultProfilePhoto && (
+
   <div>
     <button
       type="button"
-      className="profile-photo-button"
+      className="profile-photo-change-button"
       onClick={() => document.getElementById('profile-photo-input').click()}
     >
-      Upload Profile Photo
+     <div style={{left: 581, top: 172, position: 'absolute', color: '#111111', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}}><img src={addnewphoto} style={{ marginRight: 6 }} alt="Add New Photo Icon"/> Add new photo</div>
     </button>
     <span id="profile-photo-filename"></span>
     <input
@@ -218,9 +247,10 @@ const UserProfile = () => {
           <div className='edit-box'>
             <TextField
             value={updatedBio}
+            onKeyPress={handleKeyPress}
             onChange={(e) => setUpdatedBio(e.target.value)}
             multiline={true}
-            rowsMax={100}
+            inputProps={{ maxLength: 300, rows: 3 }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && e.shiftKey) {
                 e.preventDefault();
@@ -230,39 +260,41 @@ const UserProfile = () => {
             InputProps={{ className: 'edit-box' }}
             />
             </div>
-            <div className='edit-buttons'>
-            <Button variant="contained" color='success' type="button" onClick={handleProfileBioChange}>Save</Button>
-            <Button variant="contained" type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
+            <div>
+            <Button variant="contained" style={{top:100}} color='success' type="button" onClick={handleProfileBioChange}>Save</Button>
+            <Button variant="contained" style={{top:100}} type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
             </div>
           </div>
         ) : (
           <div>
+            <div style={{height: 30, left: 321, top: 300, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>About Me</div>
             <br/>
-            <Paper elevation={3} className="custom-bio">
-            <strong>Biography</strong>
-            <p>{user.biography.split('\n').map((line, index) => <span key={index}>{line}<br/></span>)}</p>
-            </Paper>
-            <Button variant="contained" type="button" onClick={() => setIsEditingBio(true)}>Edit</Button>
+            <div className="custom-bio" style={{width: 750, height: 100, left: 300, top: 330, borderRadius: 14, position: 'absolute', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', justifyContent: 'left', alignItems: 'left', display: 'inline-flex'}}>
+              <div>{user.biography.split('\n').map((line, index) => <span key={index}>{capitalizeFirstLetter(line)}<br/></span>)}</div>
+            </div>
+            <button type="button" className="edit-buttons"  onClick={() => setIsEditingBio(true)} style={{position: 'relative'}}><div style={{position: 'absolute',left: 320, top: 245, display: 'flex', justifyContent: 'center', alignItems: 'center', textTransform: 'none', background:'none'}}><img src={edit} style={{ marginRight: 5 }} alt="Edit Icon"/>Edit</div></button>
           </div>
         )}
         <br/>
-      <Paper elevation={3} className="custom-followers">
-            <strong>Followers</strong>
-            <p>{user.followers.length !== null ? user.followers.length : 'Loading...'}</p>
-          </Paper>
+      <div className="custom-followers" style={{left: 587, top: 125, position: 'absolute', color: '#111111', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}><p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
+          </div>
 
-      <h2>Stories</h2>
+          <div style={{height: 30, left: 321, top: 450, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>My Recent Stories</div>
       {loading ? (
-        <p>Loading stories...</p>
+        <div style={{ marginTop:400}}>
+          <p>Loading stories...</p>
+        </div>
       ) : stories.length === 0 ? (
-        <p>No stories found.</p>
+        <div style={{ marginTop:400}}>
+          <p>No stories found.</p>
+        </div>
       ) : (
         <div>
           {stories.map(story => (
-                <div key={story.id} className="story-box">
+                <div key={story.id} className="story-box" style={{width: 780}}>
                   <div className="story-details">
                     <h3 className="story-title" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-                    <p className="story-author">Creation Date: {new Date(story.creation_date).toLocaleDateString()}</p>
+                    <p className="story-author">Posted on {new Date(story.creation_date).toLocaleDateString()}</p>
                   </div>
                 </div>
               ))}

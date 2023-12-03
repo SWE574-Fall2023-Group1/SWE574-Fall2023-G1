@@ -17,7 +17,7 @@ function LogoutButton() {
   }
 
   return (
-    <Button variant="contained" color="error" style={{ position: 'absolute', top: '10px', right: '10px' }} onClick={handleLogoutClick}>Logout</Button>
+    <Button variant="contained" color="error" style={{ position: 'absolute', right: '10px' }} onClick={handleLogoutClick}>Logout</Button>
   );
 }
 

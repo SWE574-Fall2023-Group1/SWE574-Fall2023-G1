@@ -1,13 +1,14 @@
 // StoryMap.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { GoogleMap, Autocomplete, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, Autocomplete, Marker, useJsApiLoader, Polygon, Polyline, Circle } from '@react-google-maps/api';
 import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
 import { List, ListItem, ListItemText, Button, TextField } from '@mui/material';
 
-const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation, onUpdateLocations }) => {
+const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation, onUpdateLocations, location_ids }) => {
   const [locations, setLocations] = React.useState([]);
+  // const [locations, setLocations] = React.useState(location_ids || []);
   const [editingIndex, setEditingIndex] = useState(null); // Track which location is being edited
   const [editedName, setEditedName] = useState(''); // Temporary storage for the edited name
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
@@ -22,6 +23,72 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
     googleMapsApiKey: apiKey,
     libraries,
   });
+  useEffect(() => {
+    if (location_ids && location_ids.length > 0) {
+      const updatedLocations = location_ids.reduce((validLocations, location) => {
+        // Check if at least one of the properties is not null
+        if (location.point || location.line || location.polygon || location.circle) {
+          validLocations.push(location);
+        }
+        return validLocations;
+      }, []);
+      setLocations(updatedLocations);
+    }
+  }, [location_ids]);
+
+  function NewStoryMarkers({ locations }) {
+    return (
+      <>
+        {locations.map((location, index) => {
+          if (location.point) {
+            // For Point type locations
+            return (
+              <Marker
+                key={index}
+                position={{ lat: location.point.coordinates[1], lng: location.point.coordinates[0] }}
+              />
+            );
+          } else if (location.line) {
+            // For LineString type locations
+            const path = location.line.coordinates.map(coord => ({ lat: coord[1], lng: coord[0] }));
+            return (
+              <Polyline
+                key={index}
+                path={path}
+                options={{ strokeColor: "#FF0000" }}
+              />
+            );
+          } else if (location.polygon) {
+            // For Polygon type locations
+            const paths = location.polygon.coordinates.map(polygon =>
+              polygon.map(coord => ({ lat: coord[1], lng: coord[0] }))
+            );
+            return (
+              <Polygon
+                key={index}
+                paths={paths}
+                options={{ fillColor: "#FFFF00" }}
+              />
+            );
+          } else if (location.circle) {
+            // For Circle type locations
+            return (
+              <Circle
+                key={index}
+                center={{ lat: location.circle.coordinates[1], lng: location.circle.coordinates[0] }}
+                radius={parseFloat(location.radius)}
+                options={{ fillColor: "#0088FF" }}
+              />
+            );
+          } else {
+            // If the location type is not recognized
+            return null;
+          }
+        })}
+      </>
+    );
+  }
+
   const handleMapClick = async (e) => {
     const { latLng } = e;
     const lat = latLng.lat();
@@ -35,6 +102,8 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
           latitude: Number(lat.toFixed(6)),
           longitude: Number(lng.toFixed(6))
         };
+        console.log("Adding new location (Create Part):", locationData);  // Log the new location being added
+
         setLocations([...locations, locationData]);
       }
     } catch (error) {
@@ -352,7 +421,13 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
       }
     }
 
+    useEffect(() => {
+      console.log("Initial locations received in StoryMap:", location_ids);
+    }, [location_ids]);
 
+    useEffect(() => {
+      console.log("Updated locations in StoryMap:", locations);
+    }, [locations]);
 
 
   return (
@@ -372,6 +447,7 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
               inputRef={inputRef}
             />
           </Autocomplete>
+          <br/>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={initialCenter}
@@ -382,10 +458,8 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
         {locations.map((location, index) => (
           <Marker key={index} position={{ lat: location.latitude, lng: location.longitude }} />
         ))}
-        {/* <DrawingManager
-        onOverlayComplete={onOverlayComplete}
-        // ... other props for DrawingManager, like options for drawing control etc.
-      /> */}
+        <NewStoryMarkers locations={locations} />
+
       </GoogleMap>
       <List>
         {locations.map((location, index) => (

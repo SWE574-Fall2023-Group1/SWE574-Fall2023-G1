@@ -139,8 +139,6 @@ packaging==23.2
     #   drf-yasg
 pillow==10.1.0
     # via -r requirements.in
-psycopg2==2.9.9
-    # via -r requirements.in
 psycopg2-binary==2.9.9
     # via -r requirements.in
 pycodestyle==2.11.1

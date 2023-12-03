@@ -6,6 +6,8 @@ import withAuth from '../../authCheck';
 import UserProfile from './UserProfile';
 import './UserProfileOthers.css';
 import { Button, Paper } from '@mui/material';
+import tick from '../../assets/images/tick.png'
+
 
 
 const UserProfileOthers = () => {
@@ -122,7 +124,7 @@ const UserProfileOthers = () => {
 
   const fetchUserStories = async () => {
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${id}?page=${currentPage}&size=5`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${id}?page=${currentPage}&size=1`, {
         withCredentials: true,
       });
       setStories(response.data.stories);
@@ -140,6 +142,9 @@ const UserProfileOthers = () => {
     navigate(`/story/${id}`);
   }
 
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -153,40 +158,48 @@ const UserProfileOthers = () => {
   return (
     <div>
       {isMe? <UserProfile/>:
-          <div>
-          <h1>{user.username}'s Profile</h1>
-          {profilePhotoUrl && (
-            <img
-              src={profilePhotoUrl}
-              alt={`${user.username}'s profile`}
-              className="profile-photo"
+          <div> <div style={{left: 800, top: -270, position: 'absolute', color: '#262626', fontSize: 36, fontFamily: 'Roboto', fontWeight: '400', lineHeight: 25, wordWrap: 'break-word'}}>{user.username} <img src={tick}/></div>
+      {profilePhotoUrl && (
+        <img style={{left: 390, top: 120, position: 'absolute'}}
+        src={profilePhotoUrl}
+        alt={`${user.username}'s profile`}
+        className="profile-photo"
             />
           )}
           {/* <p>ID: {user.id}</p>
           <p>Email: {user.email}</p> */}
-          <Paper elevation={3} className="custom-bio">
-            <strong>Biography</strong>
-            <p>{user.biography}</p>
-            </Paper>
-          <Paper elevation={3} className="custom-followers">
-            <strong>Followers</strong>
-            <p>{followerCount !== null ? followerCount : 'Loading...'}</p>
-          </Paper>
-          <Button variant="contained" onClick={handleFollowClick}>
+          <div>
+            <div style={{height: 30, left: 321, top: 300, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>About Me</div>
+            <br/>
+            <div className="custom-bio" style={{width: 750, height: 100, left: 300, top: 330, borderRadius: 14, position: 'absolute', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', justifyContent: 'left', alignItems: 'left', display: 'inline-flex'}}>
+              <div>{user.biography.split('\n').map((line, index) => <span key={index}>{capitalizeFirstLetter(line)}<br/></span>)}</div>
+            </div>
+          </div>
+
+
+          <div style={{left: 587, top: 125, position: 'absolute', color: '#111111', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}><p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
+          </div>
+          <button type="button" className="custom-followers" style={{left: 590, top: 170, position: 'absolute', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}} onClick={handleFollowClick}>
             {isFollowing ? 'Unfollow' : 'Follow'}
-          </Button>
-          <h2>Stories</h2>
+          </button>
+
+
+          <div style={{height: 30, left: 321, top: 450, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>Recent Stories</div>
           {loading ? (
-            <p>Loading stories...</p>
+            <div style={{ marginTop:400}}>
+              <p>Loading stories...</p>
+            </div>
           ) : stories.length === 0 ? (
-            <p>No stories found.</p>
+            <div style={{ marginTop:400}}>
+              <p>No stories found.</p>
+            </div>
           ) : (
             <div>
               {stories.map(story => (
-                <div key={story.id} className="story-box">
+                <div key={story.id} className="story-box" style={{width: 780}}>
                   <div className="story-details">
                     <h3 className="story-title" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-                    <p className="story-author">Creation Date: {new Date(story.creation_date).toLocaleDateString()}</p>
+                    <p className="story-author">Posted on {new Date(story.creation_date).toLocaleDateString()}</p>
                   </div>
                 </div>
               ))}
