@@ -63,40 +63,55 @@ function StoryDetails() {
 
     if (location.point) {
         const coords = location.point.slice(17).slice(0, -1).split(' ');
-        locationData = { latitude: parseFloat(coords[1]), longitude: parseFloat(coords[0]), type: 'Point' };
+        locationData = {latitude: parseFloat(coords[1]), longitude: parseFloat(coords[0]), type: 'Point' };
     }
     else if (location.line) {
         const lineCoords = location.line.slice(17).slice(0, -1).split(', ');
+
         locationData = {
             type: 'LineString',
+            // name: location.name,
             coordinates: lineCoords.map(coord => {
                 const [lng, lat] = coord.split(' ');
-                return { lat: parseFloat(lat), lng: parseFloat(lng) };
+                return {lat: parseFloat(lat), lng: parseFloat(lng) };
             })
         };
     }
     else if (location.polygon) {
-        const polyCoords = location.polygon.slice(17).slice(0, -1).split(', ');
+        const polyCoords = location.polygon.slice(20).slice(0, -2).split(', ');
         locationData = {
             type: 'Polygon',
+            // name: location.name,
             coordinates: polyCoords.map(coord => {
                 const [lng, lat] = coord.split(' ');
-                return { lat: parseFloat(lat), lng: parseFloat(lng) };
+                return {lat: parseFloat(lat), lng: parseFloat(lng) };
             })
         };
     }
     else if (location.circle && location.radius) {
         const circleCoords = location.circle.slice(17).slice(0, -1).split(' ');
+
         locationData = {
             type: 'Circle',
-            center: { lat: parseFloat(circleCoords[1]), lng: parseFloat(circleCoords[0]) },
+            // name: location.name,
+            center: {lat: parseFloat(circleCoords[1]), lng: parseFloat(circleCoords[0]) },
             radius: parseFloat(location.radius)
         };
+    }
+    console.log("loc name", location.name)
+    if (location.name) {
+      locationData.name = encodeURIComponent(location.name);
     }
 
     const locationJSON = JSON.stringify(locationData);
     console.log("locationJSON",locationJSON)
-    navigate(`/timeline/${locationJSON}`);
+    try {
+      navigate(`/timeline/${locationJSON}`);
+    }
+    catch (error) {
+      console.log(error);
+    }
+
 };
 
 

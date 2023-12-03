@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './StoryDetailsBox.css';
 
 // Update the StoryDetailsBox component
-const StoryDetailsBox = ({ story, onClick }) => {
+const StoryDetailsBox = ({ story, onClick, imageUrl }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -23,8 +23,15 @@ const StoryDetailsBox = ({ story, onClick }) => {
       className={`story-details-box ${isHovered ? 'hovered' : ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={onClick} // Add the onClick handler here
+      onClick={onClick}
     >
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt={`Story titled ${story.title}`} // More descriptive alt text
+          className="story-image"
+        />
+      )}
       <h3 className="story-title-box">{story.title}</h3>
       <p className="story-date-box">{formatDate(story)}</p>
       <p className="story-author-box">by {story.author_username || 'Unknown'}</p>

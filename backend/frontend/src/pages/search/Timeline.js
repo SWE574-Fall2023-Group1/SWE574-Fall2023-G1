@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import Swipeable from 'react-swipeable';
 import './Timeline.css';
 import StoryDetailsBox from './StoryDetailsBox';
 
@@ -21,12 +20,31 @@ const LocationSearch = () => {
     minute: '2-digit',
   };
 
+  const reverseGeocodeLocation = async (latitude, longitude) => {
+    try {
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_API_KEY`);
+      if (response.data.results.length > 0) {
+        return response.data.results[0].formatted_address;
+      }
+    } catch (error) {
+      console.error('Error in reverse geocoding:', error);
+    }
+    return `Latitude: ${latitude}, Longitude: ${longitude}`;
+  };
+
   useEffect(() => {
     const handleSearch = async () => {
+      console.log("locCSON",locationJSON)
       if (locationJSON) {
         try {
           const locationData = JSON.parse(locationJSON);
-          setLocationName(determineLocationName(locationData)); // Update location name based on type
+          const locationName = await reverseGeocodeLocation(locationData.latitude, locationData.longitude);
+
+          if (locationName) {
+            setLocationName(locationName);
+          } else {
+            setLocationName(determineLocationName(locationData));
+          }
 
           const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
             params: {
@@ -48,17 +66,23 @@ const LocationSearch = () => {
   }, [locationJSON, radiusDiff]);
 
   const determineLocationName = (locationData) => {
-    switch (locationData.type) {
-      case 'Point':
-        return `Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}`;
-      case 'LineString':
-        return 'Line Location';
-      case 'Polygon':
-        return 'Polygon Location';
-      case 'Circle':
-        return `Circle Location with center at Latitude: ${locationData.center.lat}, Longitude: ${locationData.center.lng}`;
-      default:
-        return 'Unknown Location';
+    console.log("Location Data", locationData)
+    if (locationData.name) {
+      return locationData.name;
+    }
+    else{
+      switch (locationData.type) {
+        case 'Point':
+          return `Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}`;
+        case 'LineString':
+          return 'Line Location';
+        case 'Polygon':
+          return 'Polygon Location';
+        case 'Circle':
+          return `Circle Location with center at Latitude: ${locationData.center.lat}, Longitude: ${locationData.center.lng}`;
+        default:
+          return 'Unknown Location';
+      }
     }
   };
 
@@ -106,21 +130,34 @@ const LocationSearch = () => {
     }
     return dateString;
   };
+
+  const extractFirstImageUrl = (htmlContent) => {
+    const imgRegex = /<img.*?src=["'](.*?)["']/;
+    const match = htmlContent.match(imgRegex);
+    return match ? match[1] : null;
+  };
+
   return (
     <div>
       <h2>Memories in {locationName}</h2>
 
 
 
-      {/* Timeline and Dots */}
       <div className="timeline">
-  {locationStories.map((story, index) => (
-    <div key={story.id} className="dot" style={{ left: `${(index + 1) * 10}%` }}>
-      <StoryDetailsBox story={story} onClick={() => handleStoryClick(story.id)} />
-      <p className="story-date">{formatDate(story)}</p>
-    </div>
-  ))}
-</div>
+        {locationStories.map((story, index) => {
+          const imageUrl = extractFirstImageUrl(story.content);
+          return (
+            <div key={story.id} className="dot" style={{ left: `${(index + 1) * 10}%` }}>
+              <StoryDetailsBox
+                story={story}
+                onClick={() => handleStoryClick(story.id)}
+                imageUrl={imageUrl}
+              />
+              <p className="story-date">{formatDate(story)}</p>
+            </div>
+          );
+        })}
+      </div>
 
 
 

@@ -65,16 +65,10 @@ function CreateStory() {
             setLocations(storyInfo.location_ids.map(location => ({ ...location, id: location.id.toString() })));
           }
           setDateType(storyInfo.date_type);
-          switch(storyInfo.date_type) {
-            case 'year':
-              setYear(storyInfo.year);
-              setSeasonName(storyInfo.season_name);
-              break;
-            case 'year_interval':
-              setStartYear(storyInfo.start_year);
-              setEndYear(storyInfo.end_year);
-              break;
-            }
+          setYear(storyInfo.year);
+          setSeasonName(storyInfo.season_name);
+          setStartYear(storyInfo.start_year);
+          setEndYear(storyInfo.end_year);
           setDate(storyInfo.date);
           setStartDate(storyInfo.start_date);
           setEndDate(storyInfo.end_date);

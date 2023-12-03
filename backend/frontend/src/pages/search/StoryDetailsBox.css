@@ -39,3 +39,11 @@
   .story-details-box:hover {
     transform: scale(2); /* Enlarge the box when hovered */
   }
+
+  .story-details-box .story-image {
+    max-width: 100%; /* Limit the image's width to not exceed the container's width */
+    max-height: 100px; /* Set a maximum height for the image */
+    object-fit: contain; /* Ensures the entire image is visible and maintains its aspect ratio */
+    display: block; /* To remove any default inline spacing */
+    margin: 0 auto; /* Centers the image if it's smaller than the container */
+  }
