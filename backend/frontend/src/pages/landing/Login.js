@@ -29,24 +29,27 @@ function Login({ onLoginSuccess }) {
     axios.post(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/login`, {
       username: username,
       password: password
-    },{ withCredentials: true }).then(response => {
+    }, { withCredentials: true }).then(response => {
       if (response.status === 201) {
-
         onLoginSuccess();
         toast.success('Login successful!');
         navigate('/homepage');
-        } else {
-          toast.error('Invalid email or password');
-        }
-    }).catch(error => {
-      console.log(error);
-      if (error.response) {
-        console.log(error.response.data);
       } else {
-        console.log('Request failed:', error.message);
+        toast.error('Unexpected response from server');
+      }
+    }).catch(error => {
+      if (error.response) {
+        if (error.response.data && error.response.data.msg === 'Invalid username or password') {
+          toast.error('Invalid username or password');
+        } else {
+          toast.error('Unexpected error');
+        }
+      } else {
+        toast.error('Request failed:', error.message);
       }
     });
-  }
+  };
+
 
   return (
     <div className="container">
