@@ -1,4 +1,4 @@
-FROM python:3.11-slim-buster
+FROM python:3.11
 
 LABEL maintainer="SWE 574 - Fall 2023 - Group 1"
 
