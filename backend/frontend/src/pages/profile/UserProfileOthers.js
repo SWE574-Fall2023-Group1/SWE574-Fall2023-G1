@@ -177,7 +177,7 @@ const UserProfileOthers = () => {
           </div>
 
 
-          <div style={{left: 587, top: 125, position: 'absolute', color: '#111111', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}><p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
+          <div style={{left: 587, top: 125, position: 'absolute', color: '#111111', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}><p>{followerCount !== null ? followerCount : 'Loading...'} followers</p>
           </div>
           <button type="button" className="custom-followers" style={{left: 590, top: 170, position: 'absolute', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}} onClick={handleFollowClick}>
             {isFollowing ? 'Unfollow' : 'Follow'}
