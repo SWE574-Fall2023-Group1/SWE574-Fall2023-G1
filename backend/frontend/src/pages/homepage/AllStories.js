@@ -163,8 +163,11 @@ function StoriesByFollowingsUsers() {
             </div>
             <div className={styles.dateAndLocation}>
               <div style={{display: 'flex', justifyContent: 'left', alignItems: 'left', marginBottom: 5}}><img src={dateIcon} style={{ marginRight: 6 }} alt="Date Icon"/>{`${formatDate(story)}`}</div>
-              <div style={{display: 'flex', justifyContent: 'left', alignItems: 'left'}}><img src={locationIcon} style={{ marginRight: 10 }} alt="Location Icon"/>{decodeURIComponent(story.location_ids[0].name)}</div>
-            </div>
+              <div style={{display: 'flex', justifyContent: 'left', alignItems: 'left'}}>
+                <img src={locationIcon} style={{ marginRight: 10 }} alt="Location Icon"/>
+                {story.location_ids && story.location_ids.length > 0 && story.location_ids[0].name ? decodeURIComponent(story.location_ids[0].name) : 'No Location'}
+              </div>
+              </div>
           </div>
         ))
       )}
