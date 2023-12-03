@@ -90,6 +90,52 @@ function StoriesByFollowingsUsers() {
     }
   };
 
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+
+  const formatDate = (story) => {
+
+    let dateString = "";
+    const optionsWithoutTime = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const dateOptions = story.include_time ? options : optionsWithoutTime;
+
+    switch (story.date_type) {
+      case "decade":
+        dateString = `Decade: ${story.decade}s`;
+        break;
+      case "year":
+        dateString = `Year: ${story.year}`;
+        break;
+      case "year_interval":
+        const startYear = story.start_year;
+        const endYear = story.end_year;
+        dateString = `Start: ${startYear} \n End: ${endYear}`;
+        break;
+      case "normal_date":
+        const date = new Date(story.date).toLocaleDateString("en-US", dateOptions);
+        dateString = `${date}`;
+        break;
+      case "interval_date":
+        const startDate = new Date(story.start_date).toLocaleDateString("en-US", dateOptions);
+        const endDate = new Date(story.end_date).toLocaleDateString("en-US", dateOptions);
+        dateString = `Start: ${startDate} \n End: ${endDate}`;
+        break;
+      default:
+        dateString = "";
+    }
+    return dateString;
+  };
+
 
   const handlePhotoClick = async (userId) => {
     navigate(`/user-profile/${userId}`);
@@ -118,8 +164,8 @@ function StoriesByFollowingsUsers() {
               <h3 className={styles.storyTitle} onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
             </div>
             <div className={styles.dateAndLocation}>
-              <div><img src={dateIcon} style={{ marginRight: 6 }} alt="Date Icon"/>date</div>
-              <div><img src={locationIcon} style={{ marginRight: 9 }} alt="Location Icon"/>location</div>
+              <div style={{display: 'flex', justifyContent: 'left', alignItems: 'left', marginBottom: 5}}><img src={dateIcon} style={{ marginRight: 6 }} alt="Date Icon"/>{`${formatDate(story)}`}</div>
+              <div style={{display: 'flex', justifyContent: 'left', alignItems: 'left'}}><img src={locationIcon} style={{ marginRight: 10 }} alt="Location Icon"/>{decodeURIComponent(story.location_ids[0].name)}</div>
             </div>
           </div>
         ))
