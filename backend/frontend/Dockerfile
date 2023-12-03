@@ -1,5 +1,5 @@
 
-FROM node:18-buster-slim
+FROM node:18
 
 LABEL maintainer="SWE 574 - Fall 2023 - Group 1"
 
