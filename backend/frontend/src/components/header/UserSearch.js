@@ -52,13 +52,30 @@ function UserSearch() {
             autoComplete="true"
             size="small"
             variant="outlined"
-            style={{ backgroundColor: 'white', borderRadius: '4px', width: '15vw' }}
+            style={{ backgroundColor: 'white', borderRadius: '4px', width: '15vw',}}
           />
         )}
       />
-      <IconButton onClick={handleSearch} size="small">
-        <SearchIcon style={{ color: 'white' }} />
-      </IconButton>
+      <div
+  onClick={handleSearch}
+  style={{
+    width: 70,
+    height: 40,
+    paddingLeft: 5,
+    paddingRight: 5,
+    background: '#7E49FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    borderRadius : 5,
+    display: 'inline-flex',
+    cursor: 'pointer', // Add this to make it look clickable
+  }}
+>
+  <div style={{ color: 'white', fontSize: 15, fontFamily: 'Inter', fontWeight: '400', lineHeight: 22, wordWrap: 'break-word' }}>
+    Search
+  </div>
+</div>
     </div>
   );
 }
