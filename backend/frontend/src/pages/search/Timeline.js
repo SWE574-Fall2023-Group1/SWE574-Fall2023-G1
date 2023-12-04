@@ -23,8 +23,9 @@ const LocationSearch = () => {
   const reverseGeocodeLocation = async (latitude, longitude) => {
     try {
       const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_API_KEY`);
+      console.log("response:",response)
       if (response.data.results.length > 0) {
-        return response.data.results[0].formatted_address;
+        return response.data.results[0];
       }
     } catch (error) {
       console.error('Error in reverse geocoding:', error);
@@ -38,12 +39,13 @@ const LocationSearch = () => {
       if (locationJSON) {
         try {
           const locationData = JSON.parse(locationJSON);
-          const locationName = await reverseGeocodeLocation(locationData.latitude, locationData.longitude);
+          setLocationName(determineLocationName(locationData));
+          //const locationName = await reverseGeocodeLocation(locationData.latitude, locationData.longitude);
 
           if (locationName) {
-            setLocationName(locationName);
           } else {
-            setLocationName(determineLocationName(locationData));
+            const locationName = await reverseGeocodeLocation(locationData.latitude, locationData.longitude);
+            setLocationName(locationName);
           }
 
           const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
