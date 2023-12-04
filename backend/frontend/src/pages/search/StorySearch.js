@@ -485,18 +485,19 @@ const StorySearch = () => {
             center={markerPosition}
             onClick={(e) => handleMarker(e)}
           >
-          </GoogleMap>
-          {locationSearch && (
+            {locationSearch && (
               <>
               {console.log('Marker Position:', {
                 lat: locationSearch.geometry.coordinates[1],
                 lng: locationSearch.geometry.coordinates[0],
               })}
               <Marker
-                position={{markerPosition}}
+                position={{lat:locationSearch.geometry.coordinates[1],lng:locationSearch.geometry.coordinates[0]}}
               />
             </>
             )}
+          </GoogleMap>
+
         </div>
         <br />
         <Button style={{backgroundColor: "#7E49FF", fontSize: "24px"}}variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
