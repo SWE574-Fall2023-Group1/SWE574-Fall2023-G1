@@ -12,7 +12,6 @@ import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
 
-let postHeader = null;
 
 function EditStory() {
 
@@ -20,6 +19,7 @@ function EditStory() {
   const isEditMode = storyId != null;
 
   const postHeader = 'Edit Memory';
+  const postButton = 'Update Memory';
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -578,7 +578,7 @@ const parseLocation = (location) => {
                 />
           </div>
           <br/>
-          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
+          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postButton}</Button>
           <br/>
           <br/>
           <text>You can edit your memory as many times as you want after posting.</text>
