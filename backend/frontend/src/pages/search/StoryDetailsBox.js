@@ -14,8 +14,50 @@ const StoryDetailsBox = ({ story, onClick, imageUrl }) => {
     setIsHovered(false);
   };
 
-  const formatDate = (date) => {
-    // Your existing formatDate logic here
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+
+  const formatDate = (story) => {
+
+    let dateString = "";
+    const optionsWithoutTime = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+
+    const dateOptions = story.include_time ? options : optionsWithoutTime;
+
+    switch (story.date_type) {
+      case "decade":
+        dateString = `Memory Time: ${story.decade}s`;
+        break;
+      case "year":
+        dateString = `Memory Time: ${story.year}`;
+        break;
+      case "year_interval":
+        const startYear = story.start_year;
+        const endYear = story.end_year;
+        dateString = `Memory Time: ${startYear}-${endYear}`;
+        break;
+      case "normal_date":
+        const date = new Date(story.date).toLocaleDateString("en-US", dateOptions);
+        dateString = `Memory Time: ${date}`;
+        break;
+      case "interval_date":
+        const startDate = new Date(story.start_date).toLocaleDateString("en-US", dateOptions);
+        const endDate = new Date(story.end_date).toLocaleDateString("en-US", dateOptions);
+        dateString = `Memory Time: ${startDate}-${endDate}`;
+        break;
+      default:
+        dateString = "";
+    }
+    return dateString;
   };
 
   return (
