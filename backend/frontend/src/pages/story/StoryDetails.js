@@ -58,22 +58,21 @@ function StoryDetails() {
   };
 
 
-  const handleMarkerClick = (location) => {
+  const handleMarkerClick = async (location) => {
     let locationData = {};
 
     if (location.point) {
         const coords = location.point.slice(17).slice(0, -1).split(' ');
-        locationData = {latitude: parseFloat(coords[1]), longitude: parseFloat(coords[0]), type: 'Point' };
+        locationData = {type: 'Point', coordinates: [parseFloat(coords[0]), parseFloat(coords[1])] };
     }
     else if (location.line) {
         const lineCoords = location.line.slice(17).slice(0, -1).split(', ');
 
         locationData = {
             type: 'LineString',
-            // name: location.name,
             coordinates: lineCoords.map(coord => {
                 const [lng, lat] = coord.split(' ');
-                return {lat: parseFloat(lat), lng: parseFloat(lng) };
+                return [parseFloat(lng), parseFloat(lat)];
             })
         };
     }
@@ -81,10 +80,9 @@ function StoryDetails() {
         const polyCoords = location.polygon.slice(20).slice(0, -2).split(', ');
         locationData = {
             type: 'Polygon',
-            // name: location.name,
             coordinates: polyCoords.map(coord => {
                 const [lng, lat] = coord.split(' ');
-                return {lat: parseFloat(lat), lng: parseFloat(lng) };
+                return [parseFloat(lng), parseFloat(lat)];
             })
         };
     }
@@ -93,23 +91,30 @@ function StoryDetails() {
 
         locationData = {
             type: 'Circle',
-            // name: location.name,
-            center: {lat: parseFloat(circleCoords[1]), lng: parseFloat(circleCoords[0]) },
+            center: [parseFloat(circleCoords[0]), parseFloat(circleCoords[1])],
             radius: parseFloat(location.radius)
         };
     }
-    console.log("loc name", location.name)
-    if (location.name) {
-      locationData.name = encodeURIComponent(location.name);
-    }
 
     const locationJSON = JSON.stringify(locationData);
-    console.log("locationJSON",locationJSON)
+    console.log("locationJSON", locationJSON);
+
+
     try {
-      navigate(`/timeline/${locationJSON}`);
-    }
-    catch (error) {
-      console.log(error);
+        // Send GET request to the search API with the location
+        const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearch`, {
+            params: {
+                location: locationJSON,
+                radius_diff: 5, // or any default radius you'd like to use
+                // add any other parameters if needed
+            },
+            withCredentials: true,
+        });
+
+        // Navigate to the timeline screen with the stories data
+        navigate('/timeline', { state: { stories: response.data.stories } });
+    } catch (error) {
+        console.log(error);
     }
 
 };
