@@ -652,6 +652,36 @@ class SearchUserView(views.APIView):
         }, status=status.HTTP_200_OK)
 
 class SearchStoryView(views.APIView):
+    def extract_timestamp(self, story):
+    # Default to creation date in case there's an issue
+        default_timestamp = story.creation_date
+
+        if story.date_type == Story.YEAR_INTERVAL or story.date_type == Story.YEAR:
+            year = story.start_year if story.date_type == Story.YEAR_INTERVAL else story.year
+            if story.season_name == "Summer":
+                return timezone.make_aware(datetime(year, 6, 1))
+            elif story.season_name == "Fall":
+                return timezone.make_aware(datetime(year, 9, 1))
+            elif story.season_name == "Winter":
+                return timezone.make_aware(datetime(year, 12, 1))
+            elif story.season_name == "Spring":
+                return timezone.make_aware(datetime(year, 3, 1))
+            else:
+                return timezone.make_aware(datetime(year, 1, 1))
+
+        elif story.date_type == Story.NORMAL_DATE:
+            logger.info(story.date)
+            return story.date
+
+        elif story.date_type == Story.INTERVAL_DATE:
+            return story.start_date
+
+        elif story.date_type == Story.DECADE:
+            return timezone.make_aware(datetime(story.decade, 1, 1))
+
+        else:
+            return default_timestamp
+
     def get(self, request, *args, **kwargs ):
         cookie_value = request.COOKIES['refreshToken']
         try:
@@ -666,7 +696,7 @@ class SearchStoryView(views.APIView):
         time_value = request.query_params.get('time_value', '')
         location = request.query_params.get('location', '')
         radius_diff = float(request.query_params.get('radius_diff', ''))
-        date_diff = float(request.query_params.get('date_diff', ''))
+        date_diff = float(request.query_params.get('date_diff', 2))
         tag_search = request.query_params.get('tag', '')
 
 
@@ -764,27 +794,12 @@ class SearchStoryView(views.APIView):
 
             stories = stories.filter(location_query)
 
-        stories = stories.order_by('-creation_date')
+        sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=True)
 
-
-        # Page sizes and numbers
-        page_number = int(request.query_params.get('page', 1))
-        page_size = int(request.query_params.get('size', 10))
-
-
-        paginator = Paginator(stories, page_size)
-        total_pages = ceil(paginator.count / page_size)
-        page = paginator.get_page(page_number)
-
-        serializer = StorySerializer(page, many=True)
+        serializer = StorySerializer(sorted_stories, many=True)
 
         return Response({
-            'stories': serializer.data,
-            'has_next': page.has_next(),
-            'has_prev': page.has_previous(),
-            'next_page': page.next_page_number() if page.has_next() else None,
-            'prev_page': page.previous_page_number() if page.has_previous() else None,
-            'total_pages': total_pages,
+            'stories': serializer.data
         }, status=status.HTTP_200_OK)
 
 
