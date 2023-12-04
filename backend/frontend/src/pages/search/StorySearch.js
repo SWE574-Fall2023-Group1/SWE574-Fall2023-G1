@@ -47,24 +47,6 @@ const StorySearch = () => {
     navigate(`/user-profile/${id}`);
   };
 
-  const handleStoryClickWithLocation = async (locationSearch) => {
-
-    // Extract latitude and longitude from the coordinates array
-    const latitude = locationSearch.geometry.coordinates[1];
-    const longitude = locationSearch.geometry.coordinates[0];
-
-    // Construct the locationJSON in the desired format
-    const locationJSON = JSON.stringify({
-      latitude: latitude,
-      longitude: longitude,
-      type: locationSearch.geometry.type
-    });
-
-    const url = `/timeline/${locationJSON}`;
-
-    navigate(url);
-  };
-
   const handleSearch = async (e, pageNumber = 1) => {
     e.preventDefault();
 
@@ -109,6 +91,8 @@ const StorySearch = () => {
         withCredentials: true,
       });
       //console.log(locationSearch)
+      navigate('/timeline', { state: { stories: response.data.stories } });
+
       setStories(response.data.stories);
       setTotalPages(response.data.total_pages);
       setCurrentPage(pageNumber)
@@ -358,18 +342,8 @@ const StorySearch = () => {
         "align-items": "center",
         "border-radius": "10px",
       }}>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={showLocationSearch}
-            onChange={() => setShowLocationSearch(!showLocationSearch)}
-            name="locationSearchToggle"
-          />
-        }
-        label="Location Search"
-      />
+
       <form onSubmit={handleSearch}>
-        {!showLocationSearch && (
           <>
             <TextField
               variant="outlined"
@@ -428,7 +402,6 @@ const StorySearch = () => {
             {renderTimeInput()}
             {renderDateDiffInput()}
           </>
-        )}
 
         <div>
           <Autocomplete
@@ -447,17 +420,6 @@ const StorySearch = () => {
             />
 
           </Autocomplete>
-
-          {showLocationSearch && locationSearch && (
-            <Button
-              variant="contained"
-              type="button"  // Change the type to button
-              onClick={() => handleStoryClickWithLocation(locationSearch)}
-              className="btn btn-primary middle"
-            >
-              Search Memory with Location
-            </Button>
-          )}
           <br />
           <FormControl>
             <InputLabel id="radiusDiff-label" style={{ marginTop: "8px" }}>Radius Difference in KM</InputLabel>

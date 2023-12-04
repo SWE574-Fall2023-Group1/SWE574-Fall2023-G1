@@ -165,7 +165,7 @@ function Header() {
                 />
                 <Route path="/story_search" element={<StorySearch />} />
                 <Route
-                  path="/timeline/:locationJSON"
+                  path="/timeline"
                   element={<LocationSearch />}
                 />
                 <Route path="/edit-story/:storyId" element={<EditStory />} />
