@@ -96,8 +96,15 @@ function CreateStory() {
   };
 
   const removeTag = (tagId) => {
-    console.log("Removing Tag", tagId)
-    setSelectedTags(selectedTags.filter(tag => tag.wikidata_id !== tagId));
+    console.log("Removing Tag", tagId);
+
+    // Update selectedTags
+    const newSelectedTags = selectedTags.filter(tag => tag.wikidata_id !== tagId);
+    setSelectedTags(newSelectedTags);
+
+    // Update story_tags
+    const newStoryTags = story_tags.filter(tag => tag.wikidata_id !== tagId);
+    setStoryTags(newStoryTags);
   };
 
 
