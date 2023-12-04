@@ -23,6 +23,7 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (password !== passwordAgain) {
       toast.error("Passwords don't match");
       return;
@@ -37,11 +38,12 @@ function Register() {
       navigate('/login');
     }).catch(error => {
       if (error.response && error.response.data) {
-        if (error.response.data.username) {
-          toast.error(`Username: ${error.response.data.username}`);
-        }
-        if (error.response.data.email) {
-          toast.error(`Email: ${error.response.data.email}`);
+        if (error.response.data.success === false && error.response.data.msg) {
+          // Display the error message as a pop-up
+          toast.error(error.response.data.msg);
+        } else {
+          // Display a generic error message
+          toast.error('An error occurred while registering');
         }
       } else {
         toast.error('An error occurred while registering');

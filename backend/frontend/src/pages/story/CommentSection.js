@@ -160,7 +160,7 @@ function CommentSection({ comments, setComments}) {
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
-          alignItems: 'flex-start',
+          alignItems: 'center',
         }}
       >
         <TextField
@@ -178,8 +178,9 @@ function CommentSection({ comments, setComments}) {
           onClick={handleCommentSubmit}
           variant="contained"
           color="primary"
+          style={{backgroundColor: "#7E49FF"}}
         >
-          Submit
+          Comment
         </Button>
       </Box>
     </div>

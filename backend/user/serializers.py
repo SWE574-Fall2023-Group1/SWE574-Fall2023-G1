@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from user.models import User,Story,Location,Comment,Activity #, Date, SpecificDate, Decade, Season
+from user.models import User,Story,Location,Comment,Activity,Tag,StoryRecommendation #, Date, SpecificDate, Decade, Season
 from rest_framework.fields import CharField
 from .functions import *
 import urllib.parse
@@ -132,15 +132,36 @@ class LocationSerializer(serializers.ModelSerializer):
         ret.update({'success': True, 'msg': 'Location ok.'})
         return ret
 
-
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name', 'label', 'wikidata_id', 'description']  # Include 'description' field
 
 class StorySerializer(serializers.ModelSerializer):
     location_ids = LocationSerializer(many=True)
     author_username = serializers.StringRelatedField(source='author.username')
+    story_tags = TagSerializer(many=True, read_only=True)  # Add this line
 
     class Meta:
         model = Story
-        fields = ['id', 'author','author_username', 'title', 'content', 'story_tags', 'location_ids', 'date_type', 'season_name', 'year','start_year','end_year', 'date','creation_date','start_date','end_date','decade','include_time','likes']
+        fields = ['id', 'author', 'author_username', 'title', 'content',
+                  'story_tags', 'location_ids', 'date_type', 'season_name',
+                  'year', 'start_year', 'end_year', 'date', 'creation_date',
+                  'start_date', 'end_date', 'decade', 'include_time', 'likes']
+    def validate_title(self, value):
+        if not value:
+            raise serializers.ValidationError("Title is missing.")
+        return value
+
+    def validate_content(self, value):
+        if not value:
+            raise serializers.ValidationError("Content is missing.")
+        return value
+
+    def validate_date_type(self, value):
+        if not value:
+            raise serializers.ValidationError("Date type is missing.")
+        return value
 
     def validate(self, attrs):
         date_type = attrs.get('date_type')
@@ -168,6 +189,8 @@ class StorySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         location_data = validated_data.pop('location_ids')
+        tags_data = validated_data.pop('story_tags', [])
+
         locations = []
         for location in location_data:
             loc_instance = None
@@ -198,10 +221,15 @@ class StorySerializer(serializers.ModelSerializer):
             if loc_instance:
                 locations.append(loc_instance)
 
+
         story = Story.objects.create(**validated_data)
         story.location_ids.set(locations)
-        return story
 
+        for tag_data in tags_data:
+            tag, created = Tag.objects.get_or_create(**tag_data)
+            story.story_tags.add(tag)
+
+        return story
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -256,6 +284,75 @@ class CommentGetSerializer(serializers.ModelSerializer):
         ret.update({'success': True, 'msg': 'Comment details got.'})
         return ret
 
+class StoryUpdateSerializer(serializers.ModelSerializer):
+    location_ids = LocationSerializer(many=True)
+
+    class Meta:
+        model = Story
+        fields = ['id', 'title', 'content', 'story_tags', 'location_ids', 'date_type', 'season_name', 'year','start_year','end_year', 'date','creation_date','start_date','end_date','decade','include_time','likes']
+
+    def validate(self, attrs):
+        date_type = attrs.get('date_type')
+        start_year = attrs.get('start_year')
+        end_year = attrs.get('end_year')
+        season_name = attrs.get('season_name')
+        year = attrs.get('year')
+        decade = attrs.get('decade')
+        date = attrs.get('date')
+        start_date = attrs.get('start_date')
+        end_date = attrs.get('end_date')
+
+        if date_type == Story.YEAR_INTERVAL and (decade is not None or year is not None or date is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'year_interval' field should be set when 'date_type' is 'year_interval'.")
+        elif date_type == Story.YEAR and (decade is not None or start_year is not None or end_year is not None or date is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'year' field should be set when 'date_type' is 'year'.")
+        elif date_type == Story.NORMAL_DATE and (decade is not None or start_year is not None or end_year is not None or year is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'date' field should be set when 'date_type' is 'normal_date'.")
+        elif date_type == Story.INTERVAL_DATE and (decade is not None or start_year is not None or end_year is not None or year is not None or date is not None):
+            raise serializers.ValidationError("Only 'date_interval' field should be set when 'date_type' is 'date_interval'.")
+        elif date_type == Story.DECADE and (start_year is not None or end_year is not None or year is not None or date is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'decade' field should be set when 'date_type' is 'decade'.")
+
+        return attrs
+
+    def update(self, instance, validated_data):
+        location_data = validated_data.pop('location_ids', [])
+        locations = []
+
+        for location_dict in location_data:
+            if 'point' in location_dict:
+                point_coords = location_dict['point']['coordinates']
+                location_dict['point'] = Point(point_coords[0], point_coords[1], srid=4326)
+            elif 'line' in location_dict:
+                line_coords = location_dict['line']['coordinates']
+                location_dict['line'] = LineString(line_coords, srid=4326)
+            elif 'polygon' in location_dict:
+                polygon_coords = location_dict['polygon']['coordinates'][0]  # Assuming first element is outer ring
+                location_dict['polygon'] = Polygon(polygon_coords, srid=4326)
+            elif 'circle' in location_dict:
+                circle_coords = location_dict['circle']['coordinates']
+                location_dict['circle'] = Point(circle_coords[0], circle_coords[1], srid=4326)
+
+            location, created = Location.objects.get_or_create(
+                name=location_dict.get('name'),
+                defaults=location_dict
+            )
+            locations.append(location)
+
+        instance.location_ids.set(locations)
+
+        # Update other fields of Story instance
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        return instance
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'Story ok.'})
+        return ret
+
 class ActivitySerializer(serializers.ModelSerializer):
     user_username = serializers.CharField(source='user.username', read_only=True)
     target_user_username = serializers.CharField(source='target_user.username', read_only=True, allow_null=True)
@@ -264,3 +361,10 @@ class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = ['id', 'user', 'user_username', 'activity_type', 'date', 'viewed', 'target_user', 'target_user_username', 'target_story', 'target_story_title']
+
+class StoryRecommendationSerializer(serializers.ModelSerializer):
+    story = StorySerializer()  # Assuming you already have a StorySerializer
+
+    class Meta:
+        model = StoryRecommendation
+        fields = ['story', 'show_count', 'has_been_shown']

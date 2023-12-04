@@ -41,6 +41,7 @@
   .navbar-nav {
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 
 
@@ -111,4 +112,20 @@
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: normal;
+  }
+
+
+
+  .user-search-container {
+    flex-grow: 1; /* Takes up available space on the left */
+    margin-left: auto
+  }
+
+  .logout-container {
+    margin-left: auto; /* Pushes LogoutButton to the right */
   }

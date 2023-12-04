@@ -1,13 +1,17 @@
 .profile-photo {
-    width: 200px;
-    height: auto;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    /* overflow: hidden; */
+    object-fit: cover;
+    /* position: 'absolute', */
   }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin: 585px 0;
+  }
 
 .pagination button {
   background-color: white;
@@ -41,28 +45,16 @@ input[type="file"] {
   overflow: hidden;
 }
 
-.profile-photo-button {
-  display: inline-block;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .profile-photo-change-button {
-  display: inline-block;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background-color: #4c9eaf;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
+  color: #111;
+  font-family: Roboto;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border: none;
+  background: none;
 }
 
 .profile-photo-button:hover {
@@ -74,36 +66,32 @@ input[type="file"] {
 }
 
 .profile-photo-delete-button {
-  display: inline-block;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background-color: #ff5100;
-  border: none;
-  border-radius: 5px;
   cursor: pointer;
-}
-
-.profile-photo-delete-button:hover {
-  background-color: #b33f09;
-}
-
-.profile-photo-delete-button:focus {
-  outline: none;
+  color: #111;
+  font-family: Roboto;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border: none;
+  background: none;
 }
 
 .story-box {
-  width: 500px;
-  height: 55px;
+  height: 100px;
   margin: 0 auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   background-color: white;
   padding: 1rem;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  border: 0.50px #F2F1F1 solid;
+  left: 300px;
+  top: 490px;
+  position: absolute;
+  justify-content: flex-start;
 }
 
 .story-author-photo {
@@ -125,33 +113,59 @@ input[type="file"] {
   margin-bottom: 0.5rem;
   cursor: pointer;
   text-decoration: none;
-  color: #1e88e5;
+  font-size: 18px;
+  font-family: 'Inter';
   text-align: left;
   transition: color 0.2s ease-in-out;
+  text-transform: capitalize;
+  color: var(--gray-700, var(--gray-700, #323539));
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 200% */
+  letter-spacing: -0.15px;
 }
 
 .story-title:hover {
-  color: #0056b3;
+  color: #323539;
 }
 
 
 
 .story-author {
   margin-bottom: 10;
-  text-align: left;
-  font-family: "Comic Sans MS"
+  color: var(--gray-50, var(--gray-50, #858C95));
+  text-align: right;
+  /* Text S / Medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: -0.1px;
 }
 
 .custom-bio {
-  padding: spacing(2);
-  margin: 'auto';
-  width: fit-content;
-  padding: 0 30px;
-  text-align: 'center';
-  justify-content: center;
-  align-items: center;
+  height: 175px;
   margin: 0 auto;
-  padding-bottom: 35px;
+  display: flex;
+  align-items: left;
+  background-color: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  border: 0.50px#F2F1F1 solid;
+  position: absolute;
+  overflow-y: auto;
+  text-Align: left;
+  text-decoration-color: #323539;
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 184.615% */
+  letter-spacing: -0.13px;
+
 }
 
 .custom-bio p {
@@ -159,6 +173,7 @@ input[type="file"] {
   padding-bottom: 15px;
   text-align: left;
   white-space: pre-line;
+  overflow-y: auto;
 }
 
 .custom-followers {
@@ -178,14 +193,14 @@ input[type="file"] {
 
 .edit-box {
   margin: 'auto';
-  width: 400px;
-  height: fit-content;
+  width: 700px;
+  height: 100px;
   padding: 0 30px;
   text-align: 'center';
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  margin-top: 25px;
+  margin-top: 100px;
 }
 
 .edit-box .MuiOutlinedInput-root {
@@ -193,9 +208,13 @@ input[type="file"] {
 }
 
 .edit-buttons {
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
+  cursor: pointer;
+  /* color: #323539; */
+  font-family: Roboto;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border: none;
+  background: none;
 }
