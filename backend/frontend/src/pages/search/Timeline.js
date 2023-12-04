@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './Timeline.css';
 import StoryDetailsBox from './StoryDetailsBox';
 
 const LocationSearch = () => {
-  const [radiusDiff, setRadiusDiff] = useState(5);
-  const [locationStories, setLocationStories] = useState([]);
-  const [locationName, setLocationName] = useState('');
-  const { locationJSON } = useParams();
-  const navigate = useNavigate();
 
+  const [locationName, setLocationName] = useState('');
+  const [locationStories, setLocationStories] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const options = {
     year: 'numeric',
@@ -20,81 +19,21 @@ const LocationSearch = () => {
     minute: '2-digit',
   };
 
-  const reverseGeocodeLocation = async (latitude, longitude) => {
-    try {
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_API_KEY`);
-      console.log("response:",response)
-      if (response.data.results.length > 0) {
-        return response.data.results[0];
-      }
-    } catch (error) {
-      console.error('Error in reverse geocoding:', error);
-    }
-    return `Latitude: ${latitude}, Longitude: ${longitude}`;
-  };
-
   useEffect(() => {
-    const handleSearch = async () => {
-      console.log("locCSON",locationJSON)
-      if (locationJSON) {
-        try {
-          const locationData = JSON.parse(locationJSON);
-          setLocationName(determineLocationName(locationData));
-          //const locationName = await reverseGeocodeLocation(locationData.latitude, locationData.longitude);
-
-          if (locationName) {
-          } else {
-            const locationName = await reverseGeocodeLocation(locationData.latitude, locationData.longitude);
-            setLocationName(locationName);
-          }
-
-          const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
-            params: {
-              location: locationJSON,
-              radius_diff: radiusDiff,
-            },
-            withCredentials: true,
-          });
-
-          setLocationStories(response.data.stories);
-        } catch (error) {
-          console.error('Error fetching location stories:', error);
-          setLocationStories([]);
-        }
-      }
-    };
-
-    handleSearch();
-  }, [locationJSON, radiusDiff]);
-
-  const determineLocationName = (locationData) => {
-    console.log("Location Data", locationData)
-    if (locationData.name) {
-      return locationData.name;
+    // Check if stories are passed in state
+    if (location.state && location.state.stories) {
+      setLocationStories(location.state.stories);
+    } else {
+      // Handle case when no stories are passed
+      // Redirect back or show a message, etc.
     }
-    else{
-      switch (locationData.type) {
-        case 'Point':
-          return `Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}`;
-        case 'LineString':
-          return 'Line Location';
-        case 'Polygon':
-          return 'Polygon Location';
-        case 'Circle':
-          return `Circle Location with center at Latitude: ${locationData.center.lat}, Longitude: ${locationData.center.lng}`;
-        default:
-          return 'Unknown Location';
-      }
-    }
-  };
+  }, [location.state]);
+
 
   const handleStoryClick = async (id) => {
     navigate(`/story/${id}`);
   };
 
-  const handleGoBack = () => {
-    navigate(-1); // This will navigate back to the previous page
-  };
   const formatDate = (story) => {
 
     let dateString = "";
@@ -141,10 +80,7 @@ const LocationSearch = () => {
 
   return (
     <div>
-      <h2>Memories in {locationName}</h2>
-
-
-
+      <h2>TIMELINE!!!</h2>
       <div className="timeline">
         {locationStories.map((story, index) => {
           const imageUrl = extractFirstImageUrl(story.content);
