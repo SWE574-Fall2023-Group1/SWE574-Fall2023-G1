@@ -1,0 +1,49 @@
+/* StoryDetailsBox.css */
+
+
+.story-title-box {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer; /* Add this line to change cursor on hover */
+  }
+
+  .story-title-box:hover {
+    color: #0056b3; /* Change color on hover if needed */
+  }
+  .story-date-box {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+
+  .story-author-box {
+    margin: 0;
+    font-size: 12px;
+    color: #666; /* Author text color */
+  }
+
+  .story-details-box {
+    position: absolute;
+    top: -150px; /* Adjust the top position as needed */
+    left: 40%;
+    transform: translateX(-50%);
+    background-color: #fff; /* Background color of the box */
+    padding: 15px;
+    border: 1px solid #000; /* Border color */
+    border-radius: 5px;
+    text-align: center;
+    z-index: 2; /* Ensure it appears above the dots */
+    transition: transform 0.3s ease-in-out; /* Add a smooth transition effect */
+  }
+
+  .story-details-box:hover {
+    transform: scale(2); /* Enlarge the box when hovered */
+  }
+
+  .story-details-box .story-image {
+    max-width: 100%; /* Limit the image's width to not exceed the container's width */
+    max-height: 100px; /* Set a maximum height for the image */
+    object-fit: contain; /* Ensures the entire image is visible and maintains its aspect ratio */
+    display: block; /* To remove any default inline spacing */
+    margin: 0 auto; /* Centers the image if it's smaller than the container */
+  }

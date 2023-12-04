@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import './Timeline.css';
+import StoryDetailsBox from './StoryDetailsBox';
 
 const LocationSearch = () => {
-  // eslint-disable-next-line no-unused-vars
   const [radiusDiff, setRadiusDiff] = useState(5);
   const [locationStories, setLocationStories] = useState([]);
   const [locationName, setLocationName] = useState('');
   const { locationJSON } = useParams();
-  const navigate = useNavigate(); // Updated
+  const navigate = useNavigate();
+
 
   const options = {
     year: 'numeric',
@@ -19,12 +20,31 @@ const LocationSearch = () => {
     minute: '2-digit',
   };
 
+  const reverseGeocodeLocation = async (latitude, longitude) => {
+    try {
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_API_KEY`);
+      if (response.data.results.length > 0) {
+        return response.data.results[0].formatted_address;
+      }
+    } catch (error) {
+      console.error('Error in reverse geocoding:', error);
+    }
+    return `Latitude: ${latitude}, Longitude: ${longitude}`;
+  };
+
   useEffect(() => {
     const handleSearch = async () => {
+      console.log("locCSON",locationJSON)
       if (locationJSON) {
         try {
           const locationData = JSON.parse(locationJSON);
-          setLocationName(determineLocationName(locationData)); // Update location name based on type
+          const locationName = await reverseGeocodeLocation(locationData.latitude, locationData.longitude);
+
+          if (locationName) {
+            setLocationName(locationName);
+          } else {
+            setLocationName(determineLocationName(locationData));
+          }
 
           const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
             params: {
@@ -46,17 +66,23 @@ const LocationSearch = () => {
   }, [locationJSON, radiusDiff]);
 
   const determineLocationName = (locationData) => {
-    switch (locationData.type) {
-      case 'Point':
-        return `Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}`;
-      case 'LineString':
-        return 'Line Location';
-      case 'Polygon':
-        return 'Polygon Location';
-      case 'Circle':
-        return `Circle Location with center at Latitude: ${locationData.center.lat}, Longitude: ${locationData.center.lng}`;
-      default:
-        return 'Unknown Location';
+    console.log("Location Data", locationData)
+    if (locationData.name) {
+      return locationData.name;
+    }
+    else{
+      switch (locationData.type) {
+        case 'Point':
+          return `Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}`;
+        case 'LineString':
+          return 'Line Location';
+        case 'Polygon':
+          return 'Polygon Location';
+        case 'Circle':
+          return `Circle Location with center at Latitude: ${locationData.center.lat}, Longitude: ${locationData.center.lng}`;
+        default:
+          return 'Unknown Location';
+      }
     }
   };
 
@@ -104,32 +130,39 @@ const LocationSearch = () => {
     }
     return dateString;
   };
+
+  const extractFirstImageUrl = (htmlContent) => {
+    const imgRegex = /<img.*?src=["'](.*?)["']/;
+    const match = htmlContent.match(imgRegex);
+    return match ? match[1] : null;
+  };
+
   return (
     <div>
       <h2>Memories in {locationName}</h2>
 
-      {locationStories.length > 0 ? (
-        <>
-          <h3>Location Search Results:</h3>
-          <div>
-            {locationStories.map(story => (
-              <div key={story.id} className="story-box-search">
-                <div className="story-details-search">
-                  <h3 className="story-title-search" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-                  <p className="story-date-search">{formatDate(story)}</p> {/* Display the date */}
-                  <p className="story-author-search">by {story.author_username || 'Unknown'}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button onClick={handleGoBack}>Go Back</button>
-        </>
-      ) : (
-        <div>
-          <h1>Sorry, there are no stories on this location.</h1>
-          <h2>Try a different one.</h2>
-        </div>
-      )}
+
+
+      <div className="timeline">
+        {locationStories.map((story, index) => {
+          const imageUrl = extractFirstImageUrl(story.content);
+          return (
+            <div key={story.id} className="dot" style={{ left: `${(index + 1) * 10}%` }}>
+              <StoryDetailsBox
+                story={story}
+                onClick={() => handleStoryClick(story.id)}
+                imageUrl={imageUrl}
+              />
+              <p className="story-date">{formatDate(story)}</p>
+            </div>
+          );
+        })}
+      </div>
+
+
+
+
+      {/* Rest of your component content */}
     </div>
   );
 };
