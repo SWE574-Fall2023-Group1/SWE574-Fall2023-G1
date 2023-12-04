@@ -12,6 +12,7 @@ import UserSearch from "./UserSearch";
 import Register from "../../pages/landing/Register";
 import Login from "../../pages/landing/Login";
 import CreateStory from "../../pages/story/CreateStory";
+import EditStory from "../../pages/story/EditStory";
 import StoryContainer from "../../pages/homepage/StoryContainer";
 import StoryDetails from "../../pages/story/StoryDetails";
 import LogoutButton from "../../pages/landing/Logout";
@@ -167,6 +168,7 @@ function Header() {
                   path="/timeline/:locationJSON"
                   element={<LocationSearch />}
                 />
+                <Route path="/edit-story/:storyId" element={<EditStory />} />
                 <Route path="/activity-stream" element={<ActivityStream />} />
                 <Route path="/recommendation" element={<Recommendations />} />
               </>

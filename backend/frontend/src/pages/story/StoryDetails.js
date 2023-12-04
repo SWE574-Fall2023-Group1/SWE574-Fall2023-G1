@@ -272,10 +272,7 @@ useEffect(() => {
   };
 
   const handleEditButtonClick = () => {
-    setIsEditMode(true);
-    setOpen(true)
-    setEditedContent(story.content);
-    console.log(story,"story")
+    navigate(`/edit-story/${id}`);
   };
 
   const handleSaveButtonClick = async () => {

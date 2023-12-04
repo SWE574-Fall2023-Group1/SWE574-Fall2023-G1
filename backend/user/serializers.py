@@ -231,7 +231,6 @@ class StorySerializer(serializers.ModelSerializer):
 
         return story
 
-
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret.update({'success': True, 'msg': 'Story ok.'})
@@ -283,6 +282,75 @@ class CommentGetSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret.update({'success': True, 'msg': 'Comment details got.'})
+        return ret
+
+class StoryUpdateSerializer(serializers.ModelSerializer):
+    location_ids = LocationSerializer(many=True)
+
+    class Meta:
+        model = Story
+        fields = ['id', 'title', 'content', 'story_tags', 'location_ids', 'date_type', 'season_name', 'year','start_year','end_year', 'date','creation_date','start_date','end_date','decade','include_time','likes']
+
+    def validate(self, attrs):
+        date_type = attrs.get('date_type')
+        start_year = attrs.get('start_year')
+        end_year = attrs.get('end_year')
+        season_name = attrs.get('season_name')
+        year = attrs.get('year')
+        decade = attrs.get('decade')
+        date = attrs.get('date')
+        start_date = attrs.get('start_date')
+        end_date = attrs.get('end_date')
+
+        if date_type == Story.YEAR_INTERVAL and (decade is not None or year is not None or date is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'year_interval' field should be set when 'date_type' is 'year_interval'.")
+        elif date_type == Story.YEAR and (decade is not None or start_year is not None or end_year is not None or date is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'year' field should be set when 'date_type' is 'year'.")
+        elif date_type == Story.NORMAL_DATE and (decade is not None or start_year is not None or end_year is not None or year is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'date' field should be set when 'date_type' is 'normal_date'.")
+        elif date_type == Story.INTERVAL_DATE and (decade is not None or start_year is not None or end_year is not None or year is not None or date is not None):
+            raise serializers.ValidationError("Only 'date_interval' field should be set when 'date_type' is 'date_interval'.")
+        elif date_type == Story.DECADE and (start_year is not None or end_year is not None or year is not None or date is not None or start_date is not None or end_date is not None):
+            raise serializers.ValidationError("Only 'decade' field should be set when 'date_type' is 'decade'.")
+
+        return attrs
+
+    def update(self, instance, validated_data):
+        location_data = validated_data.pop('location_ids', [])
+        locations = []
+
+        for location_dict in location_data:
+            if 'point' in location_dict:
+                point_coords = location_dict['point']['coordinates']
+                location_dict['point'] = Point(point_coords[0], point_coords[1], srid=4326)
+            elif 'line' in location_dict:
+                line_coords = location_dict['line']['coordinates']
+                location_dict['line'] = LineString(line_coords, srid=4326)
+            elif 'polygon' in location_dict:
+                polygon_coords = location_dict['polygon']['coordinates'][0]  # Assuming first element is outer ring
+                location_dict['polygon'] = Polygon(polygon_coords, srid=4326)
+            elif 'circle' in location_dict:
+                circle_coords = location_dict['circle']['coordinates']
+                location_dict['circle'] = Point(circle_coords[0], circle_coords[1], srid=4326)
+
+            location, created = Location.objects.get_or_create(
+                name=location_dict.get('name'),
+                defaults=location_dict
+            )
+            locations.append(location)
+
+        instance.location_ids.set(locations)
+
+        # Update other fields of Story instance
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        return instance
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'success': True, 'msg': 'Story ok.'})
         return ret
 
 class ActivitySerializer(serializers.ModelSerializer):
