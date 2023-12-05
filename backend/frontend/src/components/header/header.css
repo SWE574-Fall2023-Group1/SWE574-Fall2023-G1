@@ -24,9 +24,10 @@
 
   .container {
     width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     text-align: center;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
   }
 
   .navbar {
@@ -35,7 +36,7 @@
     align-items: center;
     background-color: #3b3d42;
     padding: 1rem;
-    width: 100%;
+    max-width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
@@ -88,7 +89,7 @@
     justify-content: center;
   }
 
-  .custombg {
+  /* .custombg {
 
     box-sizing: border-box;
 
@@ -99,7 +100,7 @@
     background: #363636;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
-    }
+    } */
 
 
   body {
