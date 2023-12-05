@@ -1,6 +1,11 @@
 name: Django test pipeline
 on:
   pull_request:
+    paths:
+      - 'backend/backend/**'
+      - 'backend/user/**'
+      - 'backend/manage.py'
+      - 'backend/requirements.txt'
   push:
     branches:
       - main
