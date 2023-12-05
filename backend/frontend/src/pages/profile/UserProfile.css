@@ -1,17 +1,17 @@
-.profile-photo {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    /* overflow: hidden; */
-    object-fit: cover;
-    /* position: 'absolute', */
-  }
+/* UserProfile.css */
 
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin: 585px 0;
-  }
+.profile-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 150px;
+}
 
 .pagination button {
   background-color: white;
@@ -45,21 +45,18 @@ input[type="file"] {
   overflow: hidden;
 }
 
-.profile-photo-change-button {
+.profile-photo-change-button, .profile-photo-delete-button {
   cursor: pointer;
   color: #111;
   font-family: Roboto;
-  font-size: 11px;
-  font-style: normal;
+  font-size: 13px; /* Adjust as needed */
   font-weight: 400;
   line-height: normal;
-  border: none;
-  background: none;
+  border: 1px solid #ccc; /* Add a border for visibility */
+  padding: 5px 10px; /* Padding inside the button */
+  border-radius: 4px; /* Rounded corners */
 }
 
-.profile-photo-button:hover {
-  background-color: #3e8e41;
-}
 
 .profile-photo-button:focus {
   outline: none;
@@ -77,8 +74,13 @@ input[type="file"] {
   background: none;
 }
 
+.profile-photo-change-button:hover, .profile-photo-delete-button:hover {
+  background-color: #e0e0e0; /* Slightly darker on hover */
+}
+
 .story-box {
   height: 100px;
+  width: 500px;
   margin: 0 auto;
   display: flex;
   align-items: flex-start;
@@ -87,10 +89,10 @@ input[type="file"] {
   margin-bottom: 1rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 14px;
-  border: 0.50px #F2F1F1 solid;
-  left: 300px;
-  top: 490px;
-  position: absolute;
+  border: 0.5px #F2F1F1 solid;
+  left: 0px;
+  top: 50px;
+  position: relative;
   justify-content: flex-start;
 }
 
@@ -121,7 +123,7 @@ input[type="file"] {
   color: var(--gray-700, var(--gray-700, #323539));
   font-style: normal;
   font-weight: 500;
-  line-height: 30px; /* 200% */
+  line-height: 30px;
   letter-spacing: -0.15px;
 }
 
@@ -129,43 +131,55 @@ input[type="file"] {
   color: #323539;
 }
 
-
+.story-time {
+  margin-bottom: 10;
+  color: var(--gray-50, var(--gray-50, #858C95));
+  text-align: right;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.1px;
+}
 
 .story-author {
   margin-bottom: 10;
   color: var(--gray-50, var(--gray-50, #858C95));
   text-align: right;
-  /* Text S / Medium */
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
   letter-spacing: -0.1px;
 }
 
 .custom-bio {
-  height: 175px;
-  margin: 0 auto;
-  display: flex;
-  align-items: left;
-  background-color: white;
+  padding: spacing(2);
+  margin: 'auto';
+  width: -moz-fit-content;
+  width: 600px;
+  height: 200px;
   padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 14px;
-  border: 0.50px#F2F1F1 solid;
-  position: absolute;
-  overflow-y: auto;
+  position: relative;
+  text-align: 'center';
+  /* justify-content: center; */
+  /* align-items: center; */
+  margin: 0 auto;
+  /* overflow-y: auto; */
   text-Align: left;
+  background-color: white;
   text-decoration-color: #323539;
   font-family: Inter;
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 184.615% */
+  line-height: 24px;
   letter-spacing: -0.13px;
-
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  border: 0.5px #F2F1F1 solid;
 }
 
 .custom-bio p {
@@ -178,8 +192,6 @@ input[type="file"] {
 
 .custom-followers {
   padding: spacing(2);
-  margin: 'auto';
-  max-width: 100px;
   text-align: 'center';
   justify-content: center;
   align-items: center;
@@ -192,7 +204,7 @@ input[type="file"] {
 }
 
 .edit-box {
-  margin: 'auto';
+  margin: auto;
   width: 700px;
   height: 100px;
   padding: 0 30px;
@@ -208,13 +220,76 @@ input[type="file"] {
 }
 
 .edit-buttons {
+  position: absolute;
+  bottom: 10px; /* Adjust as per your design */
+  right: 10px;  /* Adjust as per your design */
   cursor: pointer;
-  /* color: #323539; */
   font-family: Roboto;
   font-size: 13px;
-  font-style: normal;
   font-weight: 400;
   line-height: normal;
   border: none;
   background: none;
+}
+
+.follow-button {
+  background-color: #4caf50; /* Green background */
+  color: white;             /* White text */
+  padding: 10px 20px;       /* Padding around the text */
+  border: none;             /* No border */
+  border-radius: 4px;       /* Rounded corners */
+  cursor: pointer;          /* Pointer cursor on hover */
+  font-size: 16px;          /* Font size */
+  font-weight: bold;        /* Font weight */
+  margin: 10px 0;           /* Margin for spacing */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.follow-button:hover {
+  background-color: #3e8e41; /* Darker shade of green on hover */
+}
+
+.follow-button:focus {
+  outline: none; /* Remove outline on focus for cleaner look */
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  width: 600px;
+  position: relative;
+  margin: 0 auto;
+  top: 30px;
+}
+
+.left-section {
+  /* Styles for left section (profile photo) */
+}
+
+.center-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.follower-info {
+  margin-bottom: 10px;
+}
+
+.photo-buttons button {
+  display: inline-block; /* Display buttons inline */
+  margin-right: 10px; /* Spacing between buttons */
+  /* Add more styling as needed */
+}
+
+.right-section {
+  /* Styles for right section (username) */
+}
+
+.username {
+  font-size: 40px; /* Adjust the size as needed */
+  font-weight: bold; /* Makes the text bold */
+  /* Add any additional styling you need here */
 }
