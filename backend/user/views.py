@@ -697,7 +697,7 @@ class SearchStoryView(views.APIView):
         location = request.query_params.get('location', '')
         radius_diff = float(request.query_params.get('radius_diff', ''))
         date_diff = float(request.query_params.get('date_diff', 2))
-        tag_search = request.query_params.get('tag', '')
+        wikidata_id = request.query_params.get('tag', '')
 
 
         logger.info(f"locationsearch: {location}")
@@ -705,8 +705,8 @@ class SearchStoryView(views.APIView):
         query_filter = Q()
         if title_search:
             query_filter &= Q(title__icontains=title_search)
-        if tag_search:
-            query_filter &= Q(story_tags__icontains=tag_search)
+        if wikidata_id:
+            query_filter &= Q(story_tags__wikidata_id=wikidata_id)
         if author_search:
             query_filter &= Q(author__username__icontains=author_search)
         if time_type and time_value:
