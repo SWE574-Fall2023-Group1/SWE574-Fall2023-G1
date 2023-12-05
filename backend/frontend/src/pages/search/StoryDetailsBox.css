@@ -23,26 +23,27 @@
   }
 
   .story-details-box {
-    position: absolute;
-    top: -150px; /* Adjust the top position as needed */
-    left: 40%;
-    transform: translateX(-50%);
-    background-color: #fff; /* Background color of the box */
+    width: 125px;
+    height: 150px;
+    background-color: #fff;
     padding: 15px;
-    border: 1px solid #000; /* Border color */
+    border: 1px solid #000;
     border-radius: 5px;
-    text-align: center;
-    z-index: 2; /* Ensure it appears above the dots */
-    transition: transform 0.3s ease-in-out; /* Add a smooth transition effect */
+    z-index: 2;
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .story-details-box:hover {
-    transform: scale(2); /* Enlarge the box when hovered */
+    transform: scale(2.3);
+    z-index: 1000;
   }
 
   .story-details-box .story-image {
     max-width: 100%; /* Limit the image's width to not exceed the container's width */
-    max-height: 100px; /* Set a maximum height for the image */
+    max-height: 100%; /* Set a maximum height for the image */
     object-fit: contain; /* Ensures the entire image is visible and maintains its aspect ratio */
     display: block; /* To remove any default inline spacing */
     margin: 0 auto; /* Centers the image if it's smaller than the container */

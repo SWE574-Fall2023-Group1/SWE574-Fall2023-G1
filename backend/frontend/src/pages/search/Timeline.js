@@ -91,16 +91,11 @@ const LocationSearch = () => {
                 onClick={() => handleStoryClick(story.id)}
                 imageUrl={imageUrl}
               />
-              <p className="story-date">{formatDate(story)}</p>
+              {/* <p className="story-date">{formatDate(story)}</p> */}
             </div>
           );
         })}
       </div>
-
-
-
-
-      {/* Rest of your component content */}
     </div>
   );
 };
