@@ -125,7 +125,6 @@ function StoryDetails() {
 
 useEffect(() => {
   const fetchStory = async () => {
-    fetchProfilePhoto();
     try {
       await fetchUserDetails(); // Get the current user ID
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
@@ -169,6 +168,7 @@ useEffect(() => {
       // Determine if the user has liked the story
       setNumLikes(response.data.likes.length);
       setLiked(userId && response.data.likes.includes(userId));
+      fetchAuthorProfilePhoto(response.data.author);
 
     } catch (error) {
       console.log(error);
@@ -310,27 +310,24 @@ useEffect(() => {
     setOpen(false)
   };
 
-  const fetchProfilePhoto = async () => {
+  const fetchAuthorProfilePhoto = async (authorId) => {
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto/${authorId}`, {
         headers: {},
         withCredentials: true,
       });
 
-
       // Directly set the URL from the response to state
       setProfilePhotoUrl(response.data.photo_url);
-
     } catch (error) {
       if (error.response && error.response.status === 404) {
         // Profile photo not found, set the default photo
         setProfilePhotoUrl(defaultProfilePhoto);
       } else {
-        console.error('Error fetching profile photo:', error);
+        console.error('Error fetching author profile photo:', error);
       }
     }
   };
-  console.log(profilePhotoUrl)
 
   Quill.register('modules/imageCompress', ImageCompress);
 
