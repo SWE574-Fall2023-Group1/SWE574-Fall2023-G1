@@ -3,7 +3,7 @@
   }
 
   .App-logo {
-    height: 40vmin;
+    height: 50vmin;
     pointer-events: none;
   }
 
@@ -34,7 +34,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #3b3d42;
+    background-color: #8E8A8A;;
     padding: 1rem;
     max-width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -52,12 +52,18 @@
     margin-right: 1rem;
     text-decoration: none;
     font-size: 1.1rem;
-    color: #ffffff;
-    padding: 0.25rem 0.5rem;
+    color: #FFFFFF;
+    padding: 0.25rem 1rem;
     border-radius: 3px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    /* Text Button / Semibold Large */
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px; /* 146.667% */
   }
 
   .nav-link::before {
