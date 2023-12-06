@@ -104,7 +104,7 @@ We moved from a PostgreSQL database to PostGIS in order to accommodate our chang
 
  * **Main contributions:**
 
-     * **Code-related significant issues:** 
+     * **Code-related significant issues:**
         - Fetch stories from backend [#44](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/44)
         - Define base route branches in main file [#45](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/45)
         - Add create story page [#56](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/56)
@@ -165,7 +165,7 @@ We moved from a PostgreSQL database to PostGIS in order to accommodate our chang
         - Improve frontend design [#68](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/68)
 
  * **Pull requests:**
-    - Improve navbar [#143](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/213) 
+    - Improve navbar [#143](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/213)
     - Feature/150 design homepage [#205](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/205)
     - Feature/Improve profile page design #151 [#200](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/200)
     - feature/147-design-login-page [#148](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/pull/148)
@@ -243,7 +243,7 @@ We moved from a PostgreSQL database to PostGIS in order to accommodate our chang
 
  * **Responsibilities:**
 
-    * Redesign memory and search frontends 
+    * Redesign memory and search frontends
     * Fix frontend bugs
     * Moderate meetings and take notes
     * Maintain wiki by adding new content
@@ -289,13 +289,13 @@ We moved from a PostgreSQL database to PostGIS in order to accommodate our chang
     1. Story detail page developed. Showing every detail related to selected story. Including author, title, content, tags, time resoulution, locaction (point/circle/line/area), like count and comments.
     2. Story page is interative so that a user can like and comment stories within the page.
     3. Made UI/UX decision on mobile app due to my extensive experience on mobile development
-    
+
      * **Code-related significant issues:**
     1. User shall be able to post comment on story details page. [**#66**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/66)
     2. Story Detail Page UI Improvements [**#71**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/71)
     3. Story like counters are not refreshed [**#63**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/63)
     4. Implement story details page [**#55**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/55)
-    
+
      * **Management-related significant issues:**
     1. Find examples from similar apps to improve user experience [**#71**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile/issues/71)
 
@@ -318,10 +318,10 @@ We moved from a PostgreSQL database to PostGIS in order to accommodate our chang
     2. Redesign Activity Stream page [**#177**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/177)
     3. Redesign Header for Website [**#176**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/176)
     4. Timeline Design Imps [**#153**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/153)
-    
-  
+
+
      * **Management-related significant issues:**
-    1. Improve frontend design [**#68**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/68) 
+    1. Improve frontend design [**#68**](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/issues/68)
 
  * **Pull requests:**
 
