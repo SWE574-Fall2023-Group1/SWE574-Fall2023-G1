@@ -127,7 +127,7 @@ function Header() {
                       <img
                         src={mainPhoto}
                         alt="Memories"
-                        style={{ width: "1000px", height: "auto" }}
+                        style={{ width: "1000px", height: "auto", maxWidth : "100%" }}
                       />
                     </div>
                   }
