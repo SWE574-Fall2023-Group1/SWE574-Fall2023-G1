@@ -4,7 +4,6 @@ import { useParams,useNavigate } from 'react-router-dom';
 import './UserProfile.css';
 import withAuth from '../../authCheck';
 import UserProfile from './UserProfile';
-import './UserProfileOthers.css';
 import { Button, Paper } from '@mui/material';
 import tick from '../../assets/images/tick.png'
 
@@ -124,7 +123,7 @@ const UserProfileOthers = () => {
 
   const fetchUserStories = async () => {
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${id}?page=${currentPage}&size=1`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${id}?page=${currentPage}&size=5`, {
         withCredentials: true,
       });
       setStories(response.data.stories);
@@ -157,73 +156,82 @@ const UserProfileOthers = () => {
 
   return (
     <div>
-      {isMe? <UserProfile/>:
-          <div> <div style={{left: 800, top: -270, position: 'absolute', color: '#262626', fontSize: 36, fontFamily: 'Roboto', fontWeight: '400', lineHeight: 25, wordWrap: 'break-word'}}>{user.username} <img src={tick}/></div>
-      {profilePhotoUrl && (
-        <img style={{left: 390, top: 120, position: 'absolute'}}
-        src={profilePhotoUrl}
-        alt={`${user.username}'s profile`}
-        className="profile-photo"
-            />
-          )}
-          {/* <p>ID: {user.id}</p>
-          <p>Email: {user.email}</p> */}
-          <div>
-            <div style={{height: 30, left: 321, top: 300, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>About Me</div>
-            <br/>
-            <div className="custom-bio" style={{width: 750, height: 100, left: 300, top: 330, borderRadius: 14, position: 'absolute', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', justifyContent: 'left', alignItems: 'left', display: 'inline-flex'}}>
-              <div>{user.biography.split('\n').map((line, index) => <span key={index}>{capitalizeFirstLetter(line)}<br/></span>)}</div>
+      {isMe ? (
+        <UserProfile />
+      ) : (
+        <div>
+          <div className="profile-section">
+            <div className="left-section">
+              {profilePhotoUrl && (
+                <img
+                  src={profilePhotoUrl}
+                  alt={`${user.username}'s profile`}
+                  className="profile-photo"
+                />
+              )}
             </div>
-          </div>
 
-
-          <div style={{left: 587, top: 125, position: 'absolute', color: '#111111', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}><p>{followerCount !== null ? followerCount : 'Loading...'} followers</p>
-          </div>
-          <button type="button" className="custom-followers" style={{left: 590, top: 170, position: 'absolute', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}} onClick={handleFollowClick}>
-            {isFollowing ? 'Unfollow' : 'Follow'}
-          </button>
-
-
-          <div style={{height: 30, left: 321, top: 450, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>Recent Stories</div>
-          {loading ? (
-            <div style={{ marginTop:400}}>
-              <p>Loading stories...</p>
-            </div>
-          ) : stories.length === 0 ? (
-            <div style={{ marginTop:400}}>
-              <p>No stories found.</p>
-            </div>
-          ) : (
-            <div>
-              {stories.map(story => (
-                <div key={story.id} className="story-box" style={{width: 780}}>
-                  <div className="story-details">
-                    <h3 className="story-title" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-                    <p className="story-author">Posted on {new Date(story.creation_date).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              ))}
-              <div className="pagination">
-                <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
-                  Previous
-                </Button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <Button variant="contained"
-                    key={index}
-                    className={index + 1 === currentPage ? 'active' : null}
-                    onClick={() => handlePageChange(index + 1)}
-                  >
-                    {index + 1}
-                  </Button>
-                ))}
-                <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
-                  Next
+            <div className="center-section">
+              <div className="follower-info">
+                <p>{followerCount !== null ? `${followerCount} followers` : 'Loading...'}</p>
+                <Button className="follow-button" onClick={handleFollowClick}>
+                  {isFollowing ? 'Unfollow' : 'Follow'}
                 </Button>
               </div>
             </div>
-          )}
+
+            <div className="right-section">
+              <div className="username">{user.username} <img src={tick} alt="Verified Icon" /></div>
+            </div>
+          </div>
+
+          <div className="bio-section">
+            <h2>About User</h2>
+            <div className="custom-bio">
+              {user.biography.split('\n').map((line, index) => (
+                <p key={index}>{capitalizeFirstLetter(line)}</p>
+              ))}
+            </div>
+          </div>
+
+          <div className="stories-section">
+            <h2>Recent Stories</h2>
+            {loading ? (
+              <p>Loading stories...</p>
+            ) : stories.length === 0 ? (
+              <p>No stories found.</p>
+            ) : (
+              <div>
+                {stories.map((story) => (
+                  <div key={story.id} className="story-box">
+                    <div className="story-details">
+                      <h3 className="story-title" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
+                      <p className="story-time">Creation Date: {new Date(story.creation_date).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                ))}
+                <div className="pagination">
+                  <Button onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
+                    Previous
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <Button
+                      key={index}
+                      className={index + 1 === currentPage ? 'active' : ''}
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </Button>
+                  ))}
+                  <Button onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
+                    Next
+                    </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        }
+      )}
     </div>
   );
 };

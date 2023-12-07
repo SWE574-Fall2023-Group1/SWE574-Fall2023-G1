@@ -75,7 +75,7 @@ const UserProfile = () => {
   const fetchUserStories = async (user) => {
 
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${user.id}?page=${currentPage}&size=1`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/userStories/${user.id}?page=${currentPage}&size=5`, {
         withCredentials: true,
       });
       console.log(response.data)
@@ -104,6 +104,7 @@ const UserProfile = () => {
     event.preventDefault(); // Prevent the default behavior of the file input
 
     const file = event.target.files[0];
+    console.log(file);
     if (!file) return;
 
     const formData = new FormData();
@@ -178,142 +179,143 @@ const capitalizeFirstLetter = (str) => {
 
   return (
     <div>
-        <div style={{left: 800, top: -270, position: 'absolute', color: '#262626', fontSize: 36, fontFamily: 'Roboto', fontWeight: '400', lineHeight: 25, wordWrap: 'break-word'}}>{user.username} <img src={tick}/></div>
-      {profilePhotoUrl && (
-        <img style={{left: 390, top: 120, position: 'absolute'}}
-        src={profilePhotoUrl}
-        alt={`${user.username}'s profile`}
-        className="profile-photo"
-        />
+    <div className="profile-section">
+      <div className="left-section">
+        {profilePhotoUrl && (
+          <img
+            src={profilePhotoUrl}
+            alt={`${user.username}'s profile`}
+            className="profile-photo"
+          />
         )}
+      </div>
 
-
-
-{profilePhotoUrl !== defaultProfilePhoto && (
-  <div>
-
-
-<div>
-    <button
-      type="button"
-      className="profile-photo-change-button"
-      onClick={() => document.getElementById('profile-photo-input').click()}
-    >
-     <div style={{left: 581, top: 170, position: 'absolute', color: '#111111', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}}><img src={addnewphoto} style={{ marginRight: 6 }} alt="Add New Photo Icon"/>  Add new photo</div>
-    </button>
-    <span id="profile-photo-filename"></span>
-    <input
-      id="profile-photo-input"
-      type="file"
-      accept="image/jpeg, image/png"
-      onChange={handleProfilePhotoChange}
-    />
-  </div>
-
-  <div>
-    <button
-      type="button"
-      className="profile-photo-delete-button"
-      onClick={handleRemoveProfilePhoto}
-    >
-     <div style={{left: 583, top: 202, position: 'absolute', color: '#111111', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}}><img src={deletephoto} style={{ marginRight: 7 }} alt="Delete Photo Icon"/> Delete photo</div>
-    </button>
-    </div>
-  </div>
-)}
-
-{profilePhotoUrl === defaultProfilePhoto && (
-
-  <div>
-    <button
-      type="button"
-      className="profile-photo-change-button"
-      onClick={() => document.getElementById('profile-photo-input').click()}
-    >
-     <div style={{left: 581, top: 172, position: 'absolute', color: '#111111', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', display: 'flex', justifyContent: 'center', alignItems: 'center', wordWrap: 'break-word'}}><img src={addnewphoto} style={{ marginRight: 6 }} alt="Add New Photo Icon"/> Add new photo</div>
-    </button>
-    <span id="profile-photo-filename"></span>
-    <input
-      id="profile-photo-input"
-      type="file"
-      accept="image/jpeg, image/png"
-      onChange={handleProfilePhotoChange}
-    />
-  </div>
-)}
-
-      {isEditingBio ? (
-          <div>
-          <div className='edit-box'>
-            <TextField
-            value={updatedBio}
-            onKeyPress={handleKeyPress}
-            onChange={(e) => setUpdatedBio(e.target.value)}
-            multiline={true}
-            inputProps={{ maxLength: 300, rows: 3 }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.shiftKey) {
-                e.preventDefault();
-                setUpdatedBio((prev) => prev + '\n');
-              }
-            }}
-            InputProps={{ className: 'edit-box' }}
-            />
-            </div>
-            <div>
-            <Button variant="contained" style={{top:100}} color='success' type="button" onClick={handleProfileBioChange}>Save</Button>
-            <Button variant="contained" style={{top:100}} type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
-            </div>
+      <div className="center-section">
+        <div className="follower-info">
+          <p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
+        </div>
+          {profilePhotoUrl !== defaultProfilePhoto ? (
+          <div className="photo-buttons">
+            <button
+              type="button"
+              className="profile-photo-change-button"
+              onClick={() => document.getElementById('profile-photo-input').click()}
+            >
+              <img src={addnewphoto} alt="Add New Photo Icon" />
+              Change photo
+            </button>
+            <button
+              type="button"
+              className="profile-photo-change-button"
+              onClick={handleRemoveProfilePhoto}
+            >
+              <img src={deletephoto} alt="Delete Photo Icon" />
+              Remove photo
+            </button>
           </div>
         ) : (
-          <div>
-            <div style={{height: 30, left: 321, top: 300, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>About Me</div>
-            <br/>
-            <div className="custom-bio" style={{width: 750, height: 100, left: 300, top: 330, borderRadius: 14, position: 'absolute', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', justifyContent: 'left', alignItems: 'left', display: 'inline-flex'}}>
-              <div>{user.biography.split('\n').map((line, index) => <span key={index}>{capitalizeFirstLetter(line)}<br/></span>)}</div>
-            </div>
-            <button type="button" className="edit-buttons"  onClick={() => setIsEditingBio(true)} style={{position: 'relative'}}><div style={{position: 'absolute',left: 320, top: 245, display: 'flex', justifyContent: 'center', alignItems: 'center', textTransform: 'none', background:'none'}}><img src={edit} style={{ marginRight: 5 }} alt="Edit Icon"/>Edit</div></button>
-          </div>
+          <button
+            type="button"
+            className="profile-photo-change-button"
+            onClick={() => document.getElementById('profile-photo-input').click()}
+          >
+            <img src={addnewphoto} alt="Add New Photo Icon" />
+            Add photo
+          </button>
         )}
-        <br/>
-      <div className="custom-followers" style={{left: 587, top: 125, position: 'absolute', color: '#111111', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}><p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
-          </div>
 
-          <div style={{height: 30, left: 321, top: 450, position: 'absolute', color: '#2C2A2A', fontSize: 20, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>My Recent Stories</div>
+        <input
+          id="profile-photo-input"
+          type="file"
+          accept="image/jpeg, image/png"
+          onChange={handleProfilePhotoChange}
+          style={{ display: 'none' }}
+        />
+      </div>
+
+      <div className="right-section">
+        <div className="username">{user.username} <img src={tick} alt="Verified Icon" /></div>
+      </div>
+    </div>
+      {isEditingBio ? (
+        <div>
+          <div className="edit-box">
+            <TextField
+              value={updatedBio}
+              onKeyPress={handleKeyPress}
+              onChange={(e) => setUpdatedBio(e.target.value)}
+              multiline={true}
+              inputProps={{ maxLength: 300, rows: 3 }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && e.shiftKey) {
+                  e.preventDefault();
+                  setUpdatedBio((prev) => prev + '\n');
+                }
+              }}
+              InputProps={{ className: 'edit-box' }}
+            />
+          </div>
+          <div>
+            <Button variant="contained" style={{ top: 100 }} color='success' type="button" onClick={handleProfileBioChange}>Save</Button>
+            <Button variant="contained" style={{ top: 100 }} type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
+          </div>
+        </div>
+      ) : (
+        <div>
+
+          <br />
+          <h2>About Me</h2>
+          <div className="custom-bio">
+            <button type="button" className="edit-buttons" onClick={() => setIsEditingBio(true)}>
+              <div className="edit-button">
+                <img src={edit} alt="Edit Icon" />
+                Edit
+              </div>
+            </button>
+            <div>
+              {user.biography.split('\n').map((line, index) => (
+                <span key={index}>{capitalizeFirstLetter(line)}<br /></span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      <br />
+      <h2>My Recent Stories</h2>
       {loading ? (
-        <div style={{ marginTop:400}}>
+        <div>
           <p>Loading stories...</p>
         </div>
       ) : stories.length === 0 ? (
-        <div style={{ marginTop:400}}>
+        <div>
           <p>No stories found.</p>
         </div>
       ) : (
         <div>
           {stories.map(story => (
-                <div key={story.id} className="story-box" style={{width: 780}}>
-                  <div className="story-details">
-                    <h3 className="story-title" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-                    <p className="story-author">Posted on {new Date(story.creation_date).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              ))}
-              <div className="pagination">
-                <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
-                  Previous
-                </Button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <Button variant="contained"
-                    key={index}
-                    className={index + 1 === currentPage ? 'active' : null}
-                    onClick={() => handlePageChange(index + 1)}
-                  >
-                    {index + 1}
-                  </Button>
-                ))}
-                <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
-                  Next
+            <div key={story.id} className="story-box">
+              <div className="story-details">
+                <h3 className="story-title" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
+                <p className="story-time">Creation Date: {new Date(story.creation_date).toLocaleDateString()}</p>
+              </div>
+            </div>
+          ))}
+          <div className="pagination">
+            <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
+              Previous
+            </Button>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button variant="contained"
+                key={index}
+                className={index + 1 === currentPage ? 'active' : null}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
               </Button>
+            ))}
+            <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
+              Next
+            </Button>
           </div>
         </div>
       )}
