@@ -1,7 +1,17 @@
 import requests
 from .models import Story, StoryRecommendation
-
+from django.db.models import Q
+from datetime import datetime, timedelta
 import logging
+from django.contrib.gis.geos import Point, LineString, Polygon, GEOSGeometry
+from django.contrib.gis.db.models.functions import Distance
+from django.db.models import Q
+from bs4 import BeautifulSoup
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+from collections import Counter
+from nltk.stem import WordNetLemmatizer
 
 logger = logging.getLogger(__name__)
 
@@ -11,24 +21,53 @@ def update_recommendations(user):
     liked_stories = Story.objects.filter(likes=user)
     recommended_tags = set()
 
+    # Gather related tags
     for story in liked_stories:
         for tag in story.story_tags.all():
-            logger.warning(f"Processing tag: {tag.name} for story: {story.title}")
-            logger.warning(f"Processing tag Wikidata: {tag.wikidata_id} for story: {story.title}")
             related_tags = query_related_tags(tag.wikidata_id)
-            logger.warning(f"Processing tag Realted: {related_tags} for story: {story.title}")
             recommended_tags.update(related_tags)
 
-    logger.warning(f"Recommended tags: {recommended_tags}")
+    all_stories = Story.objects.exclude(author=user)
 
-    recommended_stories = Story.objects.filter(story_tags__wikidata_id__in=recommended_tags).distinct()
+    for story in all_stories:
+        tag_relation = is_tag_related(story, liked_stories, recommended_tags)
 
-    logger.warning(f"Found {len(recommended_stories)} recommended stories")
+        for liked_story in liked_stories:
+            location_relation = is_location_related(liked_story, story)
+            time_relation = is_time_related(liked_story, story)
+            content_relation = compare_keywords(liked_story, story)
 
-    for story in recommended_stories:
-        _, created = StoryRecommendation.objects.get_or_create(user=user, story=story)
-        if created:
-            logger.warning(f"Created new recommendation for story: {story.title}")
+            recommendation, created = StoryRecommendation.objects.get_or_create(
+                user=user,
+                story=story
+            )
+
+            # Calculate recommendation points
+            recommendation_points = 0
+
+            if not created:
+                if not recommendation.tag_related and tag_relation:
+                    recommendation.tag_related = True
+                if not recommendation.location_related and location_relation:
+                    recommendation.location_related = True
+                if not recommendation.time_related and time_relation:
+                    recommendation.time_related = True
+                if recommendation.content_related < content_relation:
+                    recommendation.content_related = content_relation
+
+            if tag_relation:
+                recommendation_points += 2
+            if location_relation:
+                recommendation_points += 1
+            if time_relation:
+                recommendation_points += 0.5
+            recommendation_points += content_relation * 0.5
+
+            # Update recommendation points
+            recommendation.points = recommendation_points
+
+            recommendation.related_stories.add(liked_story)
+            recommendation.save()
 
 
 
@@ -61,3 +100,95 @@ def query_related_tags(wikidata_id):
     except requests.RequestException as e:
         logger.error(f"Error querying Wikidata: {e}")
         return []
+
+
+def is_tag_related(recommended_story, liked_stories, recommended_tags):
+    # Check if the recommended story has any tag that's in the recommended_tags set
+    return recommended_story.story_tags.filter(wikidata_id__in=recommended_tags).exists()
+
+
+def is_location_related(story1, story2, radius_diff=5):
+    # Assuming radius_diff is in kilometers
+    radius_diff_meters = radius_diff * 1000  # Convert to meters
+    utm_srid = 32633  # Example: UTM zone 33N SRID
+
+    def create_buffer_for_location(location):
+
+
+        if location.point:
+            buffer_area = location.point.buffer(radius_diff_meters)
+        elif location.line :
+            buffer_area = location.line.buffer(radius_diff_meters)
+        elif location.polygon :
+            buffer_area = location.polygon  # No buffer needed for a polygon
+        elif location.circle:
+            circle_center = GEOSGeometry(location.circle, srid=4326)
+            circle_center.transform(utm_srid)
+            buffer_area = circle_center.buffer(location.radius)
+            buffer_area.transform(4326)
+        else:
+            buffer_area = None
+        return buffer_area
+
+    for loc1 in story1.location_ids.all():
+
+        buffer1 = create_buffer_for_location(loc1)
+        if buffer1:
+            for loc2 in story2.location_ids.all():
+                buffer2 = create_buffer_for_location(loc2)
+                if buffer2 and buffer1.intersects(buffer2):
+                    return True
+    return False
+
+def is_time_related(story1, story2, date_diff=timedelta(days=2)):
+    # Logic adapted from your SearchStoryView
+    def build_time_query(story):
+        query = Q()
+        if story.date_type == 'season':
+            query &= Q(season_name__icontains=story.season_name)
+        elif story.date_type == 'year':
+            query &= Q(season_name__icontains=story.season_name, year__exact=story.year)
+        elif story.date_type == 'year_interval':
+            query &= Q(season_name__icontains=story.season_name, start_year__gte=story.start_year, end_year__lte=story.end_year)
+        elif story.date_type == 'normal_date':
+            start_date = story.date - date_diff
+            end_date = story.date + date_diff
+            query &= Q(date__range=(start_date, end_date))
+        elif story.date_type == 'interval_date':
+            query &= Q(start_date__gte=story.start_date, end_date__lte=story.end_date)
+        elif story.date_type == 'decade':
+            start_year = story.decade
+            end_year = story.decade + 9
+            query &= Q(decade__exact=story.decade) | Q(year__range=(start_year, end_year))
+        return query
+
+    time_query = build_time_query(story1)
+
+    return Story.objects.filter(time_query).filter(id=story2.id).exists()
+
+
+def compare_keywords(story1, story2):
+    keywords1 = set(extract_keywords_enhanced(story1.content))
+    keywords2 = set(extract_keywords_enhanced(story2.content))
+    return len(keywords1.intersection(keywords2))
+
+def extract_keywords_enhanced(html_content, max_words=5):
+    # Extract text from HTML
+    soup = BeautifulSoup(html_content, 'html.parser')
+    text = soup.get_text()
+
+    # Tokenize, remove stop words, and get POS tags
+    stop_words = set(stopwords.words('english'))
+    words = [word for word in word_tokenize(text) if word.isalpha() and word not in stop_words]
+    pos_tags = pos_tag(words)
+
+    # Initialize lemmatizer
+    lemmatizer = WordNetLemmatizer()
+
+    # Lemmatize words, focus on nouns and adjectives, and exclude proper nouns
+    lemmatized_words = [lemmatizer.lemmatize(word.lower(), pos='n') for word, tag in pos_tags
+                        if tag.startswith(('NN', 'JJ')) and not tag.startswith('NNP')]
+
+    # Get the most common words
+    common_words = Counter(lemmatized_words).most_common(max_words)
+    return [word for word, freq in common_words]
