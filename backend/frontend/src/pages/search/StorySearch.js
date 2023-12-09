@@ -53,10 +53,12 @@ const StorySearch = () => {
     navigate(`/user-profile/${id}`);
   };
 
-  const handleSearch = async (e, pageNumber = 1) => {
+  const handleSearch = async (e, pageNumber = 1, searchType = 'timeline') => {
     e.preventDefault();
 
     let timeValueObj = {};
+    const sortField = searchType === 'timeline' ? 'extract_timestamp' : 'creation_date';
+
 
     switch (timeType) {
       case 'decade':
@@ -94,11 +96,16 @@ const StorySearch = () => {
           location: locationParam,
           radius_diff: radiusDiff,
           date_diff: dateDiff,
+          sort_field: sortField,
         },
         withCredentials: true,
       });
-      //console.log(locationSearch)
-      navigate('/timeline', { state: { stories: response.data.stories } });
+
+      if (searchType === 'timeline') {
+        navigate('/timeline', { state: { stories: response.data.stories } });
+      } else {
+        navigate('/search-results', { state: { stories: response.data.stories } });
+      }
 
       setStories(response.data.stories);
       setTotalPages(response.data.total_pages);
@@ -499,8 +506,23 @@ const StorySearch = () => {
 
         </div>
         <br />
-        <Button style={{backgroundColor: "#7E49FF", fontSize: "24px"}}variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
-      </form>
+        <Button
+        variant="contained"
+        type="submit"
+        onClick={(e) => handleSearch(e, 1, 'timeline')}
+        className="btn btn-primary"
+        >
+          Search (Timeline)
+        </Button>
+        <Button
+          variant="contained"
+          type="submit"
+          onClick={(e) => handleSearch(e, 1, 'list')}
+          className="btn btn-primary"
+        >
+          Search (List)
+        </Button>
+        </form>
       </div>
       {stories.length > 0 && (
         <>
