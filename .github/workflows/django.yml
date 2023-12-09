@@ -6,10 +6,17 @@ on:
       - 'backend/user/**'
       - 'backend/manage.py'
       - 'backend/requirements.txt'
+      - 'docker-compose.yml'
   push:
     branches:
       - main
       - dev
+    paths:
+      - 'backend/backend/**'
+      - 'backend/user/**'
+      - 'backend/manage.py'
+      - 'backend/requirements.txt'
+      - 'docker-compose.yml'
   workflow_dispatch:
 jobs:
     django-test:
