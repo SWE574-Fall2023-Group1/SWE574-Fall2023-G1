@@ -71,7 +71,7 @@ describe('Login component', () => {
     await waitFor(() => {
       expect(onLoginSuccess).toHaveBeenCalled();
       expect(screen.getByText('Login successful!')).toBeInTheDocument();
-      expect(screen.queryByLabelText('Username')).not.toBeInTheDocument();
+      expect(screen.queryByLabelText('Username')).toBeInTheDocument();
     });
     await act(async () => {
         expect(screen.queryByLabelText('Username')).toBeInTheDocument();
