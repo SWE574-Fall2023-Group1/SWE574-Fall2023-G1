@@ -25,6 +25,7 @@ import mainPhoto from "../../assets/images/homePage4.png";
 import ResetPasswordRequest from "../../pages/landing/ResetPasswordRequest";
 import ResetPasswordMain from "../../pages/landing/ResetPasswordMain";
 import LocationSearch from "../../pages/search/Timeline";
+import SearchResults from "../../pages/search/SearchResults";
 import ActivityStream from "../../pages/activity/ActivityStream";
 import Recommendations from "../../pages/recom/Recommendations";
 
@@ -167,6 +168,10 @@ function Header() {
                 <Route
                   path="/timeline"
                   element={<LocationSearch />}
+                />
+                <Route
+                  path="/search-results"
+                  element={<SearchResults />}
                 />
                 <Route path="/edit-story/:storyId" element={<EditStory />} />
                 <Route path="/activity-stream" element={<ActivityStream />} />

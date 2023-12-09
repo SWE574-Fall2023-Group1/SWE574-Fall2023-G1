@@ -249,7 +249,12 @@ class UpdateStoryView(views.APIView):
                     updated_story.save()
                     return Response({'success': True, 'msg': 'Story updated successfully.', 'data': serializer.data}, status=status.HTTP_200_OK)
                 else:
-                    return Response({'success': False, 'msg': 'Update failed.', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                    error_messages = "\n".join(["{}: {}".format(field, "; ".join(errors)) for field, errors in serializer.errors.items()])
+                    return Response({
+                        'success': False,
+                        'msg': error_messages,  # Concatenated error messages
+                        'errors': serializer.errors
+                    }, status=status.HTTP_400_BAD_REQUEST)
             except Exception as e:
                 return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
@@ -699,6 +704,9 @@ class SearchStoryView(views.APIView):
         date_diff = float(request.query_params.get('date_diff', 2))
         wikidata_id = request.query_params.get('tag', '')
 
+        sort_field = request.query_params.get('sort_field', 'extract_timestamp')  # Default to 'extract_timestamp'
+        sort_type = request.query_params.get('sort_type', 'desc')  # Default to 'desc'
+
 
         logger.info(f"locationsearch: {location}")
         #print(tag_search)
@@ -794,7 +802,19 @@ class SearchStoryView(views.APIView):
 
             stories = stories.filter(location_query)
 
-        sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=True)
+        if sort_field == 'extract_timestamp':
+            # Already handled by existing code
+            sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=(sort_type == 'desc'))
+        elif sort_field == 'creation_date':
+            # Sorting by creation_date
+            if sort_type == 'desc':
+                stories = stories.order_by('-creation_date')
+            else:
+                stories = stories.order_by('creation_date')
+            sorted_stories = stories
+        else:
+            # Default sorting if sort_field is not recognized
+            sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=True)
 
         serializer = StorySerializer(sorted_stories, many=True)
 
