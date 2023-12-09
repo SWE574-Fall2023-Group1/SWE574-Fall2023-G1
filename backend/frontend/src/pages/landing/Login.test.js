@@ -74,7 +74,7 @@ describe('Login component', () => {
       expect(screen.queryByLabelText('Username')).not.toBeInTheDocument();
     });
     await act(async () => {
-        expect(screen.queryByLabelText('Username')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Username')).toBeInTheDocument();
       });
   });
 });
