@@ -507,10 +507,10 @@ const StorySearch = () => {
         </div>
         <br />
         <Button
-        variant="contained"
-        type="submit"
-        onClick={(e) => handleSearch(e, 1, 'timeline')}
-        className="btn btn-primary"
+          variant="contained"
+          type="submit"
+          onClick={(e) => handleSearch(e, 1, 'timeline')}
+          className="btn btn-primary horizontal-margin"
         >
           Search (Timeline)
         </Button>
