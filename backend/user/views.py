@@ -249,7 +249,12 @@ class UpdateStoryView(views.APIView):
                     updated_story.save()
                     return Response({'success': True, 'msg': 'Story updated successfully.', 'data': serializer.data}, status=status.HTTP_200_OK)
                 else:
-                    return Response({'success': False, 'msg': 'Update failed.', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                    error_messages = "\n".join(["{}: {}".format(field, "; ".join(errors)) for field, errors in serializer.errors.items()])
+                    return Response({
+                        'success': False,
+                        'msg': error_messages,  # Concatenated error messages
+                        'errors': serializer.errors
+                    }, status=status.HTTP_400_BAD_REQUEST)
             except Exception as e:
                 return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
