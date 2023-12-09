@@ -10,6 +10,8 @@ const LocationSearch = () => {
   const [locationStories, setLocationStories] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isDescOrder, setIsDescOrder] = useState(true); // Default to true for descending order
+
 
   const options = {
     year: 'numeric',
@@ -20,7 +22,6 @@ const LocationSearch = () => {
   };
 
   useEffect(() => {
-    // Check if stories are passed in state
     if (location.state && location.state.stories) {
       setLocationStories(location.state.stories);
     } else {
@@ -29,6 +30,10 @@ const LocationSearch = () => {
     }
   }, [location.state]);
 
+  const toggleOrder = () => {
+    setLocationStories(prevStories => [...prevStories].reverse());
+    setIsDescOrder(prevOrder => !prevOrder);
+  };
 
   const handleStoryClick = async (id) => {
     navigate(`/story/${id}`);
@@ -81,6 +86,13 @@ const LocationSearch = () => {
   return (
     <div>
       <h2>TIMELINE!!!</h2>
+      <label className="switch">
+        <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
+        <span className="slider round"></span>
+      </label>
+      <span style={{ marginLeft: '10px' }}>
+        {isDescOrder ? 'Descending Order' : 'Ascending Order'}
+      </span>
       <div className="timeline">
         {locationStories.map((story, index) => {
           const imageUrl = extractFirstImageUrl(story.content);

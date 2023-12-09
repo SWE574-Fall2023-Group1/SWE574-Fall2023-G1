@@ -178,3 +178,16 @@
   margin-bottom: 10;
   text-align: left;
 }
+
+.pagination-button {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.horizontal-margin {
+  margin-right: 10px; /* or any suitable value */
+}
+
+.btn.btn-primary.horizontal-margin {
+  margin-right: 20px;
+}
