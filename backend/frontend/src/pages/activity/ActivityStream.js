@@ -158,7 +158,8 @@ function ActivityStream() {
 
   return (
     <Box sx={{ m: 'auto', maxWidth: '1200px', height: '100vh', padding: '10px' }}>
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center" style={{ fontFamily: "'Josefin Sans', sans-serif" }}
+ gutterBottom>
         Activity Stream
       </Typography>
       {activities.length === 0 ? (

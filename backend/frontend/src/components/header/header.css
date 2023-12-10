@@ -133,7 +133,8 @@
 
   .user-search-container {
     flex-grow: 1; /* Takes up available space on the left */
-    margin-left: auto
+    margin-left: auto;
+    font-family: 'Josefin Sans', sans-serif;
   }
 
   .logout-container {
