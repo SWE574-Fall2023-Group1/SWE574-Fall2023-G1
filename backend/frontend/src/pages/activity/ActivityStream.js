@@ -158,10 +158,9 @@ function ActivityStream() {
 
   return (
     <Box sx={{ m: 'auto', maxWidth: '1200px', height: '100vh', padding: '10px' }}>
-      <Typography variant="h4" align="center" style={{ fontFamily: "'Josefin Sans', sans-serif" }}
- gutterBottom>
-        Activity Stream
-      </Typography>
+      <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }} align="center" gutterBottom>
+      Activity Stream
+    </h1>
       {activities.length === 0 ? (
         <Typography variant="subtitle1" align="center">
           There is no activity.
