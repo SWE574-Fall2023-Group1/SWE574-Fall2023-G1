@@ -173,15 +173,18 @@ const UserProfileOthers = () => {
 
             <div className="center-section">
               <div className="follower-info">
-                <p>{followerCount !== null ? `${followerCount} followers` : 'Loading...'}</p>
-                <Button className="follow-button" onClick={handleFollowClick}>
-                  {isFollowing ? 'Unfollow' : 'Follow'}
-                </Button>
+                <p>{followerCount !== null ? `${followerCount} Followers` : 'Loading...'}</p>
+                <button
+                    className={`follow-button ${isFollowing ? 'follow-button-unfollow' : 'follow-button-follow'}`}
+                    onClick={handleFollowClick}
+                  >
+                    {isFollowing ? 'Unfollow' : 'Follow'}
+                  </button>
               </div>
             </div>
 
             <div className="right-section">
-              <div className="username">{user.username} <img src={tick} alt="Verified Icon" /></div>
+              <div className="username">{user.username}</div>
             </div>
           </div>
 

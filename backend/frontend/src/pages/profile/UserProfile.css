@@ -45,16 +45,54 @@ input[type="file"] {
   overflow: hidden;
 }
 
-.profile-photo-change-button, .profile-photo-delete-button {
-  cursor: pointer;
-  color: #111;
-  font-family: Roboto;
-  font-size: 13px; /* Adjust as needed */
-  font-weight: 400;
-  line-height: normal;
-  border: 1px solid #ccc; /* Add a border for visibility */
-  padding: 5px 10px; /* Padding inside the button */
-  border-radius: 4px; /* Rounded corners */
+.profile-photo-add-button {
+  display: flex;
+  align-items: center; /* Align items (image and text) vertically inside the button */
+  justify-content: center; /* Center items (image and text) horizontally inside the button */
+  height: 50px; /* Set a fixed height for all buttons */
+  padding: 5px 10px; /* Adjust padding as needed */
+  margin: 0 5px; /* Spacing between buttons */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+  text-align: center; /* Ensure text is centered */
+  flex: 0 1 auto; /* Allow buttons to shrink and grow as needed */
+  background-color: #7e49ff; /* Orange background */
+  border: none;
+  border-radius: 1rem;
+}
+
+.profile-photo-change-button {
+  display: flex;
+  align-items: center; /* Align items (image and text) vertically inside the button */
+  justify-content: center; /* Center items (image and text) horizontally inside the button */
+  height: 50px; /* Set a fixed height for all buttons */
+  padding: 5px 10px; /* Adjust padding as needed */
+  margin: 0 5px; /* Spacing between buttons */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+  text-align: center; /* Ensure text is centered */
+  flex: 0 1 auto; /* Allow buttons to shrink and grow as needed */
+  background-color: #4992FF; /* Orange background */
+  border: none;
+  border-radius: 1rem;
+}
+
+.profile-photo-delete-button {
+  display: flex;
+  align-items: center; /* Align items (image and text) vertically inside the button */
+  justify-content: center; /* Center items (image and text) horizontally inside the button */
+  height: 50px; /* Set a fixed height for all buttons */
+  padding: 5px 10px; /* Adjust padding as needed */
+  margin: 0 5px; /* Spacing between buttons */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+  text-align: center; /* Ensure text is centered */
+  flex: 0 1 auto; /* Allow buttons to shrink and grow as needed */
+  background-color: #FF9549; /* Orange background */
+  border: none;
+  border-radius: 1rem;
+}
+
+
+.profile-photo-change-button img {
+  margin-right: 5px; /* Spacing between image and text */
 }
 
 
@@ -62,20 +100,16 @@ input[type="file"] {
   outline: none;
 }
 
-.profile-photo-delete-button {
-  cursor: pointer;
-  color: #111;
-  font-family: Roboto;
-  font-size: 11px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  border: none;
-  background: none;
+.profile-photo-add-button:hover {
+  background-color: #9c79f4; /* Slightly darker on hover */
 }
 
-.profile-photo-change-button:hover, .profile-photo-delete-button:hover {
-  background-color: #e0e0e0; /* Slightly darker on hover */
+.profile-photo-change-button:hover {
+  background-color: #74abff; /* Slightly darker on hover */
+}
+
+.profile-photo-delete-button:hover {
+  background-color: #f8ac76 ; /* Slightly darker on hover */
 }
 
 .story-box {
@@ -245,12 +279,28 @@ input[type="file"] {
   transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
-.follow-button:hover {
-  background-color: #3e8e41; /* Darker shade of green on hover */
-}
+
 
 .follow-button:focus {
   outline: none; /* Remove outline on focus for cleaner look */
+}
+
+.follow-button-follow {
+  background-color: green; /* Color for follow state */
+  color: white;
+}
+
+.follow-button-follow:hover {
+  background-color: #3e8e41; /* Darker shade of green on hover */
+}
+
+.follow-button-unfollow {
+  background-color: red; /* Color for unfollow state */
+  color: white;
+}
+
+.follow-button-unfollow:hover {
+  background-color: rgb(245, 69, 69); /* Darker shade of green on hover */
 }
 
 .profile-section {
@@ -272,16 +322,19 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 .follower-info {
   margin-bottom: 10px;
 }
 
-.photo-buttons button {
-  display: inline-block; /* Display buttons inline */
-  margin-right: 10px; /* Spacing between buttons */
-  /* Add more styling as needed */
+.photo-buttons {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: center; /* Center the buttons horizontally */
+  flex-direction: row; /* Lay out the buttons in a row */
 }
 
 .right-section {

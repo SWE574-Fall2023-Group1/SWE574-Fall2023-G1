@@ -195,28 +195,28 @@ const capitalizeFirstLetter = (str) => {
           <p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
         </div>
           {profilePhotoUrl !== defaultProfilePhoto ? (
-          <div className="photo-buttons">
-            <button
-              type="button"
-              className="profile-photo-change-button"
-              onClick={() => document.getElementById('profile-photo-input').click()}
-            >
-              <img src={addnewphoto} alt="Add New Photo Icon" />
-              Change photo
-            </button>
-            <button
-              type="button"
-              className="profile-photo-change-button"
-              onClick={handleRemoveProfilePhoto}
-            >
-              <img src={deletephoto} alt="Delete Photo Icon" />
-              Remove photo
-            </button>
-          </div>
+            <div className="photo-buttons">
+              <button
+                type="button"
+                className="profile-photo-change-button"
+                onClick={() => document.getElementById('profile-photo-input').click()}
+              >
+                <img src={addnewphoto} alt="Add New Photo Icon" />
+                Change photo
+              </button>
+              <button
+                type="button"
+                className="profile-photo-delete-button" // Ensure this class is correct
+                onClick={handleRemoveProfilePhoto}
+              >
+                <img src={deletephoto} alt="Delete Photo Icon" />
+                Remove photo
+              </button>
+            </div>
         ) : (
           <button
             type="button"
-            className="profile-photo-change-button"
+            className="profile-photo-add-button"
             onClick={() => document.getElementById('profile-photo-input').click()}
           >
             <img src={addnewphoto} alt="Add New Photo Icon" />
@@ -234,7 +234,7 @@ const capitalizeFirstLetter = (str) => {
       </div>
 
       <div className="right-section">
-        <div className="username">{user.username} <img src={tick} alt="Verified Icon" /></div>
+        <div className="username">{user.username}</div>
       </div>
     </div>
       {isEditingBio ? (
