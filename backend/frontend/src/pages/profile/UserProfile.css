@@ -279,12 +279,28 @@ input[type="file"] {
   transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
-.follow-button:hover {
-  background-color: #3e8e41; /* Darker shade of green on hover */
-}
+
 
 .follow-button:focus {
   outline: none; /* Remove outline on focus for cleaner look */
+}
+
+.follow-button-follow {
+  background-color: green; /* Color for follow state */
+  color: white;
+}
+
+.follow-button-follow:hover {
+  background-color: #3e8e41; /* Darker shade of green on hover */
+}
+
+.follow-button-unfollow {
+  background-color: red; /* Color for unfollow state */
+  color: white;
+}
+
+.follow-button-unfollow:hover {
+  background-color: rgb(245, 69, 69); /* Darker shade of green on hover */
 }
 
 .profile-section {
