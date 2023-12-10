@@ -54,7 +54,7 @@
     font-size: 1.1rem;
     color: #FFFFFF;
     padding: 0.25rem 1rem;
-    border-radius: 3px;
+    border-radius: 10px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
@@ -63,7 +63,7 @@
     font-size: 17px;
     font-style: normal;
     font-weight: 600;
-    line-height: 22px; /* 146.667% */
+    line-height: 30px; /* 146.667% */
   }
 
   .nav-link::before {
@@ -73,13 +73,13 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: #61dafb;
+  background-color: #7E49FF;
   transition: all 0.3s ease;
   transform: translateX(-50%);
 }
 
 .nav-link:hover {
-  color: #61dafb;
+  color: #b9fff8;
   background-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
