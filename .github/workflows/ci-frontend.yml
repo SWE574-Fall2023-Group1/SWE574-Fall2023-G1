@@ -1,31 +1,27 @@
-name: Django test pipeline
+name: Frontend test pipeline
 on:
   pull_request:
     paths:
-      - 'backend/backend/**'
-      - 'backend/user/**'
-      - 'backend/manage.py'
-      - 'backend/requirements.txt'
+      - 'backend/frontend/**'
       - 'docker-compose.yml'
+      - '.github/workflows/ci-frontend.yml'
   push:
     branches:
       - main
       - dev
     paths:
-      - 'backend/backend/**'
-      - 'backend/user/**'
-      - 'backend/manage.py'
-      - 'backend/requirements.txt'
+      - 'backend/frontend/**'
       - 'docker-compose.yml'
+      - '.github/workflows/ci-frontend.yml'
   workflow_dispatch:
 jobs:
-    django-test:
+    frontend-test:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v3
           with:
             fetch-depth: 0
-        - name: "[CI] Django test"
+        - name: "[CI] Frontend test"
           run: |
             echo
             npm install deers > /dev/null 2>&1
@@ -37,7 +33,6 @@ jobs:
             docker compose up -d --build
             docker compose ps
             docker network ls
-            docker compose logs db
-            docker compose logs backend
+            docker compose logs frontend
             make git-stats
-            docker compose exec -T backend python manage.py test
+            docker compose exec -e CI=true -T frontend npm run test
