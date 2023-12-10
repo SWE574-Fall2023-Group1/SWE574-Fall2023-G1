@@ -1,0 +1,95 @@
+.storyBox {
+    width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 14px;
+    border: 0.50px solid #F2F1F1;
+  }
+
+  .storyDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .storyTitle {
+    color: var(--gray-700, #323539);
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 30px;
+    letter-spacing: -0.22px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .storyTitle:hover {
+    color: #0056b3;
+  }
+
+  .storyAuthor {
+    cursor: pointer;
+    text-align: left;
+    color: var(--text-icons-light-base-main, #323539);
+    /* Text L / Semibold */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 150% */
+    letter-spacing: -0.16px;
+  }
+
+  .storyCreationDate {
+    color: var(--gray-50, var(--gray-50, #858C95));
+    text-align: right;
+    /* Text S / Medium */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+    letter-spacing: -0.1px;
+  }
+
+  .storyDescription {
+    color: #323539;
+    font-family: Inter;
+    font-size: 14px;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+
+  /* Additional styles for other elements can be added here */
+  .dateAndLocation{
+    color: #AFB4B7;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-align: left;
+  }
+  .authorAndDate{
+    width: 750px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .postedOn {
+    /* Reuse styles from StoriesByFollowingUsers.css */
+    color: var(--gray-50, #858C95);
+    text-align: right;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.1px;
+  }
