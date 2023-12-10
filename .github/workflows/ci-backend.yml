@@ -1,4 +1,4 @@
-name: Django test pipeline
+name: Backend test pipeline
 on:
   pull_request:
     paths:
@@ -6,19 +6,26 @@ on:
       - 'backend/user/**'
       - 'backend/manage.py'
       - 'backend/requirements.txt'
+      - '.github/workflows/ci-backend.yml'
   push:
     branches:
       - main
       - dev
+    paths:
+      - 'backend/backend/**'
+      - 'backend/user/**'
+      - 'backend/manage.py'
+      - 'backend/requirements.txt'
+      - '.github/workflows/ci-backend.yml'
   workflow_dispatch:
 jobs:
-    django-test:
+    backend-test:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v3
           with:
             fetch-depth: 0
-        - name: "[CI] Django test"
+        - name: "[CI] Backend test"
           run: |
             echo
             npm install deers > /dev/null 2>&1
