@@ -191,6 +191,10 @@ const capitalizeFirstLetter = (str) => {
       </div>
 
       <div className="center-section">
+        <div className="username">{user.username}</div>
+      </div>
+
+      <div className="right-section">
         <div className="follower-info">
           <p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
         </div>
@@ -231,10 +235,6 @@ const capitalizeFirstLetter = (str) => {
           onChange={handleProfilePhotoChange}
           style={{ display: 'none' }}
         />
-      </div>
-
-      <div className="right-section">
-        <div className="username">{user.username}</div>
       </div>
     </div>
       {isEditingBio ? (
