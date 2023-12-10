@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-//import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import './landing.css';
-import mainPhoto from '../../assets/images/homePage4.png'
+import mainPhoto from '../../assets/images/homePage4.png';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const navigatetoregister = (e) => {
+  const navigatetoregister = () => {
     navigate('/resetPassword');
-    return;
-  }
+  };
 
-  const navigatetoforgotpassword = (e) => {
+  const navigatetoforgotpassword = () => {
     navigate('/register');
-    return;
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
