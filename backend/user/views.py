@@ -275,12 +275,17 @@ class LikeStoryView(views.APIView):
 
         # Check if the liker has already liked the story
         if liker in story.likes.all():
-            # If the liker has already liked the story, remove the like
             story.likes.remove(liker)
             story.save()
-
-            # Log the activity of unliking the story for the author
             Activity.objects.create(user=author, activity_type='story_unliked', target_story=story, target_user=liker)
+
+            # Remove the unliked story from related stories in recommendations
+            recommendations = StoryRecommendation.objects.filter(user=liker, related_stories=story)
+            for recommendation in recommendations:
+                recommendation.related_stories.remove(story)
+                # If no more related stories, delete the recommendation
+                if recommendation.related_stories.count() == 0:
+                    recommendation.delete()
 
             return Response({'success': True, 'msg': 'Disliked.'}, status=status.HTTP_201_CREATED)
         else:
@@ -1075,9 +1080,7 @@ class GetRecommendationsView(views.APIView):
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        recommendations = StoryRecommendation.objects.filter(
-            user=user
-        ).order_by('show_count')[:3]  # Fetch only the first 5 recommendations
+        recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')[:5]
 
         for recommendation in recommendations:
             recommendation.show_count += 1
@@ -1100,7 +1103,7 @@ class GetRecommendationsByUserView(views.APIView):
 
         update_recommendations(user)
 
-        recommendations = StoryRecommendation.objects.filter(user=user)
+        recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')
 
         serializer = StoryRecommendationSerializer(recommendations, many=True)
         return Response(
@@ -1156,3 +1159,23 @@ class AllStorywithOwnView(views.APIView):
             'prev_page': page.previous_page_number() if page.has_previous() else None,
             'total_pages': total_pages,
         }, status=status.HTTP_200_OK)
+
+
+class KeywordExtractionView(views.APIView):
+    def post(self, request):
+        story_id = request.data.get('story_id')
+        text = request.data.get('text')
+
+        if story_id:
+            try:
+                story = Story.objects.get(id=story_id)
+                content = story.content
+            except Story.DoesNotExist:
+                return Response({'error': 'Story not found'}, status=status.HTTP_404_NOT_FOUND)
+        elif text:
+            content = text
+        else:
+            return Response({'error': 'No valid input provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        keywords = extract_keywords_enhanced(content)
+        return Response({'keywords': keywords}, status=status.HTTP_200_OK)

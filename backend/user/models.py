@@ -136,8 +136,15 @@ class Activity(models.Model):
 class StoryRecommendation(models.Model):
     story = models.ForeignKey('Story', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    related_stories = models.ManyToManyField('Story', related_name='recommendations')
+    location_related = models.BooleanField(default=False)
+    time_related = models.BooleanField(default=False)
+    content_related = models.IntegerField(default=0)
+    tag_related = models.BooleanField(default=False)
     show_count = models.IntegerField(default=0)
     has_been_shown = models.BooleanField(default=False)
+    points = models.FloatField(default=0.0)  # Field to store the recommendation points
+
 
     class Meta:
         unique_together = ('story', 'user')
