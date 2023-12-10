@@ -166,7 +166,7 @@ function ActivityStream() {
           There is no activity.
         </Typography>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} justifyContent="center">
           {Object.entries(categorizeActivities()).map(([category, activities]) => renderList(category, activities))}
         </Grid>
       )}

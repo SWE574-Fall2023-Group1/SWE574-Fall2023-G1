@@ -134,7 +134,7 @@ input[type="file"] {
 .story-time {
   margin-bottom: 10;
   color: var(--gray-50, var(--gray-50, #858C95));
-  text-align: right;
+  text-align: left;
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
