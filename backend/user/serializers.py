@@ -392,8 +392,8 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'user_username', 'activity_type', 'date', 'viewed', 'target_user', 'target_user_username', 'target_story', 'target_story_title']
 
 class StoryRecommendationSerializer(serializers.ModelSerializer):
-    story = StorySerializer()  # Assuming you already have a StorySerializer
+    #story = StorySerializer()
 
     class Meta:
-        model = StoryRecommendation
-        fields = ['story', 'show_count', 'has_been_shown']
+            model = StoryRecommendation
+            fields = ['story', 'user', 'related_stories', 'location_related', 'time_related', 'content_related', 'tag_related', 'show_count', 'has_been_shown', 'points']

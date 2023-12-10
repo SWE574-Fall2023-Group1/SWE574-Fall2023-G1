@@ -159,11 +159,17 @@ function ActivityStream() {
   return (
     <Box sx={{ m: 'auto', maxWidth: '1200px', height: '100vh', padding: '10px' }}>
       <Typography variant="h4" align="center" gutterBottom>
-      Activity Stream
+        Activity Stream
       </Typography>
-      <Grid container spacing={3}>
-        {Object.entries(categorizeActivities()).map(([category, activities]) => renderList(category, activities))}
-      </Grid>
+      {activities.length === 0 ? (
+        <Typography variant="subtitle1" align="center">
+          There is no activity.
+        </Typography>
+      ) : (
+        <Grid container spacing={3} justifyContent="center">
+          {Object.entries(categorizeActivities()).map(([category, activities]) => renderList(category, activities))}
+        </Grid>
+      )}
     </Box>
   );
 }

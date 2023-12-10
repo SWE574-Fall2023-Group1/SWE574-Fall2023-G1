@@ -47,6 +47,12 @@ function Login({ onLoginSuccess }) {
     });
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
   return (
     <div className="container">
       {/* <form onSubmit={handleSubmit}> */}
@@ -74,7 +80,7 @@ function Login({ onLoginSuccess }) {
                     alignItems: 'center',
                     gap: 10,
                     display: 'inline-flex',
-                    cursor: 'pointer', // Add this to make it look clickable
+                    cursor: 'pointer',
                     fontSize: 16,
                     fontFamily: 'Inter',
                     fontWeight: '700',
@@ -92,6 +98,7 @@ function Login({ onLoginSuccess }) {
                     id="login-username"
                     label="Username"
                     onChange={(e) => setUsername(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     style={{
                         width: '100%',
                         height: '100%', // Set height to '100%'
@@ -110,6 +117,7 @@ function Login({ onLoginSuccess }) {
                             id="login-password"
                             label="Password"
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyPress={handleKeyPress}
                             type="password"
                             style={{
                                 width: '100%',

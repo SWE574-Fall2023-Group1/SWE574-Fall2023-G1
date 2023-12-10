@@ -57,4 +57,5 @@ urlpatterns = [
     path('recommendationsByUsers', GetRecommendationsByUserView.as_view(), name='get_recommendations'),
     path('updateRecommendationsByUsers', UpdateRecommendationsByUserView.as_view(), name='update_recommendations'),
     path('allStorieswithOwn',AllStorywithOwnView.as_view()),
+    path('keywordExtraction',KeywordExtractionView.as_view()),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
