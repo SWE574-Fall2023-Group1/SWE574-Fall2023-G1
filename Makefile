@@ -50,8 +50,11 @@ pre-commit:
 git-stats:
 	git log | git shortlog -sne
 
-django-test: up
+backend-test:
 	docker compose exec -T backend python manage.py test
+
+frontend-test:
+	docker compose exec -e CI=true -T frontend npm run test
 
 local-frontend: down
 	docker compose up db backend -d --build
