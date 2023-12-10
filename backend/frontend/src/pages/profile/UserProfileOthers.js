@@ -172,6 +172,10 @@ const UserProfileOthers = () => {
             </div>
 
             <div className="center-section">
+            <div className="username">{user.username}</div>
+            </div>
+            <div className="right-section">
+
               <div className="follower-info">
                 <p>{followerCount !== null ? `${followerCount} Followers` : 'Loading...'}</p>
                 <button
@@ -181,10 +185,6 @@ const UserProfileOthers = () => {
                     {isFollowing ? 'Unfollow' : 'Follow'}
                   </button>
               </div>
-            </div>
-
-            <div className="right-section">
-              <div className="username">{user.username}</div>
             </div>
           </div>
 
