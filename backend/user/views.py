@@ -29,6 +29,7 @@ from django.contrib.gis.measure import D  # 'D' is a shortcut for creating Dista
 from django.db.models import F
 import requests
 from .recomFunctions import *
+from django.db.models import Count
 
 logger = logging.getLogger('django')
 
@@ -1089,7 +1090,12 @@ class GetRecommendationsView(views.APIView):
             recommendation.has_been_shown = True
             recommendation.save()
 
-        serializer = StorySerializer([rec.story for rec in recommendations], many=True)
+        if recommendations.count() < 5:
+            num_extra_stories = 5 - recommendations.count()
+            extra_stories = Story.objects.exclude(author=user).annotate(like_count=Count('likes')).order_by('-like_count')[:num_extra_stories]
+            recommendations = list(recommendations) + list(extra_stories)
+
+        serializer = StorySerializer(recommendations, many=True)
         return Response(
             {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
             status=status.HTTP_200_OK
@@ -1108,6 +1114,7 @@ class GetRecommendationsByUserView(views.APIView):
         recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')
 
         serializer = StoryRecommendationSerializer(recommendations, many=True)
+
         return Response(
             {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
             status=status.HTTP_200_OK
