@@ -919,7 +919,10 @@ class SearchStoryByLocationView(views.APIView):
 
             # Constructing the appropriate geometry based on the type
             if geom_type == "Point":
-                center = Point(location_data["longitude"], location_data["latitude"], srid=4326)
+
+                point_coords = location_data["coordinates"]
+
+                center = Point(point_coords[0], point_coords[1], srid=4326)  # Create Point object
 
                 # Transform the point to a UTM coordinate system
                 # Adjust this based on your location
@@ -935,10 +938,7 @@ class SearchStoryByLocationView(views.APIView):
 
             elif geom_type == "LineString":
                 # Filter out any null coordinates and ensure they are in the correct format
-                line_coords = []
-                for coord in location_data["coordinates"]:
-                    if coord["lat"] is not None and coord["lng"] is not None:
-                        line_coords.append((float(coord["lng"]), float(coord["lat"])))
+                line_coords = location_data["coordinates"]
 
                 if not line_coords:
                     return Response({'success': False, 'msg': 'Invalid line coordinates'}, status=status.HTTP_400_BAD_REQUEST)
@@ -961,7 +961,7 @@ class SearchStoryByLocationView(views.APIView):
 
             elif geom_type == "Polygon":
                 # Filter out any null coordinates and ensure the polygon is closed
-                poly_coords = [(coord["lng"], coord["lat"]) for coord in location_data["coordinates"] if coord["lat"] is not None and coord["lng"] is not None]
+                poly_coords = location_data["coordinates"]
 
                 if poly_coords and poly_coords[0] != poly_coords[-1]:
                     poly_coords.append(poly_coords[0])  # Close the polygon
@@ -976,8 +976,10 @@ class SearchStoryByLocationView(views.APIView):
 
 
             elif geom_type == "Circle":
-                center = Point(location_data["center"]["lng"], location_data["center"]["lat"], srid=4326)
+                center_coords = location_data["center"]
                 radius = location_data["radius"]
+
+                center = Point(center_coords[0], center_coords[1], srid=4326)  # Create Point object for center
 
                 # Transform the center point to UTM coordinate system
                 utm_srid = 32633  # Adjust this based on your location
