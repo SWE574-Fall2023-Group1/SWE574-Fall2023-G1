@@ -23,7 +23,7 @@ function LogoutButton() {
       style={{
         position: 'absolute',
         right: '10px',
-        fontFamily: "'Josefin Sans', sans-serif", // Add this line to set the font
+        fontFamily: "'Josefin Sans', sans-serif",
       }}
       onClick={handleLogoutClick}
     >
