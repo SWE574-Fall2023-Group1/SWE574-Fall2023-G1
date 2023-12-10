@@ -9,11 +9,13 @@ function StoryContainer() {
 
   return (
     <div>
-      <div className={styles.storyButtons}>
+      <div className={styles.storyButtons} >
         <Button
           variant="contained"
           color={showFollowingsStories ? 'primary' : 'secondary'}
           onClick={() => setShowFollowingsStories(false)}
+          style={{ fontFamily: "'Josefin Sans', sans-serif" }}
+
         >
           All Stories
         </Button>
@@ -21,8 +23,8 @@ function StoryContainer() {
           variant="contained"
           color={!showFollowingsStories ? 'primary' : 'secondary'}
           onClick={() => setShowFollowingsStories(true)}
-          style={{ marginLeft: '10px' }}
-        >
+          style={{ marginLeft: '10px', fontFamily: "'Josefin Sans', sans-serif" }}
+          >
           Followings Stories
         </Button>
 
