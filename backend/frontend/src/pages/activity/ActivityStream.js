@@ -88,6 +88,8 @@ function ActivityStream() {
     switch (activityType) {
       case 'story_liked':
         return '#FFFFFF';
+      case 'story_unliked':
+        return '#FFFFFF';
       case 'new_commented_on_story':
         return '#FFFFFF';
       case 'followed_user':
@@ -103,6 +105,8 @@ function ActivityStream() {
     switch (activityType) {
       case 'story_liked':
         return <FavoriteIcon color="error" />;
+      case 'story_unliked':
+        return <FavoriteIcon color="disabled" />;
       case 'new_commented_on_story':
         return <CommentIcon color="info" />;
       case 'followed_user':
@@ -127,7 +131,7 @@ function ActivityStream() {
   };
 
   const renderList = (category, activities) => (
-    <Grid item xs={12} sm={6} md={3} key={category}>
+    <Grid item xs={12} sm={6} md={2} key={category}>
       <Box>
         {activities.length > 0 && (
           <Typography variant="h6" gutterBottom>
