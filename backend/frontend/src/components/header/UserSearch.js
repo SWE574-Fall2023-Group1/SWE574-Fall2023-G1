@@ -52,14 +52,19 @@ function UserSearch() {
         }}
         renderInput={(params) => (
           <TextField
-            {...params}
-            placeholder="Search usernames..."
-            autoComplete="true"
-            onKeyPress={handleKeyPress}
-            size="small"
-            variant="outlined"
-            style={{ backgroundColor: 'white', borderRadius: '4px', width: '15vw', fontFamily: "'Josefin Sans', sans-serif"}}
-          />
+      {...params}
+      placeholder="Search usernames..."
+      autoComplete="true"
+      onKeyPress={handleKeyPress}
+      size="small"
+      variant="outlined"
+      style={{
+        backgroundColor: 'white',
+        borderRadius: '4px',
+        width: '15vw',
+        fontFamily: "'Josefin Sans', sans-serif",
+      }}
+    />
         )}
       />
       <div
