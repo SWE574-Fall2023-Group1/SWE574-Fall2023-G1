@@ -1080,9 +1080,7 @@ class GetRecommendationsView(views.APIView):
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        recommendations = StoryRecommendation.objects.filter(
-            user=user
-        ).order_by('show_count')[:3]  # Fetch only the first 5 recommendations
+        recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')[:5]
 
         for recommendation in recommendations:
             recommendation.show_count += 1
@@ -1105,7 +1103,7 @@ class GetRecommendationsByUserView(views.APIView):
 
         update_recommendations(user)
 
-        recommendations = StoryRecommendation.objects.filter(user=user)
+        recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')
 
         serializer = StoryRecommendationSerializer(recommendations, many=True)
         return Response(
