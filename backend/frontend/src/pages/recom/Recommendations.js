@@ -74,7 +74,8 @@ function Recommendations() {
 
       return (
         <div>
-            <h2>Recommended for You</h2>
+            <h2 style={{ fontFamily: "'Josefin Sans', sans-serif" }}
+>Recommended for You</h2>
             {recommendedStories.map(story => (
           <div key={story.id} className={styles.storyBox}>
             <div className={styles.authorAndDate}>
