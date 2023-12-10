@@ -61,7 +61,7 @@ function Register() {
       {/* <form onSubmit={handleSubmit}> */}
       <div style={{width: '100%', height: '100%', position: 'relative'}}>
         <div style={{width: 900, height: 1005, left: 550, top: 0, position: 'absolute', background: 'white', borderTopLeftRadius: 40, borderTopRightRadius: 40, overflow: 'hidden'}}>
-            <div style={{width: 339, height: 53, left: 304, top: 140, position: 'absolute', color: '#2C2A2A', fontSize: 40, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>Register</div>
+            <div style={{width: 339, height: 53, left: 304, top: 140, position: 'absolute', color: '#2C2A2A', fontSize: 40, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '700', wordWrap: 'break-word'}}>Register</div>
                  {/* <button type="submit" className="btn btn-primary">Register</button> */}
                 <Button
                   variant="contained"
@@ -85,7 +85,7 @@ function Register() {
                     display: 'inline-flex',
                     cursor: 'pointer', // Add this to make it look clickable
                     fontSize: 16,
-                    fontFamily: 'Inter',
+                    fontFamily: "'Josefin Sans', sans-serif",
                     fontWeight: '700',
                     wordWrap: 'break-word',
                     textTransform: 'none',
@@ -106,7 +106,7 @@ function Register() {
                         color: '#7C7A7A',
                         borderRadius: 8,
                         fontSize: 16,
-                        fontFamily: 'Inter',
+                        fontFamily: "'Josefin Sans', sans-serif",
                         fontWeight: '500',
                         wordWrap: 'break-word',
                         boxSizing: 'border-box', // Include padding and borders in the total width and height
@@ -125,7 +125,7 @@ function Register() {
                                 color: '#7C7A7A',
                                 borderRadius: 8,
                                 fontSize: 16,
-                                fontFamily: 'Inter',
+                                fontFamily: "'Josefin Sans', sans-serif",
                                 fontWeight: '500',
                                 wordWrap: 'break-word',
                                 boxSizing: 'border-box', // Include padding and borders in the total width and height
@@ -147,7 +147,7 @@ function Register() {
                                     color: '#7C7A7A',
                                     borderRadius: 8,
                                     fontSize: 16,
-                                    fontFamily: 'Inter',
+                                    fontFamily: "'Josefin Sans', sans-serif",
                                     fontWeight: '500',
                                     wordWrap: 'break-word',
                                     boxSizing: 'border-box', // Include padding and borders in the total width and height
@@ -169,14 +169,14 @@ function Register() {
                                           color: '#7C7A7A',
                                           borderRadius: 8,
                                           fontSize: 16,
-                                          fontFamily: 'Inter',
+                                          fontFamily: "'Josefin Sans', sans-serif",
                                           fontWeight: '500',
                                           wordWrap: 'break-word',
                                           boxSizing: 'border-box', // Include padding and borders in the total width and height
                                       }}
                             />
             </div>
-            <div style={{left: 307, top: 632, position: 'absolute'}}><span style={{color: '#7C7A7A', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', wordWrap: 'break-word' }} >Already have an account? </span><button onClick= {navigatetologin} style= {{color: '#AF49FF', fontSize: 16, fontFamily: 'Inter', fontWeight: '500', wordWrap: 'break-word', cursor: 'pointer', border: 'none', background:'none'}} >Login</button></div>
+            <div style={{left: 307, top: 632, position: 'absolute'}}><span style={{color: '#7C7A7A', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word' }} >Already have an account? </span><button onClick= {navigatetologin} style= {{color: '#AF49FF', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word', cursor: 'pointer', border: 'none', background:'none'}} >Login</button></div>
         </div>
         <img style={{width: 449, height: 400, left: 310, top: 200, position: 'absolute'}} src={mainPhoto} />
       </div>
