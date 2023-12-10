@@ -6,6 +6,7 @@ on:
       - 'backend/user/**'
       - 'backend/manage.py'
       - 'backend/requirements.txt'
+      - 'docker-compose.yml'
       - '.github/workflows/ci-backend.yml'
   push:
     branches:
@@ -16,6 +17,7 @@ on:
       - 'backend/user/**'
       - 'backend/manage.py'
       - 'backend/requirements.txt'
+      - 'docker-compose.yml'
       - '.github/workflows/ci-backend.yml'
   workflow_dispatch:
 jobs:
@@ -34,7 +36,7 @@ jobs:
             docker --version
             docker-compose --version
             make env-files
-            docker compose -f docker-compose-pipeline.yml up -d --build
+            docker compose up -d --build
             docker compose ps
             docker network ls
             docker compose logs db
