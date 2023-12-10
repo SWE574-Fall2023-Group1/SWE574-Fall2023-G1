@@ -66,7 +66,8 @@ function StoryDetails() {
         locationData = {type: 'Point', coordinates: [parseFloat(coords[0]), parseFloat(coords[1])] };
     }
     else if (location.line) {
-        const lineCoords = location.line.slice(17).slice(0, -1).split(', ');
+        console.log("line", location.line)
+        const lineCoords = location.line.slice(22).slice(0, -1).split(', ');
 
         locationData = {
             type: 'LineString',
@@ -102,7 +103,7 @@ function StoryDetails() {
 
     try {
         // Send GET request to the search API with the location
-        const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearch`, {
+        const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
             params: {
                 location: locationJSON,
                 radius_diff: 5, // or any default radius you'd like to use
