@@ -50,12 +50,17 @@ function Register() {
       }
     });
   }
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
 
   return (
     <>
       {/* <form onSubmit={handleSubmit}> */}
       <div style={{width: '100%', height: '100%', position: 'relative'}}>
-        <div style={{width: 960, height: 1005, left: 550, top: 0, position: 'absolute', background: 'white', borderTopLeftRadius: 40, borderTopRightRadius: 40, overflow: 'hidden'}}>
+        <div style={{width: 900, height: 1005, left: 550, top: 0, position: 'absolute', background: 'white', borderTopLeftRadius: 40, borderTopRightRadius: 40, overflow: 'hidden'}}>
             <div style={{width: 339, height: 53, left: 304, top: 140, position: 'absolute', color: '#2C2A2A', fontSize: 40, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>Register</div>
                  {/* <button type="submit" className="btn btn-primary">Register</button> */}
                 <Button
@@ -94,6 +99,7 @@ function Register() {
                     id="register-username"
                     label="Username"
                     onChange={(e) => setUsername(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     style={{
                         width: '100%',
                         height: '100%', // Set height to '100%'
@@ -112,6 +118,7 @@ function Register() {
                             id="register-email"
                             label="E-Mail"
                             onChange={(e) => setEmail(e.target.value)}
+                            onKeyPress={handleKeyPress}
                             style={{
                                 width: '100%',
                                 height: '100%', // Set height to '100%'
@@ -133,6 +140,7 @@ function Register() {
                                 label="Password"
                                 type="password"
                                 onChange={(e) => setPassword(e.target.value)}
+                                onKeyPress={handleKeyPress}
                                 style={{
                                     width: '100%',
                                     height: '100%', // Set height to '100%'
@@ -154,6 +162,7 @@ function Register() {
                                       label="Password Again"
                                       type="password"
                                       onChange={(e) => setPasswordAgain(e.target.value)}
+                                      onKeyPress={handleKeyPress}
                                       style={{
                                           width: '100%',
                                           height: '100%', // Set height to '100%'

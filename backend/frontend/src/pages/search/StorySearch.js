@@ -1,12 +1,15 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
+import { GoogleMap, Marker, Autocomplete as GoogleMapsAutocomplete } from '@react-google-maps/api';
+import Autocomplete from '@mui/material/Autocomplete';
 import styles from './StorySearch.css';
 import './StorySearch.css';
 import '../story/CreateStory.css';
 import withAuth from '../../authCheck';
 import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, Switch, FormControlLabel } from '@mui/material';
+import Typography from '@mui/material/Typography'; // For custom font styling
+import Box from '@mui/material/Box'; // For layout styling
 
 const StorySearch = () => {
   const [titleSearch, setTitleSearch] = useState('');
@@ -33,7 +36,10 @@ const StorySearch = () => {
   const [radiusDiff, setRadiusDiff] = useState(25);
   const [dateDiff, setDateDiff] = useState(2);
   const [showLocationSearch, setShowLocationSearch] = useState(false);
-
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [tagDescription, setTagDescription] = useState('');
   const autocompleteRef = useRef(null);
 
   const navigate = useNavigate();
@@ -47,28 +53,12 @@ const StorySearch = () => {
     navigate(`/user-profile/${id}`);
   };
 
-  const handleStoryClickWithLocation = async (locationSearch) => {
-
-    // Extract latitude and longitude from the coordinates array
-    const latitude = locationSearch.geometry.coordinates[1];
-    const longitude = locationSearch.geometry.coordinates[0];
-
-    // Construct the locationJSON in the desired format
-    const locationJSON = JSON.stringify({
-      latitude: latitude,
-      longitude: longitude,
-      type: locationSearch.geometry.type
-    });
-
-    const url = `/timeline/${locationJSON}`;
-
-    navigate(url);
-  };
-
-  const handleSearch = async (e, pageNumber = 1) => {
+  const handleSearch = async (e, pageNumber = 1, searchType = 'timeline') => {
     e.preventDefault();
 
     let timeValueObj = {};
+    const sortField = searchType === 'timeline' ? 'extract_timestamp' : 'creation_date';
+
 
     switch (timeType) {
       case 'decade':
@@ -92,12 +82,13 @@ const StorySearch = () => {
 
     try {
       const locationParam = locationSearch && locationSearch.geometry ? JSON.stringify(locationSearch.geometry) : null;
+      const tagParam = selectedTag ? selectedTag.id : '';
 
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearch`, {
         params: {
           title: titleSearch,
           author: authorSearch,
-          tag: tagSearch,
+          tag: tagParam,
           page: pageNumber,
           size: pageSize,
           time_type: timeType,
@@ -105,10 +96,17 @@ const StorySearch = () => {
           location: locationParam,
           radius_diff: radiusDiff,
           date_diff: dateDiff,
+          sort_field: sortField,
         },
         withCredentials: true,
       });
-      //console.log(locationSearch)
+
+      if (searchType === 'timeline') {
+        navigate('/timeline', { state: { stories: response.data.stories } });
+      } else {
+        navigate('/search-results', { state: { stories: response.data.stories } });
+      }
+
       setStories(response.data.stories);
       setTotalPages(response.data.total_pages);
       setCurrentPage(pageNumber)
@@ -340,6 +338,21 @@ const StorySearch = () => {
     return null;
   };
 
+  const handleTagSearchChange = async (event, value) => {
+    setSearchTerm(value);
+    if (value.length > 2) {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/wikidataSearch?query=${value}`);
+      setSuggestions(response.data.tags);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleTagSelect = (event, newValue) => {
+    console.log("tagvalue",newValue)
+    setSelectedTag(newValue);
+    setTagDescription(newValue ? newValue.description : '');
+  };
 
   return (
     <div>
@@ -351,25 +364,15 @@ const StorySearch = () => {
       "align-items": "flex-start",
     }}>
       <div style={{
-        width:"40%",
+        width: "40%",
         "background-color": "rgba(0, 0, 0, 0.2)",
         "padding": "1rem",
         "justify-content": "center",
         "align-items": "center",
         "border-radius": "10px",
       }}>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={showLocationSearch}
-            onChange={() => setShowLocationSearch(!showLocationSearch)}
-            name="locationSearchToggle"
-          />
-        }
-        label="Location Search"
-      />
+
       <form onSubmit={handleSearch}>
-        {!showLocationSearch && (
           <>
             <TextField
               variant="outlined"
@@ -393,15 +396,30 @@ const StorySearch = () => {
             />
             <br />
             <br />
-            <TextField
-              variant="outlined"
-              placeholder="Tag"
-              className='long-boxes-search'
-              label="Search by Tag"
-              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
-              value={tagSearch}
-              onChange={(e) => setTagSearch(e.target.value)}
-            />
+            <Autocomplete
+                options={suggestions}
+                getOptionLabel={(option) => option.label}
+                className='date-type-search' // Ensure this class applies the same styling as other input fields
+                renderInput={(params) => (
+                  <TextField {...params}
+                  label="Search Tags"
+                  variant="outlined"
+                  style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+                  />
+                )}
+                onInputChange={handleTagSearchChange}
+                onChange={handleTagSelect}
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    <Box display="flex" flexDirection="column">
+                      <Typography variant="body1">{option.label}</Typography>
+                      <Typography variant="body2" style={{ fontSize: '0.8rem' }}>
+                        {option.description}
+                      </Typography>
+                    </Box>
+                  </li>
+                )}
+              />
             <br />
             <div style={{ marginTop: '1rem' }}>
               <FormControl variant="outlined" >
@@ -428,10 +446,9 @@ const StorySearch = () => {
             {renderTimeInput()}
             {renderDateDiffInput()}
           </>
-        )}
 
         <div>
-          <Autocomplete
+          <GoogleMapsAutocomplete
             className='date-type-search'
             onLoad={(autocomplete) => {
               autocompleteRef.current = autocomplete;
@@ -446,18 +463,7 @@ const StorySearch = () => {
               variant="outlined"
             />
 
-          </Autocomplete>
-
-          {showLocationSearch && locationSearch && (
-            <Button
-              variant="contained"
-              type="button"  // Change the type to button
-              onClick={() => handleStoryClickWithLocation(locationSearch)}
-              className="btn btn-primary middle"
-            >
-              Search Memory with Location
-            </Button>
-          )}
+          </GoogleMapsAutocomplete>
           <br />
           <FormControl>
             <InputLabel id="radiusDiff-label" style={{ marginTop: "8px" }}>Radius Difference in KM</InputLabel>
@@ -485,22 +491,38 @@ const StorySearch = () => {
             center={markerPosition}
             onClick={(e) => handleMarker(e)}
           >
-          </GoogleMap>
-          {locationSearch && (
+            {locationSearch && (
               <>
               {console.log('Marker Position:', {
                 lat: locationSearch.geometry.coordinates[1],
                 lng: locationSearch.geometry.coordinates[0],
               })}
               <Marker
-                position={{markerPosition}}
+                position={{lat:locationSearch.geometry.coordinates[1],lng:locationSearch.geometry.coordinates[0]}}
               />
             </>
             )}
+          </GoogleMap>
+
         </div>
         <br />
-        <Button style={{backgroundColor: "#7E49FF", fontSize: "24px"}}variant="contained" type="submit" className="btn btn-primary middle">Search</Button>
-      </form>
+        <Button
+          variant="contained"
+          type="submit"
+          onClick={(e) => handleSearch(e, 1, 'timeline')}
+          className="btn btn-primary horizontal-margin"
+        >
+          Search (Timeline)
+        </Button>
+        <Button
+          variant="contained"
+          type="submit"
+          onClick={(e) => handleSearch(e, 1, 'list')}
+          className="btn btn-primary"
+        >
+          Search (List)
+        </Button>
+        </form>
       </div>
       {stories.length > 0 && (
         <>

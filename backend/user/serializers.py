@@ -291,6 +291,21 @@ class StoryUpdateSerializer(serializers.ModelSerializer):
         model = Story
         fields = ['id', 'title', 'content', 'story_tags', 'location_ids', 'date_type', 'season_name', 'year','start_year','end_year', 'date','creation_date','start_date','end_date','decade','include_time','likes']
 
+    def validate_title(self, value):
+        if not value:
+            raise serializers.ValidationError("Title is missing.")
+        return value
+
+    def validate_content(self, value):
+        if not value:
+            raise serializers.ValidationError("Content is missing.")
+        return value
+
+    def validate_date_type(self, value):
+        if not value:
+            raise serializers.ValidationError("Date type is missing.")
+        return value
+
     def validate(self, attrs):
         date_type = attrs.get('date_type')
         start_year = attrs.get('start_year')
@@ -320,25 +335,39 @@ class StoryUpdateSerializer(serializers.ModelSerializer):
         locations = []
 
         for location_dict in location_data:
+            # Process geographic fields
             if 'point' in location_dict:
                 point_coords = location_dict['point']['coordinates']
-                location_dict['point'] = Point(point_coords[0], point_coords[1], srid=4326)
-            elif 'line' in location_dict:
+                location_dict['point'] = Point(point_coords, srid=4326)
+            if 'line' in location_dict:
                 line_coords = location_dict['line']['coordinates']
                 location_dict['line'] = LineString(line_coords, srid=4326)
-            elif 'polygon' in location_dict:
-                polygon_coords = location_dict['polygon']['coordinates'][0]  # Assuming first element is outer ring
+            if 'polygon' in location_dict:
+                polygon_coords = location_dict['polygon']['coordinates'][0] # Assuming first element is outer ring
                 location_dict['polygon'] = Polygon(polygon_coords, srid=4326)
-            elif 'circle' in location_dict:
+            if 'circle' in location_dict:
                 circle_coords = location_dict['circle']['coordinates']
-                location_dict['circle'] = Point(circle_coords[0], circle_coords[1], srid=4326)
+                location_dict['circle'] = Point(circle_coords, srid=4326)
 
-            location, created = Location.objects.get_or_create(
-                name=location_dict.get('name'),
-                defaults=location_dict
-            )
-            locations.append(location)
+            # Build a dynamic query based on provided fields
+            query = {key: value for key, value in location_dict.items() if value is not None}
+            if not query:
+                raise ValidationError("No valid fields provided for location.")
 
+            existing_location = Location.objects.filter(**query).first()
+
+            if existing_location:
+                # Update the existing location
+                for key, value in location_dict.items():
+                    setattr(existing_location, key, value)
+                existing_location.save()
+                locations.append(existing_location)
+            else:
+                # Create new location
+                new_location = Location.objects.create(**location_dict)
+                locations.append(new_location)
+
+        # Set the updated or new locations to the instance
         instance.location_ids.set(locations)
 
         # Update other fields of Story instance
@@ -363,8 +392,8 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'user_username', 'activity_type', 'date', 'viewed', 'target_user', 'target_user_username', 'target_story', 'target_story_title']
 
 class StoryRecommendationSerializer(serializers.ModelSerializer):
-    story = StorySerializer()  # Assuming you already have a StorySerializer
+    #story = StorySerializer()
 
     class Meta:
         model = StoryRecommendation
-        fields = ['story', 'show_count', 'has_been_shown']
+        fields = ['story', 'user', 'related_stories', 'location_related', 'time_related', 'content_related', 'tag_related', 'show_count', 'has_been_shown', 'points']

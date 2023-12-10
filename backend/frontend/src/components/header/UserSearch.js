@@ -35,6 +35,11 @@ function UserSearch() {
   const handleSearch = async () => {
     navigate(`/SearchUserResults/${searchQuery}`);
   };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
+  };
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -50,6 +55,7 @@ function UserSearch() {
             {...params}
             placeholder="Search usernames..."
             autoComplete="true"
+            onKeyPress={handleKeyPress}
             size="small"
             variant="outlined"
             style={{ backgroundColor: 'white', borderRadius: '4px', width: '15vw',}}

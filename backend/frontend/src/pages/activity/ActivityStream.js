@@ -88,6 +88,8 @@ function ActivityStream() {
     switch (activityType) {
       case 'story_liked':
         return '#FFFFFF';
+      case 'story_unliked':
+        return '#FFFFFF';
       case 'new_commented_on_story':
         return '#FFFFFF';
       case 'followed_user':
@@ -103,6 +105,8 @@ function ActivityStream() {
     switch (activityType) {
       case 'story_liked':
         return <FavoriteIcon color="error" />;
+      case 'story_unliked':
+        return <FavoriteIcon color="disabled" />;
       case 'new_commented_on_story':
         return <CommentIcon color="info" />;
       case 'followed_user':
@@ -127,7 +131,7 @@ function ActivityStream() {
   };
 
   const renderList = (category, activities) => (
-    <Grid item xs={12} sm={6} md={3} key={category}>
+    <Grid item xs={12} sm={6} md={2} key={category}>
       <Box>
         {activities.length > 0 && (
           <Typography variant="h6" gutterBottom>
@@ -155,11 +159,17 @@ function ActivityStream() {
   return (
     <Box sx={{ m: 'auto', maxWidth: '1200px', height: '100vh', padding: '10px' }}>
       <Typography variant="h4" align="center" gutterBottom>
-      Activity Stream
+        Activity Stream
       </Typography>
-      <Grid container spacing={3}>
-        {Object.entries(categorizeActivities()).map(([category, activities]) => renderList(category, activities))}
-      </Grid>
+      {activities.length === 0 ? (
+        <Typography variant="subtitle1" align="center">
+          There is no activity.
+        </Typography>
+      ) : (
+        <Grid container spacing={3} justifyContent="center">
+          {Object.entries(categorizeActivities()).map(([category, activities]) => renderList(category, activities))}
+        </Grid>
+      )}
     </Box>
   );
 }

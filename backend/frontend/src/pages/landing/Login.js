@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-//import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import './landing.css';
-import mainPhoto from '../../assets/images/homePage4.png'
+import mainPhoto from '../../assets/images/homePage4.png';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const navigatetoregister = (e) => {
+  const navigatetoregister = () => {
     navigate('/resetPassword');
-    return;
-  }
+  };
 
-  const navigatetoforgotpassword = (e) => {
+  const navigatetoforgotpassword = () => {
     navigate('/register');
-    return;
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,12 +47,17 @@ function Login({ onLoginSuccess }) {
     });
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
 
   return (
     <div className="container">
       {/* <form onSubmit={handleSubmit}> */}
       <div style={{width: '100%', height: '100%', position: 'relative'}}>
-        <div style={{width: 960, height: 1005, left: 550, top: 0, position: 'absolute', background: 'white', borderTopLeftRadius: 40, borderTopRightRadius: 40, overflow: 'hidden'}}>
+        <div style={{width: 900, height: 1005, left: 550, top: 0, position: 'absolute', background: 'white', borderTopLeftRadius: 40, borderTopRightRadius: 40, overflow: 'hidden'}}>
             <div style={{width: 339, height: 53, left: 304, top: 140, position: 'absolute', color: '#2C2A2A', fontSize: 40, fontFamily: 'Inter', fontWeight: '700', wordWrap: 'break-word'}}>Welcome</div>
                  {/* <button type="submit" className="btn btn-primary">Login</button> */}
                 <Button
@@ -78,7 +80,7 @@ function Login({ onLoginSuccess }) {
                     alignItems: 'center',
                     gap: 10,
                     display: 'inline-flex',
-                    cursor: 'pointer', // Add this to make it look clickable
+                    cursor: 'pointer',
                     fontSize: 16,
                     fontFamily: 'Inter',
                     fontWeight: '700',
@@ -96,6 +98,7 @@ function Login({ onLoginSuccess }) {
                     id="login-username"
                     label="Username"
                     onChange={(e) => setUsername(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     style={{
                         width: '100%',
                         height: '100%', // Set height to '100%'
@@ -114,6 +117,7 @@ function Login({ onLoginSuccess }) {
                             id="login-password"
                             label="Password"
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyPress={handleKeyPress}
                             type="password"
                             style={{
                                 width: '100%',

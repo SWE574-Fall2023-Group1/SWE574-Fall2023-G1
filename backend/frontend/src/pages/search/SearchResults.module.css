@@ -1,0 +1,123 @@
+/* SearchResults.module.css */
+
+.searchResultsContainer {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.storyBox {
+  width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  border: 0.50px #F2F1F1 solid;
+}
+
+.authorSection {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.storyDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.storyTitle {
+  /* Reuse styles from StoriesByFollowingUsers.css */
+  color: var(--gray-700, #323539);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: -0.22px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.storyTitle:hover {
+  color: #0056b3;
+}
+
+.authorAndDate {
+  width: 750px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.postedOn {
+  /* Reuse styles from StoriesByFollowingUsers.css */
+  color: var(--gray-50, #858C95);
+  text-align: right;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.1px;
+}
+
+.dateAndLocation {
+  color: #AFB4B7;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-align: left;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination button {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+}
+
+.pagination button:hover {
+  background-color: #f1f1f1;
+}
+
+.pagination button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination .active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.storyAuthor {
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-icons-light-base-main, #323539);
+  /* Text L / Semibold */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.16px;
+}

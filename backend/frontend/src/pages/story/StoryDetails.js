@@ -58,45 +58,66 @@ function StoryDetails() {
   };
 
 
-  const handleMarkerClick = (location) => {
+  const handleMarkerClick = async (location) => {
     let locationData = {};
 
     if (location.point) {
         const coords = location.point.slice(17).slice(0, -1).split(' ');
-        locationData = { latitude: parseFloat(coords[1]), longitude: parseFloat(coords[0]), type: 'Point' };
+        locationData = {type: 'Point', coordinates: [parseFloat(coords[0]), parseFloat(coords[1])] };
     }
     else if (location.line) {
-        const lineCoords = location.line.slice(17).slice(0, -1).split(', ');
+        console.log("line", location.line)
+        const lineCoords = location.line.slice(22).slice(0, -1).split(', ');
+
         locationData = {
             type: 'LineString',
             coordinates: lineCoords.map(coord => {
                 const [lng, lat] = coord.split(' ');
-                return { lat: parseFloat(lat), lng: parseFloat(lng) };
+                return [parseFloat(lng), parseFloat(lat)];
             })
         };
     }
     else if (location.polygon) {
-        const polyCoords = location.polygon.slice(17).slice(0, -1).split(', ');
+        const polyCoords = location.polygon.slice(20).slice(0, -2).split(', ');
         locationData = {
             type: 'Polygon',
             coordinates: polyCoords.map(coord => {
                 const [lng, lat] = coord.split(' ');
-                return { lat: parseFloat(lat), lng: parseFloat(lng) };
+                return [parseFloat(lng), parseFloat(lat)];
             })
         };
     }
     else if (location.circle && location.radius) {
         const circleCoords = location.circle.slice(17).slice(0, -1).split(' ');
+
         locationData = {
             type: 'Circle',
-            center: { lat: parseFloat(circleCoords[1]), lng: parseFloat(circleCoords[0]) },
+            center: [parseFloat(circleCoords[0]), parseFloat(circleCoords[1])],
             radius: parseFloat(location.radius)
         };
     }
 
     const locationJSON = JSON.stringify(locationData);
-    console.log("locationJSON",locationJSON)
-    navigate(`/timeline/${locationJSON}`);
+    console.log("locationJSON", locationJSON);
+
+
+    try {
+        // Send GET request to the search API with the location
+        const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
+            params: {
+                location: locationJSON,
+                radius_diff: 5, // or any default radius you'd like to use
+                // add any other parameters if needed
+            },
+            withCredentials: true,
+        });
+
+        // Navigate to the timeline screen with the stories data
+        navigate('/timeline', { state: { stories: response.data.stories } });
+    } catch (error) {
+        console.log(error);
+    }
+
 };
 
 
@@ -105,7 +126,6 @@ function StoryDetails() {
 
 useEffect(() => {
   const fetchStory = async () => {
-    fetchProfilePhoto();
     try {
       await fetchUserDetails(); // Get the current user ID
       const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storyGet/${id}`, { withCredentials: true });
@@ -149,6 +169,7 @@ useEffect(() => {
       // Determine if the user has liked the story
       setNumLikes(response.data.likes.length);
       setLiked(userId && response.data.likes.includes(userId));
+      fetchAuthorProfilePhoto(response.data.author);
 
     } catch (error) {
       console.log(error);
@@ -290,27 +311,24 @@ useEffect(() => {
     setOpen(false)
   };
 
-  const fetchProfilePhoto = async () => {
+  const fetchAuthorProfilePhoto = async (authorId) => {
     try {
-      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto`, {
+      const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/profilePhoto/${authorId}`, {
         headers: {},
         withCredentials: true,
       });
 
-
       // Directly set the URL from the response to state
       setProfilePhotoUrl(response.data.photo_url);
-
     } catch (error) {
       if (error.response && error.response.status === 404) {
         // Profile photo not found, set the default photo
         setProfilePhotoUrl(defaultProfilePhoto);
       } else {
-        console.error('Error fetching profile photo:', error);
+        console.error('Error fetching author profile photo:', error);
       }
     }
   };
-  console.log(profilePhotoUrl)
 
   Quill.register('modules/imageCompress', ImageCompress);
 
