@@ -395,5 +395,5 @@ class StoryRecommendationSerializer(serializers.ModelSerializer):
     #story = StorySerializer()
 
     class Meta:
-            model = StoryRecommendation
-            fields = ['story', 'user', 'related_stories', 'location_related', 'time_related', 'content_related', 'tag_related', 'show_count', 'has_been_shown', 'points']
+        model = StoryRecommendation
+        fields = ['story', 'user', 'related_stories', 'location_related', 'time_related', 'content_related', 'tag_related', 'show_count', 'has_been_shown', 'points']
