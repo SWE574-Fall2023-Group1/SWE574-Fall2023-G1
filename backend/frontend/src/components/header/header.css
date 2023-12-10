@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+
+
 .App {
     text-align: center;
   }
@@ -47,7 +50,7 @@
   }
 
 
-.nav-link {
+  .nav-link {
     position: relative;
     margin-right: 1rem;
     text-decoration: none;
@@ -58,13 +61,12 @@
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    /* Text Button / Semibold Large */
-    font-family: Inter;
-    font-size: 17px;
-    font-style: normal;
+
+    /* Use Josefin Sans */
+    font-family: 'Josefin Sans', sans-serif;
     font-weight: 600;
-    line-height: 22px; /* 146.667% */
-  }
+    line-height: 22px;
+}
 
   .nav-link::before {
   content: '';
