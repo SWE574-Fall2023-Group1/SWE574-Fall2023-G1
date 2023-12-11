@@ -150,7 +150,7 @@ input[type="file"] {
   cursor: pointer;
   text-decoration: none;
   font-size: 18px;
-  font-family: 'Inter';
+  font-family: 'Josefin Sans', sans-serif;
   text-align: left;
   transition: color 0.2s ease-in-out;
   text-transform: capitalize;
@@ -169,7 +169,7 @@ input[type="file"] {
   margin-bottom: 10;
   color: var(--gray-50, var(--gray-50, #858C95));
   text-align: left;
-  font-family: Inter;
+  font-family: 'Josefin Sans', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -181,7 +181,7 @@ input[type="file"] {
   margin-bottom: 10;
   color: var(--gray-50, var(--gray-50, #858C95));
   text-align: right;
-  font-family: Inter;
+  font-family: 'Josefin Sans', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -205,7 +205,7 @@ input[type="file"] {
   text-Align: left;
   background-color: white;
   text-decoration-color: #323539;
-  font-family: Inter;
+  font-family: 'Josefin Sans', sans-serif;
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
