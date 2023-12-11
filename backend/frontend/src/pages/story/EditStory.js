@@ -136,6 +136,7 @@ const parseLocation = (location) => {
                 setDecade(storyInfo.decade);
                 break;
             }
+            console.log("date",date)
           setIncludeTime(storyInfo.include_time);
           // ... handle other fields as needed ...
         })
@@ -493,6 +494,7 @@ const parseLocation = (location) => {
                   className='date-box'
                   label="Date"
                   variant="outlined"
+                  value={include_time ? new Date(date).toISOString().slice(0, 16) : date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setDate(e.target.value)}
@@ -512,6 +514,7 @@ const parseLocation = (location) => {
               <div className='date-type'>
                 <TextField
                   className='date-box'
+                  value={include_time ? new Date(start_date).toISOString().slice(0, 16) : start_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="Start Date"
                   variant="outlined"
@@ -520,6 +523,7 @@ const parseLocation = (location) => {
                 />
                 <TextField
                   className='date-box'
+                  value={include_time ? new Date(end_date).toISOString().slice(0, 16) : end_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="End Date"
                   variant="outlined"
