@@ -61,8 +61,8 @@ function Login({ onLoginSuccess }) {
         <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", background: 'white', borderRadius: 40, "flex-wrap": "wrap", overflow: "auto", "min-width": "80%"}}>
         <div style={{height: "2em"}}></div>
         <img style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", width: 449}} src={mainPhoto} />
-            <h1>Every Memory Counts:</h1>
-            <h2>Write, Share, Relive.</h2>
+            <h2>Every Memory Counts:</h2>
+            <h3>Write, Share, Relive.</h3>
                  {/* <button type="submit" className="btn btn-primary">Login</button> */}
               <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", width: 473, height: 59, background: 'white', borderRadius: 8, padding: 8 }}>
                 {/* <label>Username:</label>

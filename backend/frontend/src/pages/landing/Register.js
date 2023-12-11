@@ -65,7 +65,7 @@ function Register() {
         <div style={{height: "2em"}}></div>
         <img style={{width: 449, display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}} src={mainPhoto} />
         <div style={{height: "2em"}}></div>
-            <div style={{width: 339, height: 53, color: '#2C2A2A', fontSize: 40, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '700', wordWrap: 'break-word', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}}>Register</div>
+            <div style={{width: 339, height: 53, color: '#2C2A2A', fontSize: 30, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '700', wordWrap: 'break-word', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}}>Register</div>
             <div style={{height: "2em"}}></div>
             <div style={{ width: 473, height: 59, background: 'white', borderRadius: 8, padding: 8}}>
                 <TextField
