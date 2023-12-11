@@ -57,11 +57,11 @@ function Login({ onLoginSuccess }) {
     <div className="container" style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto"}}>
       {/* <form onSubmit={handleSubmit}> */}
       <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: '100%', height: '100%', "flex-wrap": "wrap"}}>
-      <br/>
+      <div style={{height: "2em"}}></div>
         <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: "80%", background: 'white', borderRadius: 40, "flex-wrap": "wrap"}}>
-        <br/>
+        <div style={{height: "2em"}}></div>
         <img style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", width: 449}} src={mainPhoto} />
-            <h1>Every Memory Counts.</h1>
+            <h1>Every Memory Counts:</h1>
             <h2>Write, Share, Relive.</h2>
                  {/* <button type="submit" className="btn btn-primary">Login</button> */}
               <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", width: 473, height: 59, background: 'white', borderRadius: 8, padding: 8 }}>
@@ -105,7 +105,7 @@ function Login({ onLoginSuccess }) {
                             }}
                     />
         </div>
-        <br/>
+        <div style={{height: "2em"}}></div>
         <Button
                   variant="contained"
                   color="primary"
@@ -130,19 +130,18 @@ function Login({ onLoginSuccess }) {
                     wordWrap: 'break-word',
                     textTransform: 'none',
                     backgroundColor: 'purple',
-                    "margin-left": "auto",
-                    "margin-right": "auto",
+                    margin: "auto"
                   }}
                 >Login</Button>
-                <br/>
+                <div style={{height: "2em"}}></div>
                 <div style={{}}><span style={{color: '#7C7A7A', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word' }} >Don't have any account yet? </span><button onClick= {navigatetoforgotpassword} style= {{color: '#AF49FF', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word', cursor: 'pointer', border: 'none', background:'none'}} >Register Now!</button></div>
-                <br/>
+                <div style={{height: "2em"}}></div>
                 <div style={{}}><span style={{color: '#2C2A2A', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word' }} ></span><button onClick= {navigatetoregister} style= {{color: '#AF49FF', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word', cursor: 'pointer', border: 'none', background:'none'}} >Forgot password?</button></div>
-        <br/>
+                <div style={{height: "2em"}}></div>
         </div>
       </div>
         <ToastContainer position="bottom-right" autoClose={5000}  />
-        <br/>
+        <div style={{height: "2em"}}></div>
       {/* </form> */}
     </div>
   );

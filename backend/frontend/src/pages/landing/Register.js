@@ -60,13 +60,13 @@ function Register() {
     <>
       {/* <form onSubmit={handleSubmit}> */}
       <div style={{width: '100%', height: '100%', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto",}}>
-        <br/>
+        <div style={{height: "2em"}}></div>
         <div style={{width: "80%", height: 750, background: 'white', borderRadius: 40, overflow: 'hidden', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto"}}>
-        <br/>
+        <div style={{height: "2em"}}></div>
         <img style={{width: 449, display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}} src={mainPhoto} />
-        <br/>
+        <div style={{height: "2em"}}></div>
             <div style={{width: 339, height: 53, color: '#2C2A2A', fontSize: 40, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '700', wordWrap: 'break-word', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}}>Register</div>
-            <br/>
+            <div style={{height: "2em"}}></div>
             <div style={{ width: 473, height: 59, background: 'white', borderRadius: 8, padding: 8}}>
                 <TextField
                     id="register-username"
@@ -149,7 +149,7 @@ function Register() {
                                       }}
                             />
             </div>
-            <br/>
+            <div style={{height: "2em"}}></div>
                 {/* <button type="submit" className="btn btn-primary">Register</button> */}
                 <Button
                   variant="contained"
@@ -181,11 +181,11 @@ function Register() {
                 >
                   Create Account
               </Button>
-              <br/>
+              <div style={{height: "2em"}}></div>
             <div style={{}}><span style={{color: '#7C7A7A', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word' }} >Already have an account? </span><button onClick= {navigatetologin} style= {{color: '#AF49FF', fontSize: 16, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '500', wordWrap: 'break-word', cursor: 'pointer', border: 'none', background:'none'}} >Login</button></div>
-            <br/>
+            <div style={{height: "2em"}}></div>
         </div>
-        <br/>
+        <div style={{height: "2em"}}></div>
       </div>
 
       {/* </form> */}
