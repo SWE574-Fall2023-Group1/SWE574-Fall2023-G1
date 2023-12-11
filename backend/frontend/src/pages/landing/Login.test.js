@@ -29,7 +29,7 @@ describe('Login component', () => {
         <Login />
       </MemoryRouter>
     );
-    expect(screen.getByText('Welcome')).toBeInTheDocument();
+    expect(screen.getByText('Every Memory Counts:')).toBeInTheDocument();
     // ... rest of your assertions
   });
 

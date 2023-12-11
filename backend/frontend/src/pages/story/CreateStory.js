@@ -224,8 +224,10 @@ function CreateStory() {
 
   return (
     <div>
-      <h1 className="big-heading">{postHeader}</h1>
-      <div className='create-story-container'>
+<h1 className="big-heading" style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
+      {postHeader}
+    </h1>
+    <div className='create-story-container'>
       <div className="create-story-content">
         <div className="formBackground">
           <form>

@@ -356,7 +356,7 @@ const StorySearch = () => {
 
   return (
     <div>
-    <h1>Advanced Search</h1>
+    <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }}>Advanced Search</h1>
     <div style={{
       "display": "flex",
       "flex-wrap": "wrap",
