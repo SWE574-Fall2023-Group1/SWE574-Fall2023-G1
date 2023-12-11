@@ -57,11 +57,11 @@ function Register() {
   };
 
   return (
-    <>
+    <div className="container" style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto"}}>
       {/* <form onSubmit={handleSubmit}> */}
-      <div style={{width: '100%', height: '100%', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto",}}>
+      <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: '100%', height: '100%', "flex-wrap": "wrap"}}>
         <div style={{height: "2em"}}></div>
-        <div style={{width: "80%", height: 750, background: 'white', borderRadius: 40, overflow: 'hidden', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto"}}>
+        <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", background: 'white', borderRadius: 40, "flex-wrap": "wrap", overflow: "auto", "min-width": "80%"}}>
         <div style={{height: "2em"}}></div>
         <img style={{width: 449, display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}} src={mainPhoto} />
         <div style={{height: "2em"}}></div>
@@ -190,7 +190,7 @@ function Register() {
 
       {/* </form> */}
       <ToastContainer />
-    </>
+    </div>
   );
 }
 

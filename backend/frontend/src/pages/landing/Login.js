@@ -58,7 +58,7 @@ function Login({ onLoginSuccess }) {
       {/* <form onSubmit={handleSubmit}> */}
       <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: '100%', height: '100%', "flex-wrap": "wrap"}}>
       <div style={{height: "2em"}}></div>
-        <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: "80%", background: 'white', borderRadius: 40, "flex-wrap": "wrap"}}>
+        <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", background: 'white', borderRadius: 40, "flex-wrap": "wrap", overflow: "auto", "min-width": "80%"}}>
         <div style={{height: "2em"}}></div>
         <img style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", width: 449}} src={mainPhoto} />
             <h1>Every Memory Counts:</h1>
