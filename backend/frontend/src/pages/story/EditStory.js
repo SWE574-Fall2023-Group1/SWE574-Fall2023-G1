@@ -123,6 +123,7 @@ const parseLocation = (location) => {
             case 'year_interval':
                 setStartYear(storyInfo.start_year);
                 setEndYear(storyInfo.end_year);
+                setSeasonName(storyInfo.season_name);
                 break;
             case 'normal_date':
                 setDate(storyInfo.date);
@@ -455,6 +456,7 @@ const parseLocation = (location) => {
                 label="Start Year"
                 variant="outlined"
                 type="number"
+                value={start_year || ''}
                 onChange={(e) => setStartYear(e.target.value)}
               />
               <TextField
@@ -463,6 +465,7 @@ const parseLocation = (location) => {
                 label="End Year"
                 variant="outlined"
                 type="number"
+                value={end_year || ''}
                 onChange={(e) => setEndYear(e.target.value)}
               />
               <FormControl variant="outlined">
