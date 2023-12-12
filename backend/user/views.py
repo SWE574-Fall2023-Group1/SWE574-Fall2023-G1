@@ -1067,7 +1067,7 @@ class WikidataSearchView(views.APIView):
 
         logger.warning(f"search term: {search_term}")  # Log the raw request data
 
-        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json'
+        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json&limit=50'
         try:
             response = requests.get(url)
             response.raise_for_status()
