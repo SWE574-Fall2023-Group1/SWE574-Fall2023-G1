@@ -24,9 +24,15 @@ const LocationSearch = () => {
   useEffect(() => {
     if (location.state && location.state.stories) {
       setLocationStories(location.state.stories);
+      // Check if search parameters are available
+      if (location.state.searchParams) {
+        const params = location.state.searchParams;
+        // Display search parameters
+        // Example: setTitleSearch(params.title);
+        // You can store these in state or directly display them
+      }
     } else {
-      // Handle case when no stories are passed
-      // Redirect back or show a message, etc.
+      // Handle the case when no stories or parameters are passed
     }
   }, [location.state]);
 
@@ -82,10 +88,26 @@ const LocationSearch = () => {
     const match = htmlContent.match(imgRegex);
     return match ? match[1] : null;
   };
+  console.log("params",location.state.searchParams)
+
+  const renderSearchParams = (params) => {
+    return (
+      <div className="search-params">
+        {params.title && <p>Title: {params.title}</p>}
+        {params.author && <p>Author: {params.author}</p>}
+        {params.tag && <p>Tag: {params.tag}</p>}
+        {params.tag_label && <p>Tag Label: {params.tag_label}</p>}
+        {params.location && <p>Location: {params.location}</p>}
+        {params.time_value && <p>Time Value: {params.time_value}</p>}
+        {/* Render other search parameters as needed */}
+      </div>
+    );
+  };
 
   return (
     <div>
       <h2>TIMELINE!!!</h2>
+      {location.state && location.state.searchParams && renderSearchParams(location.state.searchParams)}
       <label className="switch">
         <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
         <span className="slider round"></span>

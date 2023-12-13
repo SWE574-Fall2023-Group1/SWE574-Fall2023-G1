@@ -709,6 +709,8 @@ class SearchStoryView(views.APIView):
         radius_diff = float(request.query_params.get('radius_diff', ''))
         date_diff = float(request.query_params.get('date_diff', 2))
         wikidata_id = request.query_params.get('tag', '')
+        tag_label_search = request.query_params.get('tag_label', '')
+
 
         sort_field = request.query_params.get('sort_field', 'extract_timestamp')  # Default to 'extract_timestamp'
         sort_type = request.query_params.get('sort_type', 'desc')  # Default to 'desc'
@@ -723,6 +725,8 @@ class SearchStoryView(views.APIView):
             query_filter &= Q(story_tags__wikidata_id=wikidata_id)
         if author_search:
             query_filter &= Q(author__username__icontains=author_search)
+        if tag_label_search:
+            query_filter &= Q(story_tags__label__icontains=tag_label_search)
         if time_type and time_value:
 
             time_value = json.loads(time_value)
@@ -1063,7 +1067,7 @@ class WikidataSearchView(views.APIView):
 
         logger.warning(f"search term: {search_term}")  # Log the raw request data
 
-        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json'
+        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json&limit=50'
         try:
             response = requests.get(url)
             response.raise_for_status()

@@ -80,7 +80,7 @@ function Header() {
                   <img
                     src={mainPhoto}
                     alt="Home Page"
-                    style={{ width: "50px", height: "50px" }}
+                    style={{ width: "50px"}}
                   />
                 </Link>
                 <Link to="/story_search" className="nav-item nav-link">

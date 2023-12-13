@@ -25,4 +25,10 @@
   .login-button {
     background-color: #7E49FF !important;
     color: white !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto !important;
   }
