@@ -40,6 +40,7 @@ const StorySearch = () => {
   const [selectedTag, setSelectedTag] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [tagDescription, setTagDescription] = useState('');
+  const [tagLabelSearch, setTagLabelSearch] = useState('');
   const autocompleteRef = useRef(null);
 
   const navigate = useNavigate();
@@ -59,26 +60,33 @@ const StorySearch = () => {
     let timeValueObj = {};
     const sortField = searchType === 'timeline' ? 'extract_timestamp' : 'creation_date';
 
-
+    let timeValueDisplay = '';
     switch (timeType) {
       case 'decade':
         timeValueObj = { decade };
+        timeValueDisplay = `${decade}s`;
         break;
       case 'year':
         timeValueObj = { year, seasonName };
+        timeValueDisplay = `${year} (${seasonName})`;
         break;
       case 'year_interval':
         timeValueObj = { startYear, endYear, seasonName };
+        timeValueDisplay = `${startYear} - ${endYear} (${seasonName})`;
         break;
       case 'normal_date':
         timeValueObj = { date };
+        timeValueDisplay = `${date} (${dateDiff} days interval)`;
         break;
       case 'interval_date':
         timeValueObj = { startDate, endDate };
+        timeValueDisplay = `${startDate} to ${endDate}`;
         break;
       default:
         break;
     }
+
+
 
     try {
       const locationParam = locationSearch && locationSearch.geometry ? JSON.stringify(locationSearch.geometry) : null;
@@ -89,6 +97,7 @@ const StorySearch = () => {
           title: titleSearch,
           author: authorSearch,
           tag: tagParam,
+          tag_label: tagLabelSearch,
           page: pageNumber,
           size: pageSize,
           time_type: timeType,
@@ -102,7 +111,25 @@ const StorySearch = () => {
       });
 
       if (searchType === 'timeline') {
-        navigate('/timeline', { state: { stories: response.data.stories } });
+        navigate('/timeline', {
+          state: {
+            stories: response.data.stories,
+            searchParams: {
+              title: titleSearch,
+              author: authorSearch,
+              tag: selectedTag ? selectedTag.label : null,
+              tag_label: tagLabelSearch,
+              page: pageNumber,
+              size: pageSize,
+              time_type: timeType,
+              time_value: timeValueDisplay,
+              location: locationSearch ? locationSearch.name : null,
+              radius_diff: radiusDiff,
+              date_diff: dateDiff,
+              sort_field: sortField,
+            }
+          }
+        });
       } else {
         navigate('/search-results', { state: { stories: response.data.stories } });
       }
@@ -421,6 +448,15 @@ const StorySearch = () => {
                 )}
               />
             <br />
+            <TextField
+                variant="outlined"
+                placeholder="Tag Label"
+                className='long-boxes-search'
+                label="Search by Tag Label"
+                style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+                value={tagLabelSearch}
+                onChange={(e) => setTagLabelSearch(e.target.value)}
+              />
             <div style={{ marginTop: '1rem' }}>
               <FormControl variant="outlined" >
                 <InputLabel id="date-type-label">Date Type</InputLabel>
