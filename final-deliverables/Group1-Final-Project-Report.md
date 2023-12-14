@@ -57,10 +57,10 @@ The web app is currently dockerized and deployed at the following URL: http://34
 
 - [ ] etc
 
-#### System manual 
+#### System manual
 What are the requirements to run this system and installation instructions (docker)
 
-#### User manual 
+#### User manual
 A description of how to use your system
 
 #### Requirements Addressed
@@ -72,7 +72,7 @@ The following functional requirements have been addressed in the current release
 
 #### Test Results
 (unit test coverage output & manual user tests.)
-   
+
 #### Feedback & Reflections
 
 ##### Team Feedback & Reflections
@@ -85,9 +85,9 @@ The following functional requirements have been addressed in the current release
 | -------- | ----------- |
 | new tool | explanation |
 
-### Acknowledgment 
-    
-All work in this project was performed by us, except where 3rd party libraries and tools have been acknowledged. 
+### Acknowledgment
+
+All work in this project was performed by us, except where 3rd party libraries and tools have been acknowledged.
 
 Signed:
 
@@ -158,7 +158,7 @@ For each significant personal effort:
      * **Management-related significant issues:**
 
  * **Pull requests:**
-   
+
  * **Additional information:**
 
 #### **Deniz**
@@ -188,13 +188,13 @@ For each significant personal effort:
  * **Additional information:**
 
 #### **Oğuz**
-    
+
  *  **Responsibilities:**
 
  * **Main contributions:**
 
      * **Code-related significant issues:**
-    
+
      * **Management-related significant issues:**
 
  * **Pull requests:**
@@ -202,7 +202,7 @@ For each significant personal effort:
  * **Additional information:**
 
 #### **Sadık**
-    
+
  * **Responsibilities:**
 
  * **Main contributions:**
