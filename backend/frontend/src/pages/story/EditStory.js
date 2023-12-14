@@ -12,7 +12,6 @@ import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
 
-let postHeader = null;
 
 function EditStory() {
 
@@ -20,6 +19,7 @@ function EditStory() {
   const isEditMode = storyId != null;
 
   const postHeader = 'Edit Memory';
+  const postButton = 'Update Memory';
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -123,6 +123,7 @@ const parseLocation = (location) => {
             case 'year_interval':
                 setStartYear(storyInfo.start_year);
                 setEndYear(storyInfo.end_year);
+                setSeasonName(storyInfo.season_name);
                 break;
             case 'normal_date':
                 setDate(storyInfo.date);
@@ -135,6 +136,7 @@ const parseLocation = (location) => {
                 setDecade(storyInfo.decade);
                 break;
             }
+            console.log("date",date)
           setIncludeTime(storyInfo.include_time);
           // ... handle other fields as needed ...
         })
@@ -455,6 +457,7 @@ const parseLocation = (location) => {
                 label="Start Year"
                 variant="outlined"
                 type="number"
+                value={start_year || ''}
                 onChange={(e) => setStartYear(e.target.value)}
               />
               <TextField
@@ -463,6 +466,7 @@ const parseLocation = (location) => {
                 label="End Year"
                 variant="outlined"
                 type="number"
+                value={end_year || ''}
                 onChange={(e) => setEndYear(e.target.value)}
               />
               <FormControl variant="outlined">
@@ -490,6 +494,7 @@ const parseLocation = (location) => {
                   className='date-box'
                   label="Date"
                   variant="outlined"
+                  value={include_time ? new Date(date).toISOString().slice(0, 16) : date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setDate(e.target.value)}
@@ -509,6 +514,7 @@ const parseLocation = (location) => {
               <div className='date-type'>
                 <TextField
                   className='date-box'
+                  value={include_time ? new Date(start_date).toISOString().slice(0, 16) : start_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="Start Date"
                   variant="outlined"
@@ -517,6 +523,7 @@ const parseLocation = (location) => {
                 />
                 <TextField
                   className='date-box'
+                  value={include_time ? new Date(end_date).toISOString().slice(0, 16) : end_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="End Date"
                   variant="outlined"
@@ -578,7 +585,7 @@ const parseLocation = (location) => {
                 />
           </div>
           <br/>
-          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
+          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postButton}</Button>
           <br/>
           <br/>
           <text>You can edit your memory as many times as you want after posting.</text>

@@ -65,16 +65,10 @@ function CreateStory() {
             setLocations(storyInfo.location_ids.map(location => ({ ...location, id: location.id.toString() })));
           }
           setDateType(storyInfo.date_type);
-          switch(storyInfo.date_type) {
-            case 'year':
-              setYear(storyInfo.year);
-              setSeasonName(storyInfo.season_name);
-              break;
-            case 'year_interval':
-              setStartYear(storyInfo.start_year);
-              setEndYear(storyInfo.end_year);
-              break;
-            }
+          setYear(storyInfo.year);
+          setSeasonName(storyInfo.season_name);
+          setStartYear(storyInfo.start_year);
+          setEndYear(storyInfo.end_year);
           setDate(storyInfo.date);
           setStartDate(storyInfo.start_date);
           setEndDate(storyInfo.end_date);
@@ -102,8 +96,15 @@ function CreateStory() {
   };
 
   const removeTag = (tagId) => {
-    console.log("Removing Tag", tagId)
-    setSelectedTags(selectedTags.filter(tag => tag.wikidata_id !== tagId));
+    console.log("Removing Tag", tagId);
+
+    // Update selectedTags
+    const newSelectedTags = selectedTags.filter(tag => tag.wikidata_id !== tagId);
+    setSelectedTags(newSelectedTags);
+
+    // Update story_tags
+    const newStoryTags = story_tags.filter(tag => tag.wikidata_id !== tagId);
+    setStoryTags(newStoryTags);
   };
 
 
@@ -223,8 +224,10 @@ function CreateStory() {
 
   return (
     <div>
-      <h1 className="big-heading">{postHeader}</h1>
-      <div className='create-story-container'>
+<h1 className="big-heading" style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
+      {postHeader}
+    </h1>
+    <div className='create-story-container'>
       <div className="create-story-content">
         <div className="formBackground">
           <form>

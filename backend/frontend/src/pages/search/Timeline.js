@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './Timeline.css';
+import StoryDetailsBox from './StoryDetailsBox';
 
 const LocationSearch = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [radiusDiff, setRadiusDiff] = useState(5);
-  const [locationStories, setLocationStories] = useState([]);
+
   const [locationName, setLocationName] = useState('');
-  const { locationJSON } = useParams();
-  const navigate = useNavigate(); // Updated
+  const [locationStories, setLocationStories] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isDescOrder, setIsDescOrder] = useState(true); // Default to true for descending order
+
 
   const options = {
     year: 'numeric',
@@ -20,53 +22,29 @@ const LocationSearch = () => {
   };
 
   useEffect(() => {
-    const handleSearch = async () => {
-      if (locationJSON) {
-        try {
-          const locationData = JSON.parse(locationJSON);
-          setLocationName(determineLocationName(locationData)); // Update location name based on type
-
-          const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/storySearchByLocation`, {
-            params: {
-              location: locationJSON,
-              radius_diff: radiusDiff,
-            },
-            withCredentials: true,
-          });
-
-          setLocationStories(response.data.stories);
-        } catch (error) {
-          console.error('Error fetching location stories:', error);
-          setLocationStories([]);
-        }
+    if (location.state && location.state.stories) {
+      setLocationStories(location.state.stories);
+      // Check if search parameters are available
+      if (location.state.searchParams) {
+        const params = location.state.searchParams;
+        // Display search parameters
+        // Example: setTitleSearch(params.title);
+        // You can store these in state or directly display them
       }
-    };
-
-    handleSearch();
-  }, [locationJSON, radiusDiff]);
-
-  const determineLocationName = (locationData) => {
-    switch (locationData.type) {
-      case 'Point':
-        return `Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}`;
-      case 'LineString':
-        return 'Line Location';
-      case 'Polygon':
-        return 'Polygon Location';
-      case 'Circle':
-        return `Circle Location with center at Latitude: ${locationData.center.lat}, Longitude: ${locationData.center.lng}`;
-      default:
-        return 'Unknown Location';
+    } else {
+      // Handle the case when no stories or parameters are passed
     }
+  }, [location.state]);
+
+  const toggleOrder = () => {
+    setLocationStories(prevStories => [...prevStories].reverse());
+    setIsDescOrder(prevOrder => !prevOrder);
   };
 
   const handleStoryClick = async (id) => {
     navigate(`/story/${id}`);
   };
 
-  const handleGoBack = () => {
-    navigate(-1); // This will navigate back to the previous page
-  };
   const formatDate = (story) => {
 
     let dateString = "";
@@ -104,32 +82,54 @@ const LocationSearch = () => {
     }
     return dateString;
   };
+
+  const extractFirstImageUrl = (htmlContent) => {
+    const imgRegex = /<img.*?src=["'](.*?)["']/;
+    const match = htmlContent.match(imgRegex);
+    return match ? match[1] : null;
+  };
+  console.log("params",location.state.searchParams)
+
+  const renderSearchParams = (params) => {
+    return (
+      <div className="search-params">
+        {params.title && <p>Title: {params.title}</p>}
+        {params.author && <p>Author: {params.author}</p>}
+        {params.tag && <p>Tag: {params.tag}</p>}
+        {params.tag_label && <p>Tag Label: {params.tag_label}</p>}
+        {params.location && <p>Location: {params.location}</p>}
+        {params.time_value && <p>Time Value: {params.time_value}</p>}
+        {/* Render other search parameters as needed */}
+      </div>
+    );
+  };
+
   return (
     <div>
-      <h2>Memories in {locationName}</h2>
-
-      {locationStories.length > 0 ? (
-        <>
-          <h3>Location Search Results:</h3>
-          <div>
-            {locationStories.map(story => (
-              <div key={story.id} className="story-box-search">
-                <div className="story-details-search">
-                  <h3 className="story-title-search" onClick={() => handleStoryClick(story.id)}>{story.title}</h3>
-                  <p className="story-date-search">{formatDate(story)}</p> {/* Display the date */}
-                  <p className="story-author-search">by {story.author_username || 'Unknown'}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button onClick={handleGoBack}>Go Back</button>
-        </>
-      ) : (
-        <div>
-          <h1>Sorry, there are no stories on this location.</h1>
-          <h2>Try a different one.</h2>
-        </div>
-      )}
+      <h2>TIMELINE!!!</h2>
+      {location.state && location.state.searchParams && renderSearchParams(location.state.searchParams)}
+      <label className="switch">
+        <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
+        <span className="slider round"></span>
+      </label>
+      <span style={{ marginLeft: '10px' }}>
+        {isDescOrder ? 'Descending Order' : 'Ascending Order'}
+      </span>
+      <div className="timeline">
+        {locationStories.map((story, index) => {
+          const imageUrl = extractFirstImageUrl(story.content);
+          return (
+            <div key={story.id} className="dot" style={{ left: `${(index + 1) * 10}%` }}>
+              <StoryDetailsBox
+                story={story}
+                onClick={() => handleStoryClick(story.id)}
+                imageUrl={imageUrl}
+              />
+              {/* <p className="story-date">{formatDate(story)}</p> */}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

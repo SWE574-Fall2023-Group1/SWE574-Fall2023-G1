@@ -29,6 +29,7 @@ from django.contrib.gis.measure import D  # 'D' is a shortcut for creating Dista
 from django.db.models import F
 import requests
 from .recomFunctions import *
+from django.db.models import Count
 
 logger = logging.getLogger('django')
 
@@ -249,7 +250,12 @@ class UpdateStoryView(views.APIView):
                     updated_story.save()
                     return Response({'success': True, 'msg': 'Story updated successfully.', 'data': serializer.data}, status=status.HTTP_200_OK)
                 else:
-                    return Response({'success': False, 'msg': 'Update failed.', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                    error_messages = "\n".join(["{}: {}".format(field, "; ".join(errors)) for field, errors in serializer.errors.items()])
+                    return Response({
+                        'success': False,
+                        'msg': error_messages,  # Concatenated error messages
+                        'errors': serializer.errors
+                    }, status=status.HTTP_400_BAD_REQUEST)
             except Exception as e:
                 return Response({'success': False, 'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
@@ -270,12 +276,17 @@ class LikeStoryView(views.APIView):
 
         # Check if the liker has already liked the story
         if liker in story.likes.all():
-            # If the liker has already liked the story, remove the like
             story.likes.remove(liker)
             story.save()
-
-            # Log the activity of unliking the story for the author
             Activity.objects.create(user=author, activity_type='story_unliked', target_story=story, target_user=liker)
+
+            # Remove the unliked story from related stories in recommendations
+            recommendations = StoryRecommendation.objects.filter(user=liker, related_stories=story)
+            for recommendation in recommendations:
+                recommendation.related_stories.remove(story)
+                # If no more related stories, delete the recommendation
+                if recommendation.related_stories.count() == 0:
+                    recommendation.delete()
 
             return Response({'success': True, 'msg': 'Disliked.'}, status=status.HTTP_201_CREATED)
         else:
@@ -652,6 +663,36 @@ class SearchUserView(views.APIView):
         }, status=status.HTTP_200_OK)
 
 class SearchStoryView(views.APIView):
+    def extract_timestamp(self, story):
+    # Default to creation date in case there's an issue
+        default_timestamp = story.creation_date
+
+        if story.date_type == Story.YEAR_INTERVAL or story.date_type == Story.YEAR:
+            year = story.start_year if story.date_type == Story.YEAR_INTERVAL else story.year
+            if story.season_name == "Summer":
+                return timezone.make_aware(datetime(year, 6, 1))
+            elif story.season_name == "Fall":
+                return timezone.make_aware(datetime(year, 9, 1))
+            elif story.season_name == "Winter":
+                return timezone.make_aware(datetime(year, 12, 1))
+            elif story.season_name == "Spring":
+                return timezone.make_aware(datetime(year, 3, 1))
+            else:
+                return timezone.make_aware(datetime(year, 1, 1))
+
+        elif story.date_type == Story.NORMAL_DATE:
+            logger.info(story.date)
+            return story.date
+
+        elif story.date_type == Story.INTERVAL_DATE:
+            return story.start_date
+
+        elif story.date_type == Story.DECADE:
+            return timezone.make_aware(datetime(story.decade, 1, 1))
+
+        else:
+            return default_timestamp
+
     def get(self, request, *args, **kwargs ):
         cookie_value = request.COOKIES['refreshToken']
         try:
@@ -666,8 +707,13 @@ class SearchStoryView(views.APIView):
         time_value = request.query_params.get('time_value', '')
         location = request.query_params.get('location', '')
         radius_diff = float(request.query_params.get('radius_diff', ''))
-        date_diff = float(request.query_params.get('date_diff', ''))
-        tag_search = request.query_params.get('tag', '')
+        date_diff = float(request.query_params.get('date_diff', 2))
+        wikidata_id = request.query_params.get('tag', '')
+        tag_label_search = request.query_params.get('tag_label', '')
+
+
+        sort_field = request.query_params.get('sort_field', 'extract_timestamp')  # Default to 'extract_timestamp'
+        sort_type = request.query_params.get('sort_type', 'desc')  # Default to 'desc'
 
 
         logger.info(f"locationsearch: {location}")
@@ -675,10 +721,12 @@ class SearchStoryView(views.APIView):
         query_filter = Q()
         if title_search:
             query_filter &= Q(title__icontains=title_search)
-        if tag_search:
-            query_filter &= Q(story_tags__icontains=tag_search)
+        if wikidata_id:
+            query_filter &= Q(story_tags__wikidata_id=wikidata_id)
         if author_search:
             query_filter &= Q(author__username__icontains=author_search)
+        if tag_label_search:
+            query_filter &= Q(story_tags__label__icontains=tag_label_search)
         if time_type and time_value:
 
             time_value = json.loads(time_value)
@@ -764,27 +812,24 @@ class SearchStoryView(views.APIView):
 
             stories = stories.filter(location_query)
 
-        stories = stories.order_by('-creation_date')
+        if sort_field == 'extract_timestamp':
+            # Already handled by existing code
+            sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=(sort_type == 'desc'))
+        elif sort_field == 'creation_date':
+            # Sorting by creation_date
+            if sort_type == 'desc':
+                stories = stories.order_by('-creation_date')
+            else:
+                stories = stories.order_by('creation_date')
+            sorted_stories = stories
+        else:
+            # Default sorting if sort_field is not recognized
+            sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=True)
 
-
-        # Page sizes and numbers
-        page_number = int(request.query_params.get('page', 1))
-        page_size = int(request.query_params.get('size', 10))
-
-
-        paginator = Paginator(stories, page_size)
-        total_pages = ceil(paginator.count / page_size)
-        page = paginator.get_page(page_number)
-
-        serializer = StorySerializer(page, many=True)
+        serializer = StorySerializer(sorted_stories, many=True)
 
         return Response({
-            'stories': serializer.data,
-            'has_next': page.has_next(),
-            'has_prev': page.has_previous(),
-            'next_page': page.next_page_number() if page.has_next() else None,
-            'prev_page': page.previous_page_number() if page.has_previous() else None,
-            'total_pages': total_pages,
+            'stories': serializer.data
         }, status=status.HTTP_200_OK)
 
 
@@ -879,7 +924,10 @@ class SearchStoryByLocationView(views.APIView):
 
             # Constructing the appropriate geometry based on the type
             if geom_type == "Point":
-                center = Point(location_data["longitude"], location_data["latitude"], srid=4326)
+
+                point_coords = location_data["coordinates"]
+
+                center = Point(point_coords[0], point_coords[1], srid=4326)  # Create Point object
 
                 # Transform the point to a UTM coordinate system
                 # Adjust this based on your location
@@ -895,10 +943,7 @@ class SearchStoryByLocationView(views.APIView):
 
             elif geom_type == "LineString":
                 # Filter out any null coordinates and ensure they are in the correct format
-                line_coords = []
-                for coord in location_data["coordinates"]:
-                    if coord["lat"] is not None and coord["lng"] is not None:
-                        line_coords.append((float(coord["lng"]), float(coord["lat"])))
+                line_coords = location_data["coordinates"]
 
                 if not line_coords:
                     return Response({'success': False, 'msg': 'Invalid line coordinates'}, status=status.HTTP_400_BAD_REQUEST)
@@ -921,7 +966,7 @@ class SearchStoryByLocationView(views.APIView):
 
             elif geom_type == "Polygon":
                 # Filter out any null coordinates and ensure the polygon is closed
-                poly_coords = [(coord["lng"], coord["lat"]) for coord in location_data["coordinates"] if coord["lat"] is not None and coord["lng"] is not None]
+                poly_coords = location_data["coordinates"]
 
                 if poly_coords and poly_coords[0] != poly_coords[-1]:
                     poly_coords.append(poly_coords[0])  # Close the polygon
@@ -936,8 +981,10 @@ class SearchStoryByLocationView(views.APIView):
 
 
             elif geom_type == "Circle":
-                center = Point(location_data["center"]["lng"], location_data["center"]["lat"], srid=4326)
+                center_coords = location_data["center"]
                 radius = location_data["radius"]
+
+                center = Point(center_coords[0], center_coords[1], srid=4326)  # Create Point object for center
 
                 # Transform the center point to UTM coordinate system
                 utm_srid = 32633  # Adjust this based on your location
@@ -1020,7 +1067,7 @@ class WikidataSearchView(views.APIView):
 
         logger.warning(f"search term: {search_term}")  # Log the raw request data
 
-        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json'
+        url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={search_term}&language=en&format=json&limit=50'
         try:
             response = requests.get(url)
             response.raise_for_status()
@@ -1040,16 +1087,19 @@ class GetRecommendationsView(views.APIView):
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        recommendations = StoryRecommendation.objects.filter(
-            user=user
-        ).order_by('show_count')[:3]  # Fetch only the first 5 recommendations
+        recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')[:5]
 
         for recommendation in recommendations:
             recommendation.show_count += 1
             recommendation.has_been_shown = True
             recommendation.save()
 
-        serializer = StorySerializer([rec.story for rec in recommendations], many=True)
+        if recommendations.count() < 5:
+            num_extra_stories = 5 - recommendations.count()
+            extra_stories = Story.objects.exclude(author=user).annotate(like_count=Count('likes')).order_by('-like_count')[:num_extra_stories]
+            recommendations = list(recommendations) + list(extra_stories)
+
+        serializer = StorySerializer(recommendations, many=True)
         return Response(
             {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
             status=status.HTTP_200_OK
@@ -1065,9 +1115,10 @@ class GetRecommendationsByUserView(views.APIView):
 
         update_recommendations(user)
 
-        recommendations = StoryRecommendation.objects.filter(user=user)
+        recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')
 
         serializer = StoryRecommendationSerializer(recommendations, many=True)
+
         return Response(
             {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
             status=status.HTTP_200_OK
@@ -1121,3 +1172,23 @@ class AllStorywithOwnView(views.APIView):
             'prev_page': page.previous_page_number() if page.has_previous() else None,
             'total_pages': total_pages,
         }, status=status.HTTP_200_OK)
+
+
+class KeywordExtractionView(views.APIView):
+    def post(self, request):
+        story_id = request.data.get('story_id')
+        text = request.data.get('text')
+
+        if story_id:
+            try:
+                story = Story.objects.get(id=story_id)
+                content = story.content
+            except Story.DoesNotExist:
+                return Response({'error': 'Story not found'}, status=status.HTTP_404_NOT_FOUND)
+        elif text:
+            content = text
+        else:
+            return Response({'error': 'No valid input provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        keywords = extract_keywords_enhanced(content)
+        return Response({'keywords': keywords}, status=status.HTTP_200_OK)

@@ -35,6 +35,11 @@ function UserSearch() {
   const handleSearch = async () => {
     navigate(`/SearchUserResults/${searchQuery}`);
   };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
+  };
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -47,13 +52,19 @@ function UserSearch() {
         }}
         renderInput={(params) => (
           <TextField
-            {...params}
-            placeholder="Search usernames..."
-            autoComplete="true"
-            size="small"
-            variant="outlined"
-            style={{ backgroundColor: 'white', borderRadius: '4px', width: '15vw',}}
-          />
+      {...params}
+      placeholder="Search usernames..."
+      autoComplete="true"
+      onKeyPress={handleKeyPress}
+      size="small"
+      variant="outlined"
+      style={{
+        backgroundColor: 'white',
+        borderRadius: '4px',
+        width: '15vw',
+        fontFamily: "'Josefin Sans', sans-serif",
+      }}
+    />
         )}
       />
       <div
@@ -72,7 +83,7 @@ function UserSearch() {
     cursor: 'pointer', // Add this to make it look clickable
   }}
 >
-  <div style={{ color: 'white', fontSize: 15, fontFamily: 'Inter', fontWeight: '400', lineHeight: 22, wordWrap: 'break-word' }}>
+  <div style={{ color: 'white', fontSize: 15, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '400', lineHeight: 22, wordWrap: 'break-word' }}>
     Search
   </div>
 </div>
