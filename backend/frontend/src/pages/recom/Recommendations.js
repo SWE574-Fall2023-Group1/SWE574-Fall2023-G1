@@ -25,8 +25,8 @@ function Recommendations() {
     fetchRecommendations();
   }, []);
 
-  const handleStoryClick = (id) => {
-    navigate(`/story/${id}`);
+  const handleStoryClick = (storyId) => {
+    navigate(`/story/${storyId}`);
   };
 
   const options = {
@@ -88,58 +88,60 @@ function Recommendations() {
       <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
         Recommended for You
       </h1>
-      {recommendedStories.map((story) => (
-        <div key={story.id} className={styles.storyBox}>
-          <div className={styles.authorAndDate}>
-            <p className={styles.storyAuthor}>
-              {" "}
-              {story.author_username || "Unknown"}
-            </p>
-            <p className={styles.postedOn}>
-              Posted on {new Date(story.creation_date).toLocaleDateString()}
-            </p>
-          </div>
-          <div className={styles.storyDetails}>
-            <h3
-              className={styles.storyTitle}
-              onClick={() => handleStoryClick(story.id)}
-            >
-              {story.title}
-            </h3>
-          </div>
-          <div className={styles.dateAndLocation}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "left",
-                alignItems: "left",
-                marginBottom: 5,
-              }}
-            >
-              <img src={dateIcon} style={{ marginRight: 6 }} alt="Date Icon" />
-              {`${formatDate(story)}`}
+      {recommendedStories.map((recommendation) => {
+        const story = recommendation.story; // Access the nested story object
+        return (
+          <div key={story.id} className={styles.storyBox}>
+            <div className={styles.authorAndDate}>
+              <p className={styles.storyAuthor}>
+                {story.author_username || "Unknown"}
+              </p>
+              <p className={styles.postedOn}>
+                Posted on {new Date(story.creation_date).toLocaleDateString()}
+              </p>
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "left",
-                alignItems: "left",
-              }}
-            >
-              <img
-                src={locationIcon}
-                style={{ marginRight: 10 }}
-                alt="Location Icon"
-              />
-              {story.location_ids &&
-              story.location_ids.length > 0 &&
-              story.location_ids[0].name
-                ? decodeURIComponent(story.location_ids[0].name)
-                : "No Location"}
+            <div className={styles.storyDetails}>
+              <h3
+                className={styles.storyTitle}
+                onClick={() => handleStoryClick(story.id)}
+              >
+                {story.title}
+              </h3>
+            </div>
+            <div className={styles.dateAndLocation}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "left",
+                  alignItems: "left",
+                  marginBottom: 5,
+                }}
+              >
+                <img src={dateIcon} style={{ marginRight: 6 }} alt="Date Icon" />
+                {`${formatDate(story)}`}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "left",
+                  alignItems: "left",
+                }}
+              >
+                <img
+                  src={locationIcon}
+                  style={{ marginRight: 10 }}
+                  alt="Location Icon"
+                />
+                {story.location_ids &&
+                story.location_ids.length > 0 &&
+                story.location_ids[0].name
+                  ? decodeURIComponent(story.location_ids[0].name)
+                  : "No Location"}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

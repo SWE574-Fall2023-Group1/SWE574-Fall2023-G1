@@ -1087,19 +1087,32 @@ class GetRecommendationsView(views.APIView):
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
 
+        update_recommendations(user)
+
         recommendations = StoryRecommendation.objects.filter(user=user).order_by('show_count', '-points')[:5]
 
+        # Update existing recommendations
         for recommendation in recommendations:
             recommendation.show_count += 1
             recommendation.has_been_shown = True
             recommendation.save()
 
+        # Check if we need extra stories
         if recommendations.count() < 5:
             num_extra_stories = 5 - recommendations.count()
             extra_stories = Story.objects.exclude(author=user).annotate(like_count=Count('likes')).order_by('-like_count')[:num_extra_stories]
-            recommendations = list(recommendations) + list(extra_stories)
 
-        serializer = StorySerializer(recommendations, many=True)
+            # Create StoryRecommendation objects for the extra stories
+            extra_recommendations = [
+                StoryRecommendation(story=story, user=user)
+                for story in extra_stories
+            ]
+
+            # Combine the existing recommendations with the new extra recommendations
+            recommendations = list(recommendations) + extra_recommendations
+
+        # Serialize the combined recommendations
+        serializer = StoryRecommendationSerializer(recommendations, many=True)
         return Response(
             {'success': True, 'msg': 'Recommendations fetched successfully', 'recommendations': serializer.data},
             status=status.HTTP_200_OK
