@@ -845,7 +845,7 @@ class SearchStoryView(views.APIView):
         title_search = data.get('title', '')
         author_search = data.get('author', '')
         time_type = data.get('time_type', '')
-        time_value = data.get('time_value', {})
+        time_value = data.get('time_value', {})  # No need for json.loads here
         location = data.get('location', '')
         radius_diff = float(data.get('radius_diff', 25))
         date_diff = float(data.get('date_diff', 2))
@@ -867,7 +867,6 @@ class SearchStoryView(views.APIView):
             query_filter &= Q(story_tags__label__icontains=tag_label_search)
         if time_type and time_value:
 
-            time_value = json.loads(time_value)
             if time_type == 'season':
                 time_value = time_value["seasonName"]
                 query_filter &= Q(season_name__icontains=time_value)
@@ -904,7 +903,6 @@ class SearchStoryView(views.APIView):
         stories = Story.objects.filter(query_filter)
 
         if location != "null" and location != "":
-            location = json.loads(location)
             location_point = GEOSGeometry(json.dumps(location), srid=4326)
                 # Transform the point to a projected coordinate system where units are meters (e.g., UTM)
             utm_srid = 32633  # Example: UTM zone 33N SRID
