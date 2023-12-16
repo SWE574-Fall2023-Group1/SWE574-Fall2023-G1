@@ -392,7 +392,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'user_username', 'activity_type', 'date', 'viewed', 'target_user', 'target_user_username', 'target_story', 'target_story_title']
 
 class StoryRecommendationSerializer(serializers.ModelSerializer):
-    #story = StorySerializer()
+    story = StorySerializer()
 
     class Meta:
         model = StoryRecommendation
