@@ -1041,7 +1041,7 @@ class ActivityStreamView(views.APIView):
         activities = Activity.objects.filter(user_id=user_id).order_by('-date')
         serializer = ActivitySerializer(activities, many=True)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'success': True, 'msg': 'Activities got', 'activity': serializer.data}, status=status.HTTP_200_OK)
 
     def patch(self, request, activity_id):
         try:
