@@ -106,7 +106,7 @@ const LocationSearch = () => {
 
   return (
     <div>
-      <h2>TIMELINE!!!</h2>
+    <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }}>Timeline</h1>
       {location.state && location.state.searchParams && renderSearchParams(location.state.searchParams)}
       <label className="switch">
         <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
@@ -115,17 +115,18 @@ const LocationSearch = () => {
       <span style={{ marginLeft: '10px' }}>
         {isDescOrder ? 'Descending Order' : 'Ascending Order'}
       </span>
+      <div className="static-line"></div>
       <div className="timeline">
         {locationStories.map((story, index) => {
           const imageUrl = extractFirstImageUrl(story.content);
+          const leftPosition = `${(index) * 2}%`;
           return (
-            <div key={story.id} className="dot" style={{ left: `${(index + 1) * 10}%` }}>
+            <div key={story.id} className="dot" style={{ left: leftPosition }}>
               <StoryDetailsBox
                 story={story}
                 onClick={() => handleStoryClick(story.id)}
                 imageUrl={imageUrl}
               />
-              {/* <p className="story-date">{formatDate(story)}</p> */}
             </div>
           );
         })}

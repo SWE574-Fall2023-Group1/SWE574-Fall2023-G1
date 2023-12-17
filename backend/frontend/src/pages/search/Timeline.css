@@ -180,15 +180,12 @@
   }
 
 
-  /* Add this to your existing CSS or create a new CSS file */
-/* Update the timeline styles */
+
 .timeline {
-  /* position: fixed; */
-  /* bottom: 400px; */
-  /* left: 0; */
-  /* width: 100%; */
+
   height: 800px;
-  /* background-color: #000; */
+  position: relative;
+
   margin-left: 50px;
   margin-right: 50px;
   display: flex;
@@ -204,7 +201,7 @@
 
 /* Update the dot styles */
 .dot {
-    /* position: absolute; */
+     position: relative;
     /* width: 10px; */
     /* height: 10px; */
     /* background-color: #000; */
@@ -296,4 +293,14 @@ input:checked + .slider:before {
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+.static-line {
+  position: absolute;
+  top: 72%; /* Adjust the vertical position as needed */
+  width: 100%;
+  height: 2px;
+  background-color: #000000; /* Adjust color as needed */
+  z-index: 0; /* Ensure the line is behind the dots */
+  display: flex
 }
