@@ -76,7 +76,7 @@
 .storyTitle {
   color: var(--gray-700, var(--gray-700, #323539));
   /* Headline XS / Desktop / Medium */
-  font-family: Inter;
+  font-family: "'Josefin Sans', sans-serif";
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -95,7 +95,7 @@
   text-align: left;
   color: var(--text-icons-light-base-main, #323539);
   /* Text L / Semibold */
-  font-family: Inter;
+  font-family: "'Josefin Sans', sans-serif";
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -120,7 +120,7 @@
     color: var(--gray-50, var(--gray-50, #858C95));
     text-align: right;
     /* Text S / Medium */
-    font-family: Inter;
+    font-family: "'Josefin Sans', sans-serif";
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -130,7 +130,7 @@
 
 .dateAndLocation{
   color: #AFB4B7;
-  font-family: Inter;
+  font-family: "'Josefin Sans', sans-serif";
   font-size: 14px;
   font-style: normal;
   font-weight: 500;

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ function ActivityStream() {
       try {
         const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/activities`, { withCredentials: true });
         // Filter out activities that have been viewed
-        const unviewedActivities = response.data.filter(activity => !activity.viewed);
+        const unviewedActivities = response.data.activity.filter(activity => !activity.viewed);
         setActivities(unviewedActivities);
       } catch (error) {
         console.error('Error fetching activities:', error);

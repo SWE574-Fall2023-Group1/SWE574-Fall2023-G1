@@ -58,7 +58,7 @@
   /* Reuse styles from StoriesByFollowingUsers.css */
   color: var(--gray-50, #858C95);
   text-align: right;
-  font-family: Inter;
+  font-family: 'Josefin Sans', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
