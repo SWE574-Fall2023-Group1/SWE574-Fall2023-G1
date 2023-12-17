@@ -832,6 +832,142 @@ class SearchStoryView(views.APIView):
             'stories': serializer.data
         }, status=status.HTTP_200_OK)
 
+    def post(self, request, *args, **kwargs ):
+        cookie_value = request.COOKIES['refreshToken']
+        try:
+            user_id = decode_refresh_token(cookie_value)
+        except:
+            return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        user = get_object_or_404(User, pk=user_id)
+
+        data = request.data
+
+        title_search = data.get('title', '')
+        author_search = data.get('author', '')
+        time_type = data.get('time_type', '')
+        time_value = data.get('time_value', {})  # No need for json.loads here
+        location = data.get('location', '')
+        radius_diff = float(data.get('radius_diff', 25))
+        date_diff = float(data.get('date_diff', 2))
+        wikidata_id = data.get('tag', '')
+        tag_label_search = data.get('tag_label', '')
+        sort_field = data.get('sort_field', 'extract_timestamp')
+        sort_type = data.get('sort_type', 'desc')
+
+        logger.info(f"locationsearch: {location}")
+        #print(tag_search)
+        query_filter = Q()
+        if title_search:
+            query_filter &= Q(title__icontains=title_search)
+        if wikidata_id:
+            query_filter &= Q(story_tags__wikidata_id=wikidata_id)
+        if author_search:
+            query_filter &= Q(author__username__icontains=author_search)
+        if tag_label_search:
+            query_filter &= Q(story_tags__label__icontains=tag_label_search)
+        if time_type and time_value:
+
+            if time_type == 'season':
+                time_value = time_value["seasonName"]
+                query_filter &= Q(season_name__icontains=time_value)
+            elif time_type == 'year':
+                year_value = time_value["year"]
+                season_value = time_value["seasonName"]
+                query_filter &= Q(season_name__icontains=season_value, year__exact=year_value) | Q(date__year__exact=year_value) | Q(start_date__year__exact=year_value) | Q(end_date__year__exact=year_value)
+            elif time_type == 'year_interval':
+                start_year = time_value["startYear"]
+                end_year = time_value["endYear"]
+                season_value = time_value["seasonName"]
+                query_filter &= Q(season_name__icontains=season_value, start_year__gte=start_year, end_year__lte=end_year) | Q(year__range=(start_year, end_year)) | Q(date__year__range=(start_year, end_year)) ##here can be change for now it shows greater than of that year
+            elif time_type == 'normal_date':
+
+                given_date = datetime.strptime(time_value["date"], "%Y-%m-%d")
+
+                # Calculate the date range
+                start_date = given_date - timedelta(days=date_diff+1)
+                end_date = given_date + timedelta(days=date_diff+1)
+                #print(start_date)
+                #print(end_date)
+                query_filter &= Q(date__range=(start_date, end_date)) ##I can change the date to get 2 dates for interval on normal_date too
+            elif time_type == 'interval_date':
+                query_filter &= Q(
+                    start_date__gte=time_value['startDate'],
+                    end_date__lte=time_value['endDate']
+                )
+            elif time_type == 'decade':
+                decade_value = time_value["decade"]
+                start_year = decade_value
+                end_year = decade_value + 9
+                query_filter &= Q(decade__exact=decade_value) | Q(year__range=(start_year, end_year)) | Q(date__year__range=(start_year, end_year)) | Q(start_date__year__range=(start_year, end_year)) | Q(end_date__year__range=(start_year, end_year))
+
+        stories = Story.objects.filter(query_filter)
+
+        if location != "null" and location != "":
+            location_point = GEOSGeometry(json.dumps(location), srid=4326)
+                # Transform the point to a projected coordinate system where units are meters (e.g., UTM)
+            utm_srid = 32633  # Example: UTM zone 33N SRID
+            location_point.transform(utm_srid)
+            logger.info(f"location_point: {location_point}")
+
+            radius = radius_diff * 1000  # Assuming radius_diff is in kilometers, convert to meters
+
+            # Create a search area (buffer) around the point using the correct units
+            search_area = location_point.buffer(radius)
+
+            # Transform the search area back to WGS 84 if necessary
+            search_area.transform(4326)
+
+            logger.info(f"search_area: {search_area}")
+
+            # Start with a base queryset for all locations
+            location_query = Q()
+
+            # Handle points
+            location_query |= Q(location_ids__point__intersects=search_area)
+
+            # Handle lines
+            location_query |= Q(location_ids__line__intersects=search_area)
+
+            # Handle polygons
+            location_query |= Q(location_ids__polygon__intersects=search_area)
+
+            # Apply the combined location query to the stories queryset
+
+
+                # Handle circles
+            for location in Location.objects.filter(circle__isnull=False):
+                circle_center = GEOSGeometry(location.circle, srid=4326)
+                circle_center.transform(utm_srid)
+                circle_area = circle_center.buffer(location.radius)
+                circle_area.transform(4326)
+                logger.info(f"circle_area: {circle_area}")
+                logger.info(f"search_area: {search_area}")
+                if circle_area.intersects(search_area):
+                    logger.info("circle_area intersects with (search_area)")
+                    location_query |= Q(location_ids__id=location.id)
+
+            stories = stories.filter(location_query)
+
+        if sort_field == 'extract_timestamp':
+            # Already handled by existing code
+            sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=(sort_type == 'desc'))
+        elif sort_field == 'creation_date':
+            # Sorting by creation_date
+            if sort_type == 'desc':
+                stories = stories.order_by('-creation_date')
+            else:
+                stories = stories.order_by('creation_date')
+            sorted_stories = stories
+        else:
+            # Default sorting if sort_field is not recognized
+            sorted_stories = sorted(stories, key=self.extract_timestamp, reverse=True)
+
+        serializer = StorySerializer(sorted_stories, many=True)
+
+        return Response({
+            'stories': serializer.data
+        }, status=status.HTTP_200_OK)
+
 
 class SendPasswordResetEmail(views.APIView):
     def post(self, request):
