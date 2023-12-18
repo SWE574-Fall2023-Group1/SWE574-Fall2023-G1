@@ -98,7 +98,7 @@ const LocationSearch = () => {
         {params.tag && <p><b>Tag: </b>{params.tag}</p>}
         {params.tag_label && <p><b>Tag Label: </b>{params.tag_label}</p>}
         {params.location && <p><b>Location: </b>{params.location}</p>}
-        {params.time_value && <p><b>Time Value: </b>{params.time_value}</p>}
+        {params.time_value && <p><b>Time Period: </b>{params.time_value}</p>}
         {/* Render other search parameters as needed */}
       </div>
     );
