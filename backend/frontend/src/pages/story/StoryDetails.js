@@ -113,7 +113,10 @@ function StoryDetails() {
         });
 
         // Navigate to the timeline screen with the stories data
-        navigate('/timeline', { state: { stories: response.data.stories } });
+        navigate('/timeline', { state:
+          { stories: response.data.stories, searchParams: {
+          location: location ? location.name : null
+        } } });
     } catch (error) {
         console.log(error);
     }
