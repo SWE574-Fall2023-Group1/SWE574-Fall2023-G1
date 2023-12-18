@@ -220,7 +220,7 @@ function CreateStory() {
 
     } catch (error) {
       console.error('Error submitting story:', error);
-      toast.error('Please fill all forms correctly');
+      toast.error('Please fill all fields correctly');
     }
   };
 
@@ -465,6 +465,7 @@ function CreateStory() {
           </div>
         </div>
         </div>
+        <ToastContainer position="bottom-right" autoClose={5000} />
     </div>
   );
 }
