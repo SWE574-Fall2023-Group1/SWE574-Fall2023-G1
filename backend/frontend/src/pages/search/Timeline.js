@@ -106,7 +106,7 @@ const LocationSearch = () => {
 
   return (
     <div>
-      <h2>TIMELINE!!!</h2>
+      <h2>Timeline of Memories</h2>
       {location.state && location.state.searchParams && renderSearchParams(location.state.searchParams)}
       <label className="switch">
         <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
