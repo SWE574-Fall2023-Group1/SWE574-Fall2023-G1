@@ -591,6 +591,7 @@ const parseLocation = (location) => {
           </div>
         </div>
         </div>
+        <ToastContainer position="bottom-right" autoClose={5000} />
     </div>
   );
 }
