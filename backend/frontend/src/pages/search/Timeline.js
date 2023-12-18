@@ -113,7 +113,7 @@ const LocationSearch = () => {
         <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
         <span className="slider round"></span>
       </label>
-      <span style={{ marginLeft: '10px' }}>
+      <span style={{ marginLeft: '10px', "vertical-align": "sub"}}>
         {isDescOrder ? 'Descending Order' : 'Ascending Order'}
       </span>
       <div className="timeline">
