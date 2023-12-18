@@ -346,6 +346,7 @@ const parseLocation = (location) => {
       navigate(`/story/${storyId}`);
     } catch (error) {
       console.error('Error submitting story:', error);
+      toast.error('Please fill all fields correctly');
     }
 };
 
