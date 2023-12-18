@@ -108,6 +108,7 @@ const LocationSearch = () => {
     <div>
       <h2>Timeline of Memories</h2>
       {location.state && location.state.searchParams && renderSearchParams(location.state.searchParams)}
+      <div style={{height: "2em"}}></div>
       <label className="switch">
         <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
         <span className="slider round"></span>
