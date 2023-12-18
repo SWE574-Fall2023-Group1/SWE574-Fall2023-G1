@@ -93,12 +93,12 @@ const LocationSearch = () => {
   const renderSearchParams = (params) => {
     return (
       <div className="search-params">
-        {params.title && <p>Title: {params.title}</p>}
-        {params.author && <p>Author: {params.author}</p>}
-        {params.tag && <p>Tag: {params.tag}</p>}
-        {params.tag_label && <p>Tag Label: {params.tag_label}</p>}
-        {params.location && <p>Location: {params.location}</p>}
-        {params.time_value && <p>Time Value: {params.time_value}</p>}
+        {params.title && <p><b>Title: </b>{params.title}</p>}
+        {params.author && <p><b>Author: </b>{params.author}</p>}
+        {params.tag && <p><b>Tag: </b>{params.tag}</p>}
+        {params.tag_label && <p><b>Tag Label: </b>{params.tag_label}</p>}
+        {params.location && <p><b>Location: </b>{params.location}</p>}
+        {params.time_value && <p><b>Time Value: </b>{params.time_value}</p>}
         {/* Render other search parameters as needed */}
       </div>
     );
