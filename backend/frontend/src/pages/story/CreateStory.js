@@ -220,6 +220,7 @@ function CreateStory() {
 
     } catch (error) {
       console.error('Error submitting story:', error);
+      toast.error('Please fill all forms correctly');
     }
   };
 
