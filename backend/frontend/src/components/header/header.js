@@ -28,8 +28,9 @@ import LocationSearch from "../../pages/search/Timeline";
 import SearchResults from "../../pages/search/SearchResults";
 import ActivityStream from "../../pages/activity/ActivityStream";
 import Recommendations from "../../pages/recom/Recommendations";
+import Button from '@mui/material/Button'
 
-function Header() {
+function Header({ toggleTheme }) {
   console.log("Rendering Header");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -98,6 +99,7 @@ function Header() {
                 <Link to="/recommendation" className="nav-item nav-link">
                   Recommendations
                 </Link>
+                <Button onClick={toggleTheme}>Toggle Theme</Button>
 
                 <>
                 <div className="nav-actions">
