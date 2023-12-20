@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography'; // For custom font styling
 import Box from '@mui/material/Box'; // For layout styling
 
-function TagSearch({ onTagSelect }) {
+function TagSearch({ onTagSelect, currentTheme }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [userLabel, setUserLabel] = useState('');
     const [selectedTag, setSelectedTag] = useState(null);
@@ -78,7 +78,7 @@ function TagSearch({ onTagSelect }) {
                 variant="outlined"
                 value={userLabel}
                 onChange={(e) => setUserLabel(e.target.value)}
-                style={{ marginTop: '10px', "background-color": "rgb(240, 240, 240)"}}
+                style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', marginTop: '10px', "background-color": "rgb(240, 240, 240)"}}
             />
             <Button onClick={handleAddTag} variant="contained" className="btn btn-primary middle" style={{ marginTop: '10px', borderRadius: 10, backgroundColor: "#7E49FF" }}>Add Tag</Button>
         </Box>

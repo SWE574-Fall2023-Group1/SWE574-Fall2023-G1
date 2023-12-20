@@ -15,7 +15,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import withAuth from '../../authCheck';
 
 
-function ActivityStream() {
+function ActivityStream({ currentTheme }) {
   const [activities, setActivities] = useState([]);
   const navigate = useNavigate();
 
@@ -187,11 +187,11 @@ function ActivityStream() {
 
   return (
     <Box sx={{ m: 'auto', maxWidth: '1200px', height: '100vh', padding: '10px' }}>
-      <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }} align="center" gutterBottom>
+      <h1 style={{fontFamily: "'Josefin Sans', sans-serif", color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} align="center" gutterBottom>
       Activity Stream
     </h1>
       {activities.length === 0 ? (
-        <Typography variant="subtitle1" align="center">
+        <Typography style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}variant="subtitle1" align="center">
           There is no activity.
         </Typography>
       ) : (

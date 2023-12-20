@@ -346,3 +346,15 @@ input[type="file"] {
   font-weight: bold; /* Makes the text bold */
   /* Add any additional styling you need here */
 }
+
+.h2 {
+  color: black;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: white;
+}
+
+.p {
+  color: black;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: white;
+}

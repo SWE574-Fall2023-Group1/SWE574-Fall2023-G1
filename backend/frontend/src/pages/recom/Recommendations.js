@@ -5,7 +5,7 @@ import styles from "./Recommendations.module.css"; // Make sure to create this C
 import locationIcon from "../../assets/images/location.png";
 import dateIcon from "../../assets/images/date.png";
 
-function Recommendations() {
+function Recommendations({ currentTheme }) {
   const [recommendedStories, setRecommendedStories] = useState([]);
   const navigate = useNavigate();
 
@@ -85,7 +85,7 @@ function Recommendations() {
 
   return (
     <div>
-      <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
+      <h1 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>
         Recommended for You
       </h1>
       {recommendedStories.map((recommendation) => {

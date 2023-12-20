@@ -8,7 +8,7 @@ import locationIcon from '../../assets/images/location.png'
 import dateIcon from '../../assets/images/date.png'
 
 
-function StoriesByFollowingsUsers() {
+function StoriesByFollowingsUsers({ currentTheme }) {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);

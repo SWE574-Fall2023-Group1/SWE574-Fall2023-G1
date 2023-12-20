@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './Timeline.css';
 import StoryDetailsBox from './StoryDetailsBox';
 
-const LocationSearch = () => {
+const LocationSearch = ({ currentTheme }) => {
 
   const [locationName, setLocationName] = useState('');
   const [locationStories, setLocationStories] = useState([]);
@@ -93,12 +93,12 @@ const LocationSearch = () => {
   const renderSearchParams = (params) => {
     return (
       <div className="search-params">
-        {params.title && <p>Title: {params.title}</p>}
-        {params.author && <p>Author: {params.author}</p>}
-        {params.tag && <p>Tag: {params.tag}</p>}
-        {params.tag_label && <p>Tag Label: {params.tag_label}</p>}
-        {params.location && <p>Location: {params.location}</p>}
-        {params.time_value && <p>Time Value: {params.time_value}</p>}
+        {params.title && <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Title: {params.title}</p>}
+        {params.author && <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Author: {params.author}</p>}
+        {params.tag && <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Tag: {params.tag}</p>}
+        {params.tag_label && <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Tag Label: {params.tag_label}</p>}
+        {params.location && <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Location: {params.location}</p>}
+        {params.time_value && <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Time Value: {params.time_value}</p>}
         {/* Render other search parameters as needed */}
       </div>
     );
@@ -106,13 +106,13 @@ const LocationSearch = () => {
 
   return (
     <div>
-      <h2>TIMELINE!!!</h2>
+      <h2 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Timeline of Memories</h2>
       {location.state && location.state.searchParams && renderSearchParams(location.state.searchParams)}
       <label className="switch">
         <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
         <span className="slider round"></span>
       </label>
-      <span style={{ marginLeft: '10px' }}>
+      <span style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', marginLeft: '10px' }}>
         {isDescOrder ? 'Descending Order' : 'Ascending Order'}
       </span>
       <div className="timeline">

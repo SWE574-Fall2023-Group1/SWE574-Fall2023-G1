@@ -98,7 +98,7 @@ function CommentSection({ comments, setComments}) {
 
   return (
     <div>
-      <h2>Comments</h2>
+      <h2 style={{ color: "gray"}}>Comments</h2>
       {comments.length > 0 ? (
         comments.map((comment) => (
           <div key={comment.id} className="comment-container">

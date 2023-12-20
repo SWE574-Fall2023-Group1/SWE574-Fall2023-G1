@@ -10,7 +10,7 @@ import tick from '../../assets/images/tick.png'
 import edit from '../../assets/images/edit.png'
 
 
-const UserProfile = () => {
+const UserProfile = ({ currentTheme }) => {
   const [user, setUser] = useState(null);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
   const [stories, setStories] = useState([]);
@@ -191,12 +191,12 @@ const capitalizeFirstLetter = (str) => {
       </div>
 
       <div className="center-section">
-        <div className="username">{user.username}</div>
+        <div style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} className="username">{user.username}</div>
       </div>
 
       <div className="right-section">
         <div className="follower-info">
-          <p>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
+          <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>{user.followers.length !== null ? user.followers.length : 'Loading...'} followers</p>
         </div>
           {profilePhotoUrl !== defaultProfilePhoto ? (
             <div className="photo-buttons">
@@ -260,11 +260,11 @@ const capitalizeFirstLetter = (str) => {
             <Button variant="contained" style={{ top: 100 }} type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
           </div>
         </div>
-      ) : (
+          ) : (
         <div>
 
           <br />
-          <h2>About Me</h2>
+          <h2 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>About Me</h2>
           <div className="custom-bio">
             <button type="button" className="edit-buttons" onClick={() => setIsEditingBio(true)}>
               <div className="edit-button">
@@ -281,14 +281,14 @@ const capitalizeFirstLetter = (str) => {
         </div>
       )}
       <br />
-      <h2>My Recent Stories</h2>
+      <h2 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>My Recent Stories</h2>
       {loading ? (
         <div>
-          <p>Loading stories...</p>
+          <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Loading stories...</p>
         </div>
       ) : stories.length === 0 ? (
         <div>
-          <p>No stories found.</p>
+          <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>No stories found.</p>
         </div>
       ) : (
         <div>
