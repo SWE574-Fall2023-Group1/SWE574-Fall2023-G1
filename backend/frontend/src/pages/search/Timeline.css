@@ -295,5 +295,7 @@ input:checked + .slider:before {
   margin-top: 20px;
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border-radius: 20px;
+  width: 70%;
+  margin: auto;
 }
