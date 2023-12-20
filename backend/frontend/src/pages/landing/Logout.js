@@ -17,18 +17,14 @@ function LogoutButton() {
   }
 
   return (
-<Button
-      variant="contained"
-      color="error"
-      style={{
-        position: 'absolute',
-        right: '10px',
-        fontFamily: "'Josefin Sans', sans-serif",
-      }}
-      onClick={handleLogoutClick}
-    >
-      Logout
-    </Button>  );
+    <Button
+        variant="contained"
+        color="error"
+        style={{fontWeight: "bold"}}
+        onClick={handleLogoutClick}
+        >Log Out
+    </Button>
+  );
 }
 
 export default LogoutButton;
