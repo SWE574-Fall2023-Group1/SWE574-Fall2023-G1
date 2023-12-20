@@ -58,6 +58,7 @@ function Header() {
 
   return (
     <Router>
+      <div className="container">
         <nav className="navbar">
             {!isLoggedIn && (
               <>
@@ -168,6 +169,7 @@ function Header() {
             )}
           </Routes>
         </LoadScriptNext>
+      </div>
     </Router>
   );
 }
