@@ -30,7 +30,7 @@ import ActivityStream from "../../pages/activity/ActivityStream";
 import Recommendations from "../../pages/recom/Recommendations";
 import Button from '@mui/material/Button'
 
-function Header({ toggleTheme }) {
+function Header({ toggleTheme, currentTheme }) {
   console.log("Rendering Header");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -60,7 +60,7 @@ function Header({ toggleTheme }) {
   return (
     <Router>
       <div className="container">
-        <nav className="navbar">
+        <nav className="navbar" style={{ backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>
           <div className="navbar-nav">
             {!isLoggedIn && (
               <>
