@@ -25,7 +25,10 @@ function App() {
 
   return (
     <ThemeProvider theme={currentTheme === 'default' ? theme : customTheme}>
-    <Header toggleTheme={toggleTheme}/>
+      {currentTheme === 'custom' && <div style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.8)', zIndex: 1}}></div>}
+      <div style={{ position: 'relative', zIndex: 2 }}> {/* this will ensure the content stays in front of the div */}
+        <Header toggleTheme={toggleTheme}/>
+      </div>
     </ThemeProvider>
   );
 }
