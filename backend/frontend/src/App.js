@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './components/header/header';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -13,11 +13,19 @@ const theme = createTheme({
   },
 });
 
+const customTheme = createTheme({
+});
+
 function App() {
+  const [currentTheme, setCurrentTheme] = useState('default'); // add a state variable for the current theme
+
+  const toggleTheme = () => { // add a function to toggle the theme
+    setCurrentTheme(currentTheme === 'default' ? 'custom' : 'default');
+  };
 
   return (
-    <ThemeProvider theme={theme}>
-    <Header/>
+    <ThemeProvider theme={currentTheme === 'default' ? theme : customTheme}>
+    <Header toggleTheme={toggleTheme}/>
     </ThemeProvider>
   );
 }
