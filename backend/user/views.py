@@ -30,6 +30,8 @@ from django.db.models import F
 import requests
 from .recomFunctions import *
 from django.db.models import Count
+from django.conf import settings
+
 
 logger = logging.getLogger('django')
 
@@ -605,21 +607,35 @@ class UserPhotoView(views.APIView):
 
     @swagger_auto_schema(request_body=UserPhotoSerializer)
     def put(self, request):
-
         cookie_value = request.COOKIES['refreshToken']
         try:
             user_id = decode_refresh_token(cookie_value)
         except:
             return Response({'success': False, 'msg': 'Unauthenticated'}, status=status.HTTP_401_UNAUTHORIZED)
-        user = get_object_or_404(User, pk=user_id)
-        if not isinstance(request.FILES.get('profile_photo'), InMemoryUploadedFile):
-            return Response({'success':False ,'msg': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = UserPhotoSerializer(user, data={'profile_photo': request.FILES['profile_photo']})
+        user = get_object_or_404(User, pk=user_id)
+
+        # Get the file from the request
+        uploaded_file = request.FILES.get('profile_photo')
+
+         # Check the file size against the limit in settings
+        max_size = getattr(settings, 'FILE_UPLOAD_MAX_MEMORY_SIZE', None)
+        logger.warning(f"maxsize {max_size}")
+        logger.warning(f"file {uploaded_file}")
+        logger.warning(f"filesize {uploaded_file.size}")
+        if max_size and uploaded_file.size > max_size:
+            return Response({'success': False, 'msg': 'File size exceeds limit'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if a file is provided
+        if not isinstance(uploaded_file, InMemoryUploadedFile):
+            return Response({'success': False, 'msg': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Proceed with the existing logic
+        serializer = UserPhotoSerializer(user, data={'profile_photo': uploaded_file})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({'success':False ,'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': False, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         cookie_value = request.COOKIES['refreshToken']
