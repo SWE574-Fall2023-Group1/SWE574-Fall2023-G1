@@ -58,9 +58,7 @@ function Header() {
 
   return (
     <Router>
-      <div className="container">
         <nav className="navbar">
-          <div className="navbar-nav">
             {!isLoggedIn && (
               <>
                 <Link to="/" className="nav-item nav-link">
@@ -80,7 +78,7 @@ function Header() {
                   <img
                     src={mainPhoto}
                     alt="Home Page"
-                    style={{ width: "50px"}}
+                    style={{ width: "100px"}}
                   />
                 </Link>
                 <Link to="/story_search" className="nav-item nav-link">
@@ -90,7 +88,7 @@ function Header() {
                   Create Memory
                 </Link>
                 <Link to="/user-profile" className="nav-item nav-link">
-                  User Profile
+                  Profile
                 </Link>
                 <Link to="/activity-stream" className="nav-item nav-link">
                   Activity Stream
@@ -98,20 +96,10 @@ function Header() {
                 <Link to="/recommendation" className="nav-item nav-link">
                   Recommendations
                 </Link>
-
-                <>
-                <div className="nav-actions">
-                      <div className="user-search-container">
-                        <UserSearch />
-                      </div>
-                      <div className="logout-container">
-                        <LogoutButton />
-                      </div>
-                  </div>
-                </>
+                <UserSearch />
+                <LogoutButton />
               </>
             )}
-          </div>
         </nav>
         <LoadScriptNext
           googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -180,7 +168,6 @@ function Header() {
             )}
           </Routes>
         </LoadScriptNext>
-      </div>
     </Router>
   );
 }
