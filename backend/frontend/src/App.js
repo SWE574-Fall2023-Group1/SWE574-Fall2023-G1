@@ -19,7 +19,7 @@ const customTheme = createTheme({
       main: '#ff9800',
     },
     secondary: {
-      main: '#f57c00', // Change this to your custom color
+      main: '#f57c00',
     },
     text: {
 
