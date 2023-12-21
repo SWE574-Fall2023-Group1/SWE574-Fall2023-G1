@@ -60,7 +60,7 @@ function Header({ toggleTheme, currentTheme }) {
   return (
     <Router>
       <div className="container">
-        <nav className="navbar" style={{ backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>>
+        <nav className="navbar" style={{ backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>
             {!isLoggedIn && (
               <>
                 <Link to="/" className="nav-item nav-link">
