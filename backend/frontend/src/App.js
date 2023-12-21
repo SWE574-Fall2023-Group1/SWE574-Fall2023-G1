@@ -13,19 +13,7 @@ const theme = createTheme({
   },
 });
 
-const customTheme = createTheme({
-  palette: {
-    primary: {
-      main: '#ff9800',
-    },
-    secondary: {
-      main: '#f57c00',
-    },
-    text: {
-
-    },
-  }
-});
+const customTheme = createTheme();
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState('default'); // add a state variable for the current theme
