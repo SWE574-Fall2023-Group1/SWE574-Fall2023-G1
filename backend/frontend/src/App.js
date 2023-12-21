@@ -30,7 +30,7 @@ const customTheme = createTheme({
 function App() {
   const [currentTheme, setCurrentTheme] = useState('default'); // add a state variable for the current theme
 
-  const toggleTheme = () => { // add a function to toggle the theme
+  const toggleTheme = () => {
     setCurrentTheme(currentTheme === 'default' ? 'custom' : 'default');
   };
 
