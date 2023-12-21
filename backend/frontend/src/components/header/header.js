@@ -60,8 +60,7 @@ function Header({ toggleTheme, currentTheme }) {
   return (
     <Router>
       <div className="container">
-        <nav className="navbar" style={{ backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>
-          <div className="navbar-nav">
+        <nav className="navbar" style={{ backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>>
             {!isLoggedIn && (
               <>
                 <Link to="/" className="nav-item nav-link">
@@ -82,7 +81,7 @@ function Header({ toggleTheme, currentTheme }) {
                   <img
                     src={mainPhoto}
                     alt="Home Page"
-                    style={{ width: "50px"}}
+                    style={{ width: "100px"}}
                   />
                 </Link>
                 <Link to="/story_search" className="nav-item nav-link">
@@ -92,7 +91,7 @@ function Header({ toggleTheme, currentTheme }) {
                   Create Memory
                 </Link>
                 <Link to="/user-profile" className="nav-item nav-link">
-                  User Profile
+                  Profile
                 </Link>
                 <Link to="/activity-stream" className="nav-item nav-link">
                   Activity Stream
@@ -101,20 +100,10 @@ function Header({ toggleTheme, currentTheme }) {
                   Recommendations
                 </Link>
                 <Button style={{ marginRight: "25px", backgroundColor: currentTheme === 'custom' ? 'orange' : 'purple', color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} onClick={toggleTheme}> {currentTheme === 'custom' ? 'Light Mode' : 'Dark Mode'} </Button>
-
-                <>
-                <div className="nav-actions">
-                      <div className="user-search-container">
-                        <UserSearch />
-                      </div>
-                      <div className="logout-container">
-                        <LogoutButton />
-                      </div>
-                  </div>
-                </>
+                <UserSearch />
+                <LogoutButton />
               </>
             )}
-          </div>
         </nav>
         <LoadScriptNext
           googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}

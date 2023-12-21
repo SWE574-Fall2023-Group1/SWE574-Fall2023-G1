@@ -81,9 +81,11 @@ function UserSearch() {
     borderRadius : 5,
     display: 'inline-flex',
     cursor: 'pointer', // Add this to make it look clickable
+    marginLeft: "10px",
+    marginRight: "10px",
   }}
 >
-  <div style={{ color: 'white', fontSize: 15, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '400', lineHeight: 22, wordWrap: 'break-word' }}>
+  <div style={{color: 'white', fontSize: 15, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '400', lineHeight: 22, wordWrap: 'break-word' }}>
     Search
   </div>
 </div>
