@@ -173,6 +173,7 @@ function CommentSection({ comments, setComments}) {
           onChange={(event) => setCommentText(event.target.value)}
           variant="outlined"
           fullWidth
+          style={{backgroundColor: "#ffffff", borderRadius: "10px"}}
         />
         <Button
           onClick={handleCommentSubmit}
