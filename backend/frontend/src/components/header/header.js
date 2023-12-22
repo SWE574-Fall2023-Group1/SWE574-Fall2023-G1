@@ -72,7 +72,7 @@ function Header({ toggleTheme, currentTheme }) {
                 <Link to="/login" className="nav-item nav-link">
                   Login
                 </Link>
-                <Button style={{ marginRight: "25px", backgroundColor: currentTheme === 'custom' ? 'orange' : 'purple', color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} onClick={toggleTheme}> {currentTheme === 'custom' ? 'Light Mode' : 'Dark Mode'} </Button>
+                <Button style={{ marginRight: "25px", backgroundColor: currentTheme === 'custom' ? 'orange' : 'purple', color:'#ffffff' }} onClick={toggleTheme}> {currentTheme === 'custom' ? 'Light Mode' : 'Dark Mode'} </Button>
               </>
             )}
             {isLoggedIn && (
@@ -99,7 +99,7 @@ function Header({ toggleTheme, currentTheme }) {
                 <Link to="/recommendation" className="nav-item nav-link">
                   Recommendations
                 </Link>
-                <Button style={{ marginRight: "25px", backgroundColor: currentTheme === 'custom' ? 'orange' : 'purple', color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} onClick={toggleTheme}> {currentTheme === 'custom' ? 'Light Mode' : 'Dark Mode'} </Button>
+                <Button style={{ marginRight: "25px", backgroundColor: currentTheme === 'custom' ? 'orange' : 'purple', color:'#ffffff' }} onClick={toggleTheme}> {currentTheme === 'custom' ? 'Light Mode' : 'Dark Mode'} </Button>
                 <UserSearch />
                 <LogoutButton />
               </>
