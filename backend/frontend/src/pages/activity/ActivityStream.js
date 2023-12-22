@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import StoryIcon from '@mui/icons-material/Article';
 import CommentIcon from '@mui/icons-material/Comment';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -22,7 +24,7 @@ function ActivityStream() {
       try {
         const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST_NAME}:8000/user/activities`, { withCredentials: true });
         // Filter out activities that have been viewed
-        const unviewedActivities = response.data.filter(activity => !activity.viewed);
+        const unviewedActivities = response.data.activity.filter(activity => !activity.viewed);
         setActivities(unviewedActivities);
       } catch (error) {
         console.error('Error fetching activities:', error);
@@ -88,9 +90,13 @@ function ActivityStream() {
     switch (activityType) {
       case 'story_liked':
         return '#FFFFFF';
+      case 'new_story':
+        return '#FFFFFF';
       case 'story_unliked':
         return '#FFFFFF';
       case 'new_commented_on_story':
+        return '#FFFFFF';
+      case 'new_comment_on_comment':
         return '#FFFFFF';
       case 'followed_user':
         return '#FFFFFF';
@@ -107,8 +113,12 @@ function ActivityStream() {
         return <FavoriteIcon color="error" />;
       case 'story_unliked':
         return <FavoriteIcon color="disabled" />;
-      case 'new_commented_on_story':
+      case 'new_commented_on_story' :
         return <CommentIcon color="info" />;
+      case 'new_comment_on_comment':
+        return <CommentIcon color="info" />;
+      case 'new_story':
+        return <StoryIcon color="success" />;
       case 'followed_user':
         return <PersonAddIcon color="success" />;
       case 'unfollowed_user':
@@ -121,17 +131,36 @@ function ActivityStream() {
   const categorizeActivities = () => {
     const categorized = {};
     activities.forEach(activity => {
-      const category = activity.activity_type;
+      let category = activity.activity_type;
+
+      // Combine 'new_commented_on_story' and 'new_comment_on_comment' into one category
+      if (category === 'new_commented_on_story' || category === 'new_comment_on_comment') {
+        category = 'comments';
+      }
+
       if (!categorized[category]) {
         categorized[category] = [];
       }
       categorized[category].push(activity);
     });
-    return categorized;
+
+    // Define the order in which categories should be displayed
+    const categoryOrder = ['followed_user', 'unfollowed_user', 'new_story', 'story_liked', 'story_unliked', 'comments'];
+
+    // Sort the activities based on the defined order
+    const sortedCategorized = {};
+    categoryOrder.forEach(category => {
+      if (categorized[category]) {
+        sortedCategorized[category] = categorized[category];
+      }
+    });
+
+    return sortedCategorized;
   };
 
+
   const renderList = (category, activities) => (
-    <Grid item xs={12} sm={6} md={2} key={category}>
+    <Grid item xs={10} sm={6} md={2} key={category}>
       <Box>
         {activities.length > 0 && (
           <Typography variant="h6" gutterBottom>
@@ -158,9 +187,9 @@ function ActivityStream() {
 
   return (
     <Box sx={{ m: 'auto', maxWidth: '1200px', height: '100vh', padding: '10px' }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Activity Stream
-      </Typography>
+      <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }} align="center" gutterBottom>
+      Activity Stream
+    </h1>
       {activities.length === 0 ? (
         <Typography variant="subtitle1" align="center">
           There is no activity.

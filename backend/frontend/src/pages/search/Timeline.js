@@ -24,9 +24,15 @@ const LocationSearch = () => {
   useEffect(() => {
     if (location.state && location.state.stories) {
       setLocationStories(location.state.stories);
+      // Check if search parameters are available
+      if (location.state.searchParams) {
+        const params = location.state.searchParams;
+        // Display search parameters
+        // Example: setTitleSearch(params.title);
+        // You can store these in state or directly display them
+      }
     } else {
-      // Handle case when no stories are passed
-      // Redirect back or show a message, etc.
+      // Handle the case when no stories or parameters are passed
     }
   }, [location.state]);
 
@@ -82,15 +88,32 @@ const LocationSearch = () => {
     const match = htmlContent.match(imgRegex);
     return match ? match[1] : null;
   };
+  console.log("params",location.state.searchParams)
+
+  const renderSearchParams = (params) => {
+    return (
+      <div className="search-params">
+        {params.title && <p><b>Title: </b>{params.title}</p>}
+        {params.author && <p><b>Author: </b>{params.author}</p>}
+        {params.tag && <p><b>Tag: </b>{params.tag}</p>}
+        {params.tag_label && <p><b>Tag Label: </b>{params.tag_label}</p>}
+        {params.location && <p><b>Location: </b>{params.location}</p>}
+        {params.time_value && <p><b>Time Period: </b>{params.time_value}</p>}
+        {/* Render other search parameters as needed */}
+      </div>
+    );
+  };
 
   return (
     <div>
-      <h2>TIMELINE!!!</h2>
+      <h2>Timeline of Memories</h2>
+      {location.state && location.state.searchParams && renderSearchParams(location.state.searchParams)}
+      <div style={{height: "2em"}}></div>
       <label className="switch">
         <input type="checkbox" checked={!isDescOrder} onChange={toggleOrder} />
         <span className="slider round"></span>
       </label>
-      <span style={{ marginLeft: '10px' }}>
+      <span style={{ marginLeft: '10px', "vertical-align": "sub"}}>
         {isDescOrder ? 'Descending Order' : 'Ascending Order'}
       </span>
       <div className="timeline">

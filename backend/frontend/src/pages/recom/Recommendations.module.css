@@ -19,7 +19,7 @@
 
   .storyTitle {
     color: var(--gray-700, #323539);
-    font-family: Inter;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 18px;
     font-weight: 500;
     line-height: 30px;
@@ -37,7 +37,7 @@
     text-align: left;
     color: var(--text-icons-light-base-main, #323539);
     /* Text L / Semibold */
-    font-family: Inter;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -49,7 +49,7 @@
     color: var(--gray-50, var(--gray-50, #858C95));
     text-align: right;
     /* Text S / Medium */
-    font-family: Inter;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -59,7 +59,7 @@
 
   .storyDescription {
     color: #323539;
-    font-family: Inter;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 14px;
     margin-top: 1rem;
     line-height: 1.5;
@@ -68,7 +68,7 @@
   /* Additional styles for other elements can be added here */
   .dateAndLocation{
     color: #AFB4B7;
-    font-family: Inter;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
@@ -86,7 +86,7 @@
     /* Reuse styles from StoriesByFollowingUsers.css */
     color: var(--gray-50, #858C95);
     text-align: right;
-    font-family: Inter;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;

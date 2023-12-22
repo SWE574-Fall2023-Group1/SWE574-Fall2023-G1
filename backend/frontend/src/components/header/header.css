@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+
 .App {
     text-align: center;
   }
@@ -22,49 +24,34 @@
     color: #61dafb;
   }
 
-  .container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    text-align: center;
-    /* overflow-x: hidden; */
-  }
-
   .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #8E8A8A;;
-    padding: 1rem;
+    padding: 10px;
     max-width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-items: stretch;
   }
 
-  .navbar-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-
-.nav-link {
+  .nav-link {
     position: relative;
     margin-right: 1rem;
     text-decoration: none;
     font-size: 1.1rem;
     color: #FFFFFF;
-    padding: 0.25rem 1rem;
-    border-radius: 3px;
+    border-radius: 10px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    /* Text Button / Semibold Large */
-    font-family: Inter;
-    font-size: 17px;
-    font-style: normal;
+
+    /* Use Josefin Sans */
+    font-family: 'Josefin Sans', sans-serif;
     font-weight: 600;
-    line-height: 22px; /* 146.667% */
+    line-height: 30px; /* 146.667% */
   }
+
 
   .nav-link::before {
   content: '';
@@ -73,13 +60,13 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: #61dafb;
+  background-color: #7E49FF;
   transition: all 0.3s ease;
   transform: translateX(-50%);
 }
 
 .nav-link:hover {
-  color: #61dafb;
+  color: #b9fff8;
   background-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -115,25 +102,20 @@
     /* background-image: url('https://i.gifer.com/1luB.gif'); */
     /* background-image: url('https://i.gifer.com/930Z.gif'); */
     /* background-image: url('https://64.media.tumblr.com/fd5267ff1121b0d3eb331a2bf831f0de/tumblr_meols6ozIo1qg39ewo1_500.gifv'); */
-    background-image: url('https://media.tenor.com/NH_dhrT0B6MAAAAC/white-aesthetic.gif');
+    background-image: url('https://i.imgur.com/cEZJn6s.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
   }
 
-  .nav-actions {
-    display: flex;
-    align-items: normal;
-  }
-
-
-
   .user-search-container {
     flex-grow: 1; /* Takes up available space on the left */
-    margin-left: auto
+    margin-left: auto;
+    font-family: 'Josefin Sans', sans-serif;
   }
 
-  .logout-container {
-    margin-left: auto; /* Pushes LogoutButton to the right */
-  }
+.container {
+  align-items: center;
+  text-align: center;
+}
