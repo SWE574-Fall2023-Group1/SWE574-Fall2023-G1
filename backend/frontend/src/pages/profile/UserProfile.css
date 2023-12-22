@@ -190,30 +190,43 @@ input[type="file"] {
 }
 
 .custom-bio {
-  padding: spacing(2);
-  margin: 'auto';
-  width: -moz-fit-content;
+  margin: 65px auto 0;
   width: 600px;
   height: 200px;
   padding: 1rem;
   position: relative;
-  text-align: 'center';
-  /* justify-content: center; */
-  /* align-items: center; */
-  margin: 0 auto;
-  /* overflow-y: auto; */
-  text-Align: left;
+  text-align: 'left';
   background-color: white;
   text-decoration-color: #323539;
   font-family: 'Josefin Sans', sans-serif;
   font-size: 15px;
   font-style: normal;
-  font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.13px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 14px;
   border: 0.5px #F2F1F1 solid;
+  word-wrap: break-word; /* Wrap the text */
+
+}
+.edit-box .MuiOutlinedInput-root {
+  background-color: white;
+  width:633px;
+  height:233px;
+  margin: 50px auto 0;
+  padding: 1rem;
+  overflow-y: auto;
+  text-align: 'left';
+  background-color: white;
+  text-decoration-color: #323539;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 15px;
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: -0.13px;
+  border-radius: 14px;
+  border: 0.5px #F2F1F1 solid;
+  position:relative;
 }
 
 .custom-bio p {
@@ -238,27 +251,16 @@ input[type="file"] {
 }
 
 .edit-box {
-  margin: auto;
-  width: 700px;
-  height: 100px;
   padding: 0 30px;
-  text-align: 'center';
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  margin-top: 100px;
 }
 
-.edit-box .MuiOutlinedInput-root {
-  background-color: white;
-}
 
 .edit-buttons {
   position: absolute;
   bottom: 10px; /* Adjust as per your design */
   right: 10px;  /* Adjust as per your design */
   cursor: pointer;
-  font-family: Roboto;
+  font-family: 'Josefin Sans', sans-serif;
   font-size: 13px;
   font-weight: 400;
   line-height: normal;
@@ -312,6 +314,7 @@ input[type="file"] {
   position: relative;
   margin: 0 auto;
   top: 30px;
+
 }
 
 .left-section {
