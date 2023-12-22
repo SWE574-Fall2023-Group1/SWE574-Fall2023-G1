@@ -59,7 +59,7 @@ function Header() {
   return (
     <Router>
       <div className="container">
-        <nav className="navbar">
+        <nav className="navbar" style={{justifyContent: isLoggedIn ? "space-between" : "start"}}>
             {!isLoggedIn && (
               <>
                 <Link to="/" className="nav-item nav-link">
