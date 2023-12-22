@@ -45,6 +45,8 @@
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    padding-right: 10px;
+    padding-left: 10px;
 
     /* Use Josefin Sans */
     font-family: 'Josefin Sans', sans-serif;
