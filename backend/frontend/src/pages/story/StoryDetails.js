@@ -422,7 +422,7 @@ useEffect(() => {
                 <>
                   <div className="storydetail-story-map">
                     <GoogleMap
-                      mapContainerStyle={{ "border-style": "solid", "border-radius": '10px', height: "400px", width: "80%" }}
+                      mapContainerStyle={{ "border-style": "solid", "border-radius": '10px', height: "400px", width: "80%", marginTop: "20px"}}
                       zoom={2}
                       center={{
                         lat: 0,
