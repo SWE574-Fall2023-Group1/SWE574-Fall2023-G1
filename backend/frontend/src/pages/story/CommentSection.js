@@ -129,13 +129,13 @@ function CommentSection({ comments, setComments}) {
       )}
       {comments.length > 0 && (
       <div className="pagination">
-        <Button
+        {(hasPrevPage) && <Button
           variant="contained"
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={!hasPrevPage}
         >
           Previous
-        </Button>
+        </Button>}
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
             variant="contained"
@@ -146,13 +146,13 @@ function CommentSection({ comments, setComments}) {
             {index + 1}
           </Button>
         ))}
-        <Button
+        {(hasNextPage) && <Button
           variant="contained"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={!hasNextPage}
         >
           Next
-        </Button>
+        </Button>}
       </div>
       )}
       <Box

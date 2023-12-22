@@ -174,9 +174,9 @@ function StoriesByFollowingsUsers({ currentTheme }) {
         ))
       )}
       <div className={styles.pagination}>
-        <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
+        {(hasPrevPage) && <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
           Previous
-        </Button>
+        </Button>}
         {Array.from({ length: totalPages }, (_, index) => (
           <Button variant="contained"
             key={index}
@@ -186,9 +186,9 @@ function StoriesByFollowingsUsers({ currentTheme }) {
             {index + 1}
           </Button>
         ))}
-        <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
+        {(hasNextPage) && <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
           Next
-        </Button>
+        </Button>}
       </div>
     </div>
   );
