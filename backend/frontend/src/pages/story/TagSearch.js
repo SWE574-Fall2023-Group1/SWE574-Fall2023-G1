@@ -81,6 +81,7 @@ function TagSearch({ onTagSelect, currentTheme }) {
                 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', marginTop: '10px', "background-color": "rgb(240, 240, 240)"}}
             />
             <Button onClick={handleAddTag} variant="contained" className="btn btn-primary middle" style={{ marginTop: '10px', borderRadius: 10, backgroundColor: "#7E49FF" }}>Add Tag</Button>
+            <br/>
         </Box>
     );
 }
