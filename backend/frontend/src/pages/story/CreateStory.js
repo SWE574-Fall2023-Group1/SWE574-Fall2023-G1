@@ -224,9 +224,9 @@ function CreateStory({ currentTheme }) {
 
   return (
     <div>
-<h1 className="big-heading" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>
-      {postHeader}
-    </h1>
+      <h1 className="big-heading" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>
+        {postHeader}
+      </h1>
     <div className='create-story-container'>
       <div className="create-story-content">
         <div className="formBackground">
@@ -452,7 +452,7 @@ function CreateStory({ currentTheme }) {
                 />
           </div>
           <br/>
-          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
+          <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "8px 16px", fontSize: "16px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
           <br/>
           <br/>
           <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} >You can edit your memory as many times as you want after posting.</text>

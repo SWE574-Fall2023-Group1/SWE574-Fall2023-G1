@@ -60,7 +60,7 @@ function Header({ toggleTheme, currentTheme }) {
   return (
     <Router>
       <div className="container">
-        <nav className="navbar" style={{ backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>
+        <nav className="navbar" style={{ justifyContent: isLoggedIn ? "space-between" : "start", backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>
             {!isLoggedIn && (
               <>
                 <Link to="/" className="nav-item nav-link">
@@ -116,11 +116,12 @@ function Header({ toggleTheme, currentTheme }) {
                 <Route
                   path="/"
                   element={
+
                     <div className="home-container">
                       <img
                         src={mainPhoto}
                         alt="Memories"
-                        style={{ width: "1000px", height: "auto", maxWidth : "100%" }}
+                        style={{ margin: "10%", width: "1000px", height: "auto", maxWidth : "100%" }}
                       />
                     </div>
                   }
