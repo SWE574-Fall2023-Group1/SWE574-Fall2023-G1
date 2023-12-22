@@ -142,27 +142,63 @@ def is_location_related(story1, story2, radius_diff=5):
 
 def is_time_related(story1, story2, date_diff=timedelta(days=2)):
     # Logic adapted from your SearchStoryView
-    def build_time_query(story):
-        query = Q()
-        if story.date_type == 'season':
-            query &= Q(season_name__icontains=story.season_name)
-        elif story.date_type == 'year':
-            query &= Q(season_name__icontains=story.season_name, year__exact=story.year)
-        elif story.date_type == 'year_interval':
-            query &= Q(season_name__icontains=story.season_name, start_year__gte=story.start_year, end_year__lte=story.end_year)
-        elif story.date_type == 'normal_date':
-            start_date = story.date - date_diff
-            end_date = story.date + date_diff
-            query &= Q(date__range=(start_date, end_date))
-        elif story.date_type == 'interval_date':
-            query &= Q(start_date__gte=story.start_date, end_date__lte=story.end_date)
-        elif story.date_type == 'decade':
-            start_year = story.decade
-            end_year = story.decade + 9
-            query &= Q(decade__exact=story.decade) | Q(year__range=(start_year, end_year))
-        return query
+    def build_time_query(story, date_diff):
+        query_filter = Q()
+        time_type = story.date_type
 
-    time_query = build_time_query(story1)
+        if story.season_name:
+            season_name = story.season_name
+            query_filter &= Q(season_name__icontains=season_name)
+
+        if time_type == 'year':
+            year_value = story.year
+            query_filter &= (Q(date__year__exact=year_value) |
+                            Q(start_date__year__exact=year_value) |
+                            Q(end_date__year__exact=year_value))
+
+        elif time_type == 'year_interval':
+            start_year = story.start_year
+            end_year = story.end_year
+            query_filter &= (Q(start_year__gte=start_year, end_year__lte=end_year) |
+                            Q(year__range=(start_year, end_year)) |
+                            Q(date__year__range=(start_year, end_year)))
+        elif time_type == 'normal_date':
+            if isinstance(story.date, datetime):
+                given_date = story.date
+            else:
+                # If it's a string, parse it into a datetime object
+                given_date = datetime.strptime(story.date, "%Y-%m-%d")
+            start_date = given_date - timedelta(days=date_diff)
+            end_date = given_date + timedelta(days=date_diff)
+            query_filter &= Q(date__range=(start_date, end_date))
+        elif time_type == 'interval_date':
+            if isinstance(story.start_date, datetime):
+                start_date = story.start_date
+            else:
+                # If it's a string, parse it into a datetime object.
+                start_date = datetime.strptime(story.start_date, "%Y-%m-%d")
+
+            # Check if 'story.end_date' is a datetime object, and use it directly if so.
+            if isinstance(story.end_date, datetime):
+                end_date = story.end_date
+            else:
+                # If it's a string, parse it into a datetime object.
+                end_date = datetime.strptime(story.end_date, "%Y-%m-%d")
+
+            query_filter &= Q(start_date__gte=start_date, end_date__lte=end_date)
+        elif time_type == 'decade':
+            decade_value = story.decade
+            start_year = decade_value
+            end_year = decade_value + 9
+            query_filter &= (Q(decade__exact=decade_value) |
+                            Q(year__range=(start_year, end_year)) |
+                            Q(date__year__range=(start_year, end_year)) |
+                            Q(start_date__year__range=(start_year, end_year)) |
+                            Q(end_date__year__range=(start_year, end_year)))
+
+        return query_filter
+
+    time_query = build_time_query(story1,2)
 
     return Story.objects.filter(time_query).filter(id=story2.id).exists()
 
