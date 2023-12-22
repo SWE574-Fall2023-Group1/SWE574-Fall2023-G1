@@ -113,11 +113,12 @@ function Header() {
                 <Route
                   path="/"
                   element={
+
                     <div className="home-container">
                       <img
                         src={mainPhoto}
                         alt="Memories"
-                        style={{ width: "1000px", height: "auto", maxWidth : "100%" }}
+                        style={{ margin: "10%", width: "1000px", height: "auto", maxWidth : "100%" }}
                       />
                     </div>
                   }
