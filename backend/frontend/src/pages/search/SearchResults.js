@@ -103,7 +103,7 @@ const SearchResults = ({ currentTheme }) => {
           <Button
             variant="contained"
             key={index}
-            className={index + 1 === currentPage ? styles.activePageButton : styles.pageButton}
+            className={index + 1 === currentPage ? styles.active : null}
             onClick={() => handlePageChange(index + 1)}
           >
             {index + 1}
