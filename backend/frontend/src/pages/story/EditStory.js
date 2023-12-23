@@ -390,7 +390,7 @@ const parseLocation = (location) => {
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
-                    style={{"background-color": "rgb(240, 240, 240)"}}
+                    style={{margin: "1px", "background-color": "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
