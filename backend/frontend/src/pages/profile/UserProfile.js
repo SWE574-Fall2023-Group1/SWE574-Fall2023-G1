@@ -239,6 +239,7 @@ const capitalizeFirstLetter = (str) => {
     </div>
       {isEditingBio ? (
         <div>
+           <h2>About Me</h2>
           <div className="edit-box">
             <TextField
               value={updatedBio}
@@ -252,18 +253,15 @@ const capitalizeFirstLetter = (str) => {
                   setUpdatedBio((prev) => prev + '\n');
                 }
               }}
-              InputProps={{ className: 'edit-box' }}
             />
           </div>
           <div>
-            <Button variant="contained" style={{ top: 100 }} color='success' type="button" onClick={handleProfileBioChange}>Save</Button>
-            <Button variant="contained" style={{ top: 100 }} type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
+            <Button variant="contained" color='success' type="button" onClick={handleProfileBioChange}>Save</Button>
+            <Button variant="contained"  type="button" onClick={() => setIsEditingBio(false)}>Cancel</Button>
           </div>
         </div>
       ) : (
         <div>
-
-          <br />
           <h2>About Me</h2>
           <div className="custom-bio">
             <button type="button" className="edit-buttons" onClick={() => setIsEditingBio(true)}>
