@@ -480,6 +480,7 @@ const StoryMap = ({ currentTheme, mapContainerStyle, initialCenter, zoom, apiKey
               size="small"
               color="primary"
               onClick={() => (editingIndex === index ? handleSaveClick(index) : handleEditClick(index))}
+              style={{ marginRight: "10px" }}
             >
               {editingIndex === index ? 'Save' : 'Edit'}
             </Button>
