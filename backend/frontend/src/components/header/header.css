@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
 
-
 .App {
     text-align: center;
   }
@@ -25,30 +24,16 @@
     color: #61dafb;
   }
 
-  .container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    text-align: center;
-    /* overflow-x: hidden; */
-  }
-
   .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #8E8A8A;;
-    padding: 1rem;
+    padding: 10px;
     max-width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-items: stretch;
   }
-
-  .navbar-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
 
   .nav-link {
     position: relative;
@@ -56,11 +41,12 @@
     text-decoration: none;
     font-size: 1.1rem;
     color: #FFFFFF;
-    padding: 0.25rem 1rem;
     border-radius: 10px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    padding-right: 10px;
+    padding-left: 10px;
 
     /* Use Josefin Sans */
     font-family: 'Josefin Sans', sans-serif;
@@ -125,19 +111,13 @@
     background-attachment: fixed;
   }
 
-  .nav-actions {
-    display: flex;
-    align-items: normal;
-  }
-
-
-
   .user-search-container {
     flex-grow: 1; /* Takes up available space on the left */
     margin-left: auto;
     font-family: 'Josefin Sans', sans-serif;
   }
 
-  .logout-container {
-    margin-left: auto; /* Pushes LogoutButton to the right */
-  }
+.container {
+  align-items: center;
+  text-align: center;
+}
