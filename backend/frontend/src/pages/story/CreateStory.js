@@ -449,6 +449,7 @@ function CreateStory({ currentTheme }) {
                   onAddLocation={handleAddLocation}
                   onRemoveLocation={handleRemoveLocation}
                   onUpdateLocations={handleUpdateLocations}
+                  currentTheme={currentTheme}
                 />
           </div>
           <br/>

@@ -582,6 +582,7 @@ const parseLocation = (location) => {
                     onAddLocation={handleAddLocation}
                     onRemoveLocation={handleRemoveLocation}
                     onUpdateLocations={handleUpdateLocations}
+                    currentTheme={currentTheme}
                 />
           </div>
           <br/>
