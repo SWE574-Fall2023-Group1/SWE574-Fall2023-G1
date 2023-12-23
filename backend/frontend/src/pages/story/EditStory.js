@@ -500,10 +500,12 @@ const parseLocation = (location) => {
                   onChange={(e) => setDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                     />
                   }
                   label="Include time"
@@ -531,10 +533,12 @@ const parseLocation = (location) => {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                     />
                   }
                   label="Include time"

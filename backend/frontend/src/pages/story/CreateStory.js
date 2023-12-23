@@ -370,8 +370,10 @@ function CreateStory({ currentTheme }) {
                   onChange={(e) => setDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
                     />
@@ -399,8 +401,10 @@ function CreateStory({ currentTheme }) {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
                     />
