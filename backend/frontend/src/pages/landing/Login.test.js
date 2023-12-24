@@ -5,10 +5,10 @@ import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 import Login from './Login';
 
-// Mock Axios
+
 jest.mock('axios');
 
-// Mock react-router-dom
+
 jest.mock('react-router-dom', () => {
   const originalModule = jest.requireActual('react-router-dom');
 
@@ -30,7 +30,7 @@ describe('Login component', () => {
       </MemoryRouter>
     );
     expect(screen.getByText('Every Memory Counts:')).toBeInTheDocument();
-    // ... rest of your assertions
+
   });
 
   test('calls axios.post with correct credentials on form submission', async () => {
