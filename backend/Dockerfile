@@ -18,7 +18,7 @@ RUN : \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir -qU pip \
     && pip install --no-cache-dir -qr requirements.txt \
     && python -m nltk.downloader punkt averaged_perceptron_tagger wordnet stopwords \
     && :
