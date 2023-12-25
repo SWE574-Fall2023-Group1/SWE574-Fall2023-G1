@@ -6,7 +6,8 @@ from django.contrib.gis.geos import Point, LineString
 from unittest.mock import patch
 from rest_framework.test import APITestCase, APIClient
 from .authentication import create_refresh_token, decode_refresh_token  # Adjust the import based on your actual token creation method
-
+import json
+from datetime import datetime
 
 class UserRegistrationTest(APITestCase):
     def test_user_registration(self):
@@ -218,3 +219,221 @@ class StoryDetailViewTest(APITestCase):
         url = reverse('get_story', kwargs={'pk': 99999})  # An unlikely ID
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class UserLogoutTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='logouttest', email='logouttest@example.com', password='testpassword')
+        self.refresh_token = create_refresh_token(self.user.id)
+        self.client.cookies['refreshToken'] = self.refresh_token
+        self.client.force_authenticate(user=self.user)
+
+    def test_user_logout(self):
+        url = reverse('user_logout')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # Check if 'refreshToken' is set to an empty string, indicating deletion
+        self.assertEqual(response.cookies.get('refreshToken').value, '')
+
+
+class FollowUserViewTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='follower', email='follower@example.com', password='testpassword')
+        self.target_user = User.objects.create_user(username='targetuser', email='targetuser@example.com', password='testpassword')
+        self.refresh_token = create_refresh_token(self.user.id)
+        self.client.cookies['refreshToken'] = self.refresh_token
+        self.client.force_authenticate(user=self.user)
+
+    def test_follow_user(self):
+        url = reverse('follow_user', kwargs={'id': self.target_user.id})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['msg'], 'Followed')
+
+class UserDetailsViewTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='detailviewuser', email='detailviewuser@example.com', password='testpassword')
+        self.refresh_token = create_refresh_token(self.user.id)
+        self.client.cookies['refreshToken'] = self.refresh_token
+        self.client.force_authenticate(user=self.user)
+
+    def test_get_user_details(self):
+        url = reverse('user_details')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], self.user.username)
+
+class UserBiographyUpdateTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='biographer', email='bio@example.com', password='testpassword')
+        self.refresh_token = create_refresh_token(self.user.id)  # Create a JWT refresh token
+        self.client.cookies['refreshToken'] = self.refresh_token  # Set the refresh token in the cookies
+        self.client.force_authenticate(user=self.user)  # Authenticate the user for this test
+
+    def test_update_user_biography(self):
+        url = reverse('user_bio')  # The URL name for updating the biography
+        new_biography = "This is the new biography."
+        data = {'biography': new_biography}
+        response = self.client.put(url, data, format='json')
+
+        # Print response data for debugging
+        print("Response Data:", response.data)
+        print("Response Status Code:", response.status_code)
+
+        # Adjust the expected status code if necessary
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Expecting a 200 OK response
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.biography, new_biography)  # Confirm the biography was updated correctly
+
+
+class ActivityStreamViewTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='activeuser', email='active@example.com', password='testpassword')
+        self.refresh_token = create_refresh_token(self.user.id)  # Create a JWT refresh token
+        self.client.cookies['refreshToken'] = self.refresh_token  # Set the refresh token in the cookies
+        self.client.force_authenticate(user=self.user)  # Authenticate the user for this test
+
+    def test_activity_stream(self):
+        url = reverse('activity-stream')  # The URL name for the activity stream endpoint
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Expecting a 200 OK response
+        # Assuming the response data structure is a list of activities under a key
+        self.assertIsInstance(response.data.get('activity'), list)  # Confirm the data structure
+        # Add more assertions here as necessary, depending on the structure of your activity data
+
+class WikidataSearchViewTest(APITestCase):
+    def test_wikidata_search(self):
+        url = reverse('wikidata_search')  # Update with your actual URL name
+        response = self.client.get(url, {'query': 'test'})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertGreater(len(response.data['tags']), 0)  # Check that tags are returned
+
+
+class SearchStoryViewTest(APITestCase):
+    def setUp(self):
+        # Set up data and authenticate as needed
+        self.user = User.objects.create_user(username='searcher', email='searcher@example.com', password='testpassword')
+        self.author = User.objects.create_user(username='author', email='author@example.com', password='testpassword')
+
+        # Create tags and locations
+        self.tag_adventure = Tag.objects.create(name='Adventure', wikidata_id='Q123', description='Adventure genre', label='Adventure')
+        self.tag_history = Tag.objects.create(name='History', wikidata_id='Q456', description='Historical genre', label='History')
+        self.location_mountain = Location.objects.create(name="Mountain", point=Point(10, 50))
+        self.location_sea = Location.objects.create(name="Sea", line=LineString((0, 0), (5, 5)))
+
+        # Create stories with appropriate date and date_type
+        self.story1 = Story.objects.create(
+            author=self.author,
+            title='Adventure in the Mountains',
+            content='Story content about mountains',
+            date_type=Story.NORMAL_DATE,
+            date=datetime(2020, 1, 1)
+        )
+        self.story2 = Story.objects.create(
+            author=self.author,
+            title='History of the Seas',
+            content='Story content about seas',
+            date_type=Story.NORMAL_DATE,
+            date=datetime(2021, 1, 1)
+        )
+
+        # Add tags and locations to the stories
+        self.story1.story_tags.add(self.tag_adventure)
+        self.story1.location_ids.add(self.location_mountain)
+        self.story2.story_tags.add(self.tag_history)
+        self.story2.location_ids.add(self.location_sea)
+
+        # Authenticate
+        self.refresh_token = create_refresh_token(self.user.id)
+        self.client.cookies['refreshToken'] = self.refresh_token
+        self.client.force_authenticate(user=self.user)
+
+    def test_search_story_with_location(self):
+        # URL for SearchStoryView (adjust as necessary)
+        url = reverse('search_story')
+
+        # Define the location as a point (adjust coordinates as necessary)
+        location = {
+        "type": "Point",
+        "coordinates": [10, 50]  # Adjust as necessary
+        }
+        radius_diff = 10  # Adjust as necessary
+
+        search_params = {
+            'location': json.dumps(location),  # Serialize the location dictionary
+            'radius_diff': radius_diff,
+            'title': 'Adventure'
+        }
+
+        # Make the request and assert the response
+        response = self.client.get(url, search_params, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check that the correct story is returned based on location and title
+        self.assertIn('Adventure in the Mountains', [story['title'] for story in response.data['stories']])
+
+    def test_search_story_with_title(self):
+        # URL for SearchStoryView
+        url = reverse('search_story')
+
+        # Define the search parameters for the title
+        search_params = {
+            'title': 'Adventure in the Mountains'
+        }
+
+        # Make the request and assert the response
+        response = self.client.get(url, search_params, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('Adventure in the Mountains', [story['title'] for story in response.data['stories']])
+
+    def test_search_story_with_author(self):
+        # URL for SearchStoryView
+        url = reverse('search_story')
+
+        # Define the search parameters for the author's username
+        search_params = {
+            'author': 'author'
+        }
+
+        # Make the request and assert the response
+        response = self.client.get(url, search_params, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check if all returned stories are authored by the expected author ID
+        expected_author_id = self.author.id  # or however you retrieve the expected author ID
+        self.assertTrue(all(story['author'] == expected_author_id for story in response.data['stories']))
+
+
+    def test_search_story_with_tag(self):
+        # URL for SearchStoryView
+        url = reverse('search_story')
+
+        # Define the search parameters for the tag's wikidata ID
+        search_params = {
+            'tag': 'Q123'  # Wikidata ID for the 'Adventure' tag
+        }
+
+        # Make the request and assert the response
+        response = self.client.get(url, search_params, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check if any stories returned include the tag with the specified wikidata ID
+        self.assertTrue(any('Q123' in [tag['wikidata_id'] for tag in story.get('story_tags', [])] for story in response.data['stories']))
+
+
+    def test_search_story_not_found(self):
+        # URL for SearchStoryView (adjust as necessary)
+        url = reverse('search_story')
+
+        # Define search parameters that won't match any story
+        search_params = {
+            'location': json.dumps({"type": "Point", "coordinates": [80, -40]}),  # Serialize the location dictionary
+            'radius_diff': 5,
+            'title': 'Nonexistent'
+        }
+
+        # Make the request and assert the response
+        response = self.client.get(url, search_params, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['stories']), 0)  # Expecting 0 stories returned
