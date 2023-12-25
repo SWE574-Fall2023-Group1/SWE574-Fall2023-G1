@@ -16,7 +16,7 @@ import { format, parseISO } from 'date-fns';
 
 let postHeader = null;
 
-function CreateStory() {
+function CreateStory({ currentTheme }) {
 
   const { storyId } = useParams(); // Get story ID from URL
   const isEditMode = storyId != null;
@@ -241,7 +241,7 @@ function CreateStory() {
 
   return (
     <div>
-      <h1 className="big-heading" style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
+      <h1 className="big-heading" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>
         {postHeader}
       </h1>
     <div className='create-story-container'>
@@ -280,7 +280,7 @@ function CreateStory() {
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
-                    style={{"background-color": "rgb(240, 240, 240)"}}
+                    style={{margin: "1px", "background-color": "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
@@ -388,8 +388,10 @@ function CreateStory() {
                   onChange={(e) => setDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
                     />
@@ -419,8 +421,10 @@ function CreateStory() {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
                     />
@@ -460,7 +464,7 @@ function CreateStory() {
             }
           <br/>
           <div className='create-story-map'>
-          <text>You can add locations by using the map or typing in the search bar.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>You can add locations by using the map or typing in the search bar.</text>
             <StoryMap
                   mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
                   initialCenter={mapCenter}
@@ -469,13 +473,14 @@ function CreateStory() {
                   onAddLocation={handleAddLocation}
                   onRemoveLocation={handleRemoveLocation}
                   onUpdateLocations={handleUpdateLocations}
+                  currentTheme={currentTheme}
                 />
           </div>
           <br/>
           <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "8px 16px", fontSize: "16px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
           <br/>
           <br/>
-          <text>You can edit your memory as many times as you want after posting.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} >You can edit your memory as many times as you want after posting.</text>
           <br/>
           <br/>
           </form>

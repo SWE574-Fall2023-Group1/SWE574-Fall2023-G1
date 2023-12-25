@@ -11,7 +11,7 @@ import { TextField, Select, MenuItem, InputLabel, FormControl, Slider, Button, S
 import Typography from '@mui/material/Typography'; // For custom font styling
 import Box from '@mui/material/Box'; // For layout styling
 
-const StorySearch = () => {
+const StorySearch = ({ currentTheme }) => {
   const [titleSearch, setTitleSearch] = useState('');
   const [authorSearch, setAuthorSearch] = useState('');
   const [tagSearch, setTagSearch] = useState('');
@@ -383,7 +383,7 @@ const StorySearch = () => {
 
   return (
     <div>
-    <h1 style={{ fontFamily: "'Josefin Sans', sans-serif" }}>Advanced Search</h1>
+    <h1 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>Advanced Search</h1>
     <div style={{
       "display": "flex",
       "flex-wrap": "wrap",
@@ -502,7 +502,7 @@ const StorySearch = () => {
           </GoogleMapsAutocomplete>
           <br />
           <FormControl>
-            <InputLabel id="radiusDiff-label" style={{ marginTop: "8px" }}>Radius Difference in KM</InputLabel>
+            <InputLabel id="radiusDiff-label" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', marginTop: "8px" }}>Radius Difference in KM</InputLabel>
             <Slider
               aria-label="Radius Difference"
               value={radiusDiff}

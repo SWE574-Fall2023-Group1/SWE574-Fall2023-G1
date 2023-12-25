@@ -9,7 +9,7 @@ import tick from '../../assets/images/tick.png'
 
 
 
-const UserProfileOthers = () => {
+const UserProfileOthers = ({ currentTheme }) => {
   const [user, setUser] = useState(null);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -172,12 +172,12 @@ const UserProfileOthers = () => {
             </div>
 
             <div className="center-section">
-            <div className="username">{user.username}</div>
+            <div style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} className="username">{user.username}</div>
             </div>
             <div className="right-section">
 
               <div className="follower-info">
-                <p>{followerCount !== null ? `${followerCount} Followers` : 'Loading...'}</p>
+                <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>{followerCount !== null ? `${followerCount} Followers` : 'Loading...'}</p>
                 <button
                     className={`follow-button ${isFollowing ? 'follow-button-unfollow' : 'follow-button-follow'}`}
                     onClick={handleFollowClick}
@@ -189,7 +189,7 @@ const UserProfileOthers = () => {
           </div>
 
           <div className="bio-section">
-            <h2>About User</h2>
+            <h2 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>About User</h2>
             <div className="custom-bio">
               {user.biography.split('\n').map((line, index) => (
                 <p key={index}>{capitalizeFirstLetter(line)}</p>
@@ -198,11 +198,11 @@ const UserProfileOthers = () => {
           </div>
 
           <div className="stories-section">
-            <h2>Recent Stories</h2>
+            <h2 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Recent Stories</h2>
             {loading ? (
-              <p>Loading stories...</p>
+              <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Loading stories...</p>
             ) : stories.length === 0 ? (
-              <p>No stories found.</p>
+              <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>No stories found.</p>
             ) : (
               <div>
                 {stories.map((story) => (
