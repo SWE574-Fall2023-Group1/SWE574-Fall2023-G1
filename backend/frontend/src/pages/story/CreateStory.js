@@ -11,6 +11,8 @@ import Quill from 'quill'
 import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
+import { format, parseISO } from 'date-fns';
+
 
 let postHeader = null;
 
@@ -41,7 +43,6 @@ function CreateStory({ currentTheme }) {
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
-
   const [selectedTags, setSelectedTags] = useState([]);
 
   useEffect(() => {
@@ -185,8 +186,24 @@ function CreateStory({ currentTheme }) {
 
   const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
+  const convertUTCToLocalDate = (utcDateString) => {
+    if (!utcDateString) return null;
+
+    // Parse the ISO string to a Date object
+    const date = parseISO(utcDateString);
+
+    // Format the date to a string in the local timezone including timezone offset
+    // 'X' will give you the timezone offset in hours and minutes (e.g., -04, +03)
+    // 'XX' will give you the timezone offset with a colon (e.g., -04:00, +03:00)
+    return format(date, "yyyy-MM-dd'T'HH:mm:ssXX");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const localDate = convertUTCToLocalDate(date);
+    const localStartDate = convertUTCToLocalDate(start_date);
+    const localEndDate = convertUTCToLocalDate(end_date);
+
     const storyData = {
       title: title,
       content: content,
@@ -197,9 +214,9 @@ function CreateStory({ currentTheme }) {
       start_year: start_year,
       end_year: end_year,
       year: year,
-      date: date,
-      start_date: start_date,
-      end_date: end_date,
+      date: localDate,
+      start_date: localStartDate,
+      end_date: localEndDate,
       decade: decade,
       include_time: include_time
     };
@@ -365,6 +382,7 @@ function CreateStory({ currentTheme }) {
                   className='date-box'
                   label="Date"
                   variant="outlined"
+                  timezone="Europe/Istanbul"
                   type={include_time ? "datetime-local" : "date"}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setDate(e.target.value)}
@@ -389,6 +407,7 @@ function CreateStory({ currentTheme }) {
                   type={include_time ? "datetime-local" : "date"}
                   label="Start Date"
                   variant="outlined"
+                  timezone="Europe/Istanbul"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
@@ -397,6 +416,7 @@ function CreateStory({ currentTheme }) {
                   type={include_time ? "datetime-local" : "date"}
                   label="End Date"
                   variant="outlined"
+                  timezone="Europe/Istanbul"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setEndDate(e.target.value)}
                 />

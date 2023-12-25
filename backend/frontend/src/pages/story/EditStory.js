@@ -11,6 +11,7 @@ import Quill from 'quill'
 import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
+import { format, parseISO } from 'date-fns';
 
 
 function EditStory({ currentTheme }) {
@@ -115,6 +116,8 @@ const parseLocation = (location) => {
           });
           setDateType(storyInfo.date_type);
           // eslint-disable-next-line default-case
+
+          // eslint-disable-next-line default-case
           switch(storyInfo.date_type) {
             case 'year':
                 setYear(storyInfo.year);
@@ -126,11 +129,11 @@ const parseLocation = (location) => {
                 setSeasonName(storyInfo.season_name);
                 break;
             case 'normal_date':
-                setDate(storyInfo.date);
+                setDate(convertUTCToLocalDate(storyInfo.date));
                 break;
             case 'interval_date':
-                setStartDate(storyInfo.start_date);
-                setEndDate(storyInfo.end_date);
+                setStartDate(convertUTCToLocalDate(storyInfo.start_date));
+                setEndDate(convertUTCToLocalDate(storyInfo.end_date));
                 break;
             case 'decade':
                 setDecade(storyInfo.decade);
@@ -289,9 +292,25 @@ const parseLocation = (location) => {
 
   const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
+  const convertUTCToLocalDate = (utcDateString) => {
+    if (!utcDateString) return null;
+
+    // Parse the ISO string to a Date object
+    const date = parseISO(utcDateString);
+
+    // Format the date to a string in the local timezone including timezone offset
+    // 'X' will give you the timezone offset in hours and minutes (e.g., -04, +03)
+    // 'XX' will give you the timezone offset with a colon (e.g., -04:00, +03:00)
+    return format(date, "yyyy-MM-dd'T'HH:mm:ssXX");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const localDate = convertUTCToLocalDate(date);
+    const localStartDate = convertUTCToLocalDate(start_date);
+    const localEndDate = convertUTCToLocalDate(end_date);
+
     const prepareLocationData = (location) => {
     let preparedLocation = {
         id: location.id,
@@ -332,9 +351,9 @@ const parseLocation = (location) => {
       start_year: start_year,
       end_year: end_year,
       year: year,
-      date: date,
-      start_date: start_date,
-      end_date: end_date,
+      date: localDate,
+      start_date: localStartDate,
+      end_date: localEndDate,
       decade: decade,
       include_time: include_time
     };
@@ -494,10 +513,10 @@ const parseLocation = (location) => {
                   className='date-box'
                   label="Date"
                   variant="outlined"
-                  value={include_time ? new Date(date).toISOString().slice(0, 16) : date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setDate(e.target.value)}
+                  {...(date ? { value: include_time ? date.slice(0, 16) : date.slice(0, 10) } : {})}
                 />
                 <FormControlLabel
                   style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
@@ -516,21 +535,21 @@ const parseLocation = (location) => {
               <div className='date-type'>
                 <TextField
                   className='date-box'
-                  value={include_time ? new Date(start_date).toISOString().slice(0, 16) : start_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="Start Date"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setStartDate(e.target.value)}
+                  {...(start_date ? { value: include_time ? start_date.slice(0, 16) : start_date.slice(0, 10) } : {})} // Conditionally add the value prop for start_date
                 />
                 <TextField
                   className='date-box'
-                  value={include_time ? new Date(end_date).toISOString().slice(0, 16) : end_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="End Date"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setEndDate(e.target.value)}
+                  {...(end_date ? { value: include_time ? end_date.slice(0, 16) : end_date.slice(0, 10) } : {})} // Conditionally add the value prop for end_date
                 />
                 <FormControlLabel
                   style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
