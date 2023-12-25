@@ -40,8 +40,6 @@ class UserLoginTest(APITestCase):
         self.assertEqual(response.data['msg'], 'Login success')
         self.assertIn('refreshToken', response.cookies)
 
-        # Further checks can be added here to validate the structure and content of the access and refresh tokens
-
 
 
 class CreateStoryTest(APITestCase):
@@ -58,7 +56,6 @@ class CreateStoryTest(APITestCase):
         self.client.cookies['refreshToken'] = self.refresh_token
 
     def test_create_story(self):
-        # Define the URL and the data
         url = reverse('create_story')
         data = {
             'author': self.user.id,
@@ -76,15 +73,12 @@ class CreateStoryTest(APITestCase):
             ]
         }
 
-        # Make the request and assert the response
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Story.objects.count(), 1)
         created_story = Story.objects.get()
         self.assertEqual(created_story.title, 'Test Story')
         self.assertEqual(created_story.author, self.user)
-
-        # Assert other fields as necessary
 
 class CreateCommentTest(APITestCase):
     def setUp(self):
@@ -102,7 +96,6 @@ class CreateCommentTest(APITestCase):
         self.location1 = Location.objects.create(name="Location 1", point=Point(1, 1))
         self.location2 = Location.objects.create(name="Location 2", line=LineString((0, 0), (1, 1)))
 
-        # Add tags and locations to the story
         self.story.story_tags.add(self.tag1, self.tag2)
         self.story.location_ids.add(self.location1, self.location2)
 
@@ -131,7 +124,6 @@ class UpdateStoryTest(APITestCase):
         self.location1 = Location.objects.create(name="Location 1", point=Point(1, 1))
         self.location2 = Location.objects.create(name="Location 2", line=LineString((0, 0), (1, 1)))
 
-        # Add tags and locations to the story
         self.story.story_tags.add(self.tag1, self.tag2)
         self.story.location_ids.add(self.location1, self.location2)
 
@@ -171,7 +163,6 @@ class LikeStoryTest(APITestCase):
         self.location1 = Location.objects.create(name="Location 1", point=Point(1, 1))
         self.location2 = Location.objects.create(name="Location 2", line=LineString((0, 0), (1, 1)))
 
-        # Add tags and locations to the story
         self.story.story_tags.add(self.tag1, self.tag2)
         self.story.location_ids.add(self.location1, self.location2)
 
@@ -209,10 +200,10 @@ class StoryDetailViewTest(APITestCase):
 
     def test_story_detail_success(self):
         # Test successful retrieval of story details
-        url = reverse('get_story', kwargs={'pk': self.story.id})  # Adjust to your URL name
+        url = reverse('get_story', kwargs={'pk': self.story.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['title'], self.story.title)  # Ensure the correct story is returned
+        self.assertEqual(response.data['title'], self.story.title)
 
     def test_story_detail_not_found(self):
         # Test response for a non-existent story
@@ -271,7 +262,7 @@ class UserBiographyUpdateTest(APITestCase):
         self.client.force_authenticate(user=self.user)  # Authenticate the user for this test
 
     def test_update_user_biography(self):
-        url = reverse('user_bio')  # The URL name for updating the biography
+        url = reverse('user_bio')
         new_biography = "This is the new biography."
         data = {'biography': new_biography}
         response = self.client.put(url, data, format='json')
@@ -281,33 +272,31 @@ class UserBiographyUpdateTest(APITestCase):
         print("Response Status Code:", response.status_code)
 
         # Adjust the expected status code if necessary
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Expecting a 200 OK response
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.user.refresh_from_db()
-        self.assertEqual(self.user.biography, new_biography)  # Confirm the biography was updated correctly
+        self.assertEqual(self.user.biography, new_biography)
 
 
 class ActivityStreamViewTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='activeuser', email='active@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)  # Create a JWT refresh token
-        self.client.cookies['refreshToken'] = self.refresh_token  # Set the refresh token in the cookies
-        self.client.force_authenticate(user=self.user)  # Authenticate the user for this test
+        self.refresh_token = create_refresh_token(self.user.id)
+        self.client.cookies['refreshToken'] = self.refresh_token
+        self.client.force_authenticate(user=self.user)
 
     def test_activity_stream(self):
-        url = reverse('activity-stream')  # The URL name for the activity stream endpoint
+        url = reverse('activity-stream')
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Expecting a 200 OK response
-        # Assuming the response data structure is a list of activities under a key
-        self.assertIsInstance(response.data.get('activity'), list)  # Confirm the data structure
-        # Add more assertions here as necessary, depending on the structure of your activity data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsInstance(response.data.get('activity'), list)
 
 class WikidataSearchViewTest(APITestCase):
     def test_wikidata_search(self):
-        url = reverse('wikidata_search')  # Update with your actual URL name
+        url = reverse('wikidata_search')
         response = self.client.get(url, {'query': 'test'})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertGreater(len(response.data['tags']), 0)  # Check that tags are returned
+        self.assertGreater(len(response.data['tags']), 0)
 
 
 class SearchStoryViewTest(APITestCase):
@@ -350,18 +339,16 @@ class SearchStoryViewTest(APITestCase):
         self.client.force_authenticate(user=self.user)
 
     def test_search_story_with_location(self):
-        # URL for SearchStoryView (adjust as necessary)
         url = reverse('search_story')
 
-        # Define the location as a point (adjust coordinates as necessary)
         location = {
         "type": "Point",
-        "coordinates": [10, 50]  # Adjust as necessary
+        "coordinates": [10, 50]
         }
-        radius_diff = 10  # Adjust as necessary
+        radius_diff = 10
 
         search_params = {
-            'location': json.dumps(location),  # Serialize the location dictionary
+            'location': json.dumps(location),
             'radius_diff': radius_diff,
             'title': 'Adventure'
         }
@@ -374,10 +361,8 @@ class SearchStoryViewTest(APITestCase):
         self.assertIn('Adventure in the Mountains', [story['title'] for story in response.data['stories']])
 
     def test_search_story_with_title(self):
-        # URL for SearchStoryView
         url = reverse('search_story')
 
-        # Define the search parameters for the title
         search_params = {
             'title': 'Adventure in the Mountains'
         }
@@ -388,10 +373,8 @@ class SearchStoryViewTest(APITestCase):
         self.assertIn('Adventure in the Mountains', [story['title'] for story in response.data['stories']])
 
     def test_search_story_with_author(self):
-        # URL for SearchStoryView
         url = reverse('search_story')
 
-        # Define the search parameters for the author's username
         search_params = {
             'author': 'author'
         }
@@ -400,35 +383,27 @@ class SearchStoryViewTest(APITestCase):
         response = self.client.get(url, search_params, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Check if all returned stories are authored by the expected author ID
-        expected_author_id = self.author.id  # or however you retrieve the expected author ID
+        expected_author_id = self.author.id
         self.assertTrue(all(story['author'] == expected_author_id for story in response.data['stories']))
 
 
     def test_search_story_with_tag(self):
-        # URL for SearchStoryView
         url = reverse('search_story')
 
-        # Define the search parameters for the tag's wikidata ID
         search_params = {
             'tag': 'Q123'  # Wikidata ID for the 'Adventure' tag
         }
-
-        # Make the request and assert the response
         response = self.client.get(url, search_params, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Check if any stories returned include the tag with the specified wikidata ID
         self.assertTrue(any('Q123' in [tag['wikidata_id'] for tag in story.get('story_tags', [])] for story in response.data['stories']))
 
 
     def test_search_story_not_found(self):
-        # URL for SearchStoryView (adjust as necessary)
         url = reverse('search_story')
 
-        # Define search parameters that won't match any story
         search_params = {
-            'location': json.dumps({"type": "Point", "coordinates": [80, -40]}),  # Serialize the location dictionary
+            'location': json.dumps({"type": "Point", "coordinates": [80, -40]}),
             'radius_diff': 5,
             'title': 'Nonexistent'
         }
@@ -436,4 +411,4 @@ class SearchStoryViewTest(APITestCase):
         # Make the request and assert the response
         response = self.client.get(url, search_params, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['stories']), 0)  # Expecting 0 stories returned
+        self.assertEqual(len(response.data['stories']), 0)
