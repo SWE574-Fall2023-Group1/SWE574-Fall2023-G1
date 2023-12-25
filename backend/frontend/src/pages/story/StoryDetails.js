@@ -17,7 +17,7 @@ import Chip from '@mui/material/Chip';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Tooltip from '@mui/material/Tooltip';
 
-function StoryDetails() {
+function StoryDetails( {currentTheme} ) {
   const [story, setStory] = useState(null);
   //const [author, setAuthor] = useState(null);
   const { id } = useParams();
@@ -358,23 +358,23 @@ useEffect(() => {
     <div className="story-details-wrapper">
       {story ? (
         <Box sx={{ borderRadius: "10px", p: 2}}>
-          <Typography variant="h4" align="center" gutterBottom sx={{ mt: 1, mb: 3 }}>
+          <Typography style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} variant="h4" align="center" gutterBottom sx={{ mt: 1, mb: 3 }}>
             {story.title}
           </Typography>
           <div className="content-container">
           <div className="bottom-container">
             <div >
-              <Typography variant="subtitle1">Memory Time</Typography>
+              <Typography variant="subtitle1" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Memory Time</Typography>
               <Typography variant="body1" className="info-box">{`${formatDate()}`}</Typography>
             </div>
             {story.season_name && (
               <div>
-                <Typography variant="subtitle1">Season</Typography>
+                <Typography variant="subtitle1" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Season</Typography>
                 <Typography variant="body1" className="info-box">{story.season_name}</Typography>
               </div>
             )}
             <div >
-              <Typography variant="subtitle1">Tags</Typography>
+              <Typography variant="subtitle1" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Tags</Typography>
               <div className="tags-container">
                 {story.story_tags.map((tag, index) => (
                   <Tooltip key={index} title={tag.description || ''}>
@@ -422,7 +422,7 @@ useEffect(() => {
                 <>
                   <div className="storydetail-story-map">
                     <GoogleMap
-                      mapContainerStyle={{ "border-style": "solid", "border-radius": '10px', height: "400px", width: "80%" }}
+                      mapContainerStyle={{ "border-style": "solid", "border-radius": '10px', height: "400px", width: "80%", marginTop: "20px"}}
                       zoom={2}
                       center={{
                         lat: 0,
@@ -437,7 +437,7 @@ useEffect(() => {
               )}
               <div className="author-date-container">
               <div style={{ display: 'flex', "align-items": 'center'}}>
-                <Typography variant="subtitle1">Author‎  ‎</Typography>
+                <Typography variant="subtitle1" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Author‎  ‎</Typography>
                 <img
                   src={profilePhotoUrl}
                   alt={`author's profile`}
@@ -452,7 +452,7 @@ useEffect(() => {
                 />
               </div>
               <div style={{ display: 'flex', "align-items": 'center'}}>
-                <Typography variant="subtitle1">Posted On‎  ‎</Typography>
+                <Typography variant="subtitle1" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Posted On‎  ‎</Typography>
                 <Typography variant="body1" className="info-box">
                   {new Date(story.creation_date).toLocaleDateString()}
                 </Typography>
@@ -475,7 +475,7 @@ useEffect(() => {
                       onClick={() => setLiked(!liked)}
                     />
                   </Button>
-                  <Chip label={numLikes} style={{"font-size": "large"}}/>
+                  <Chip label={numLikes} style={{"font-size": "large", color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}/>
                 </div>
               </div>
             </div>
@@ -489,7 +489,7 @@ useEffect(() => {
           />
         </Box>
       ) : (
-        <Typography variant="h5" align="center">
+        <Typography variant="h5" align="center" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>
           Loading memory details...
         </Typography>
       )}
