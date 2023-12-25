@@ -185,3 +185,36 @@ class LikeStoryTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.story.refresh_from_db()
         self.assertTrue(self.user in self.story.likes.all())
+
+
+class StoryDetailViewTest(APITestCase):
+    def setUp(self):
+        # Set up data and authenticate as needed
+        self.user = User.objects.create_user(username='viewer', email='viewer@example.com', password='testpassword')
+        self.author = User.objects.create_user(username='storyauthor', email='storyauthor@example.com', password='testpassword')
+        self.story = Story.objects.create(author=self.author, title='A Story', content='Story content', year=2020)
+        self.tag1 = Tag.objects.create(name='Adventure', wikidata_id='Q123', description='Adventure genre', label='Test Label 1')
+        self.tag2 = Tag.objects.create(name='History', wikidata_id='Q456', description='Historical genre', label='Test Label 2')
+        self.location1 = Location.objects.create(name="Location 1", point=Point(1, 1))
+        self.location2 = Location.objects.create(name="Location 2", line=LineString((0, 0), (1, 1)))
+
+        # Add tags and locations to the story
+        self.story.story_tags.add(self.tag1, self.tag2)
+        self.story.location_ids.add(self.location1, self.location2)
+
+        self.refresh_token = create_refresh_token(self.user.id)
+        self.client.cookies['refreshToken'] = self.refresh_token
+        self.client.force_authenticate(user=self.user)
+
+    def test_story_detail_success(self):
+        # Test successful retrieval of story details
+        url = reverse('get_story', kwargs={'pk': self.story.id})  # Adjust to your URL name
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.story.title)  # Ensure the correct story is returned
+
+    def test_story_detail_not_found(self):
+        # Test response for a non-existent story
+        url = reverse('get_story', kwargs={'pk': 99999})  # An unlikely ID
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
