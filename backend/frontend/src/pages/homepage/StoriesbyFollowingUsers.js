@@ -8,7 +8,7 @@ import locationIcon from '../../assets/images/location.png'
 import dateIcon from '../../assets/images/date.png'
 
 
-function StoriesByFollowingsUsers() {
+function StoriesByFollowingsUsers({ currentTheme }) {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -174,9 +174,9 @@ function StoriesByFollowingsUsers() {
         ))
       )}
       <div className={styles.pagination}>
-        <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
+        {(hasPrevPage) && <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={!hasPrevPage}>
           Previous
-        </Button>
+        </Button>}
         {Array.from({ length: totalPages }, (_, index) => (
           <Button variant="contained"
             key={index}
@@ -186,9 +186,9 @@ function StoriesByFollowingsUsers() {
             {index + 1}
           </Button>
         ))}
-        <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
+        {(hasNextPage) && <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={!hasNextPage}>
           Next
-        </Button>
+        </Button>}
       </div>
     </div>
   );
