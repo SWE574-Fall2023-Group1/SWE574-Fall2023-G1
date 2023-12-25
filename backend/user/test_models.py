@@ -81,17 +81,15 @@ class StoryTest(TestCase):
         location1 = Location.objects.create(name="Location 1", point=Point(1, 1))
         location2 = Location.objects.create(
             name="Location 2",
-            line=LineString((0, 0), (1, 1))  # Replace with actual coordinates for your use case
+            line=LineString((0, 0), (1, 1))
         )
-        # Create story with year field set to comply with clean method's validation
         story = Story.objects.create(
             author=author,
             title='Test Story',
             content='This is a test story content.',
-            year=2020  # Only one date field is set
+            year=2020
         )
 
-        # Add tags and locations to the story
         story.story_tags.add(tag1, tag2)
         story.location_ids.add(location1, location2)
 
@@ -99,12 +97,10 @@ class StoryTest(TestCase):
         story = Story.objects.get(title='Test Story')
         self.assertEquals(story.content, 'This is a test story content.')
 
-        # Test that the tags were added correctly
         self.assertEquals(story.story_tags.count(), 2)
         self.assertTrue(story.story_tags.filter(name='Adventure').exists())
         self.assertTrue(story.story_tags.filter(name='History').exists())
 
-        # Test that the locations were added correctly
         self.assertEquals(story.location_ids.count(), 2)
         self.assertTrue(story.location_ids.filter(name='Location 1').exists())
         self.assertTrue(story.location_ids.filter(name='Location 2').exists())
@@ -116,14 +112,11 @@ class StoryTest(TestCase):
         with self.assertRaises(ValidationError):
             story.clean()
 
-    # ... Add more tests for field validation, relationships, and custom methods
-
 
 
 class TagTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        # Create a tag with a Wikidata Q code, description, and label
         Tag.objects.create(
             name='Adventure',
             wikidata_id='Q123456',
@@ -147,10 +140,8 @@ class TagTest(TestCase):
         tag = Tag.objects.get(name='Adventure')
         self.assertEquals(tag.label, 'Adventure Genre')
 
-    # Test for valid wikidata_id format (if you have a specific format)
     def test_wikidata_id_format(self):
         tag = Tag.objects.get(name='Adventure')
-        # Here, use a regex or any other method you prefer to validate the format of the Q code
         self.assertRegex(tag.wikidata_id, r'^Q\d+$')
 
 
@@ -164,15 +155,13 @@ class CommentTest(TestCase):
                 title='Test Story',
                 content='This is a test story content',
                 date_type = 'year',
-                year=2020  # Only one date field is set
+                year=2020
         )
         Comment.objects.create(comment_author=user, story=story, text='Nice story!')
 
     def test_comment_content(self):
         comment = Comment.objects.get(text='Nice story!')
         self.assertEquals(comment.text, 'Nice story!')
-
-    # ... Add more tests for field validation and any custom methods
 
 
 
@@ -186,7 +175,6 @@ class ActivityTest(TestCase):
         activity = Activity.objects.get(user__username='active_user')
         self.assertEquals(activity.activity_type, 'new_story')
 
-    # ... Add more tests for field validation and any custom methods
 
 
 class StoryRecommendationTest(TestCase):
@@ -206,5 +194,3 @@ class StoryRecommendationTest(TestCase):
     def test_recommendation_creation(self):
         recommendation = StoryRecommendation.objects.get(user__username='recommender')
         self.assertEquals(recommendation.story.title, 'Story to Recommend')
-
-#     # ... Add more tests for field validation and any custom methods
