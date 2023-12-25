@@ -21,7 +21,6 @@ cryptography
 flake8
 boto3
 django-storages
-Pillow
 django-rest-swagger
 drf-yasg
 djangorestframework-gis
