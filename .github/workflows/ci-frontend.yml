@@ -30,7 +30,7 @@ jobs:
             docker --version
             docker-compose --version
             make env-files
-            docker compose up -d --build
+            docker compose up -d --build --quiet-pull --remove-orphans
             docker compose ps
             docker network ls
             docker compose logs frontend
