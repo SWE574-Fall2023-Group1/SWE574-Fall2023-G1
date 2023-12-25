@@ -14,7 +14,7 @@ import Chip from '@mui/material/Chip';
 import { format, parseISO } from 'date-fns';
 
 
-function EditStory() {
+function EditStory({ currentTheme }) {
 
   const { storyId } = useParams(); // Get story ID from URL
   const isEditMode = storyId != null;
@@ -372,7 +372,7 @@ const parseLocation = (location) => {
 
   return (
     <div>
-      <h1 className="big-heading">{postHeader}</h1>
+      <h1 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} className="big-heading">{postHeader}</h1>
       <div className='create-story-container'>
       <div className="create-story-content">
         <div className="formBackground">
@@ -409,7 +409,7 @@ const parseLocation = (location) => {
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
-                    style={{"background-color": "rgb(240, 240, 240)"}}
+                    style={{margin: "1px", "background-color": "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
@@ -519,10 +519,12 @@ const parseLocation = (location) => {
                   {...(date ? { value: include_time ? date.slice(0, 16) : date.slice(0, 10) } : {})}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                     />
                   }
                   label="Include time"
@@ -550,10 +552,12 @@ const parseLocation = (location) => {
                   {...(end_date ? { value: include_time ? end_date.slice(0, 16) : end_date.slice(0, 10) } : {})} // Conditionally add the value prop for end_date
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                     />
                   }
                   label="Include time"
@@ -591,7 +595,7 @@ const parseLocation = (location) => {
             }
           <br/>
           <div className='create-story-map'>
-          <text>You can add locations by using the map or typing in the search bar.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>You can add locations by using the map or typing in the search bar.</text>
           <StoryMap
                     mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
                     initialCenter={mapCenter}
@@ -601,13 +605,14 @@ const parseLocation = (location) => {
                     onAddLocation={handleAddLocation}
                     onRemoveLocation={handleRemoveLocation}
                     onUpdateLocations={handleUpdateLocations}
+                    currentTheme={currentTheme}
                 />
           </div>
           <br/>
           <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postButton}</Button>
           <br/>
           <br/>
-          <text>You can edit your memory as many times as you want after posting.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>You can edit your memory as many times as you want after posting.</text>
           <br/>
           <br/>
           </form>

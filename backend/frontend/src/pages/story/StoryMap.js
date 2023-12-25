@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import './CreateStory.css'
 import { List, ListItem, ListItemText, Button, TextField } from '@mui/material';
 
-const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation, onUpdateLocations, location_ids }) => {
+const StoryMap = ({ currentTheme, mapContainerStyle, initialCenter, zoom, apiKey, onAddLocation, onRemoveLocation, onUpdateLocations, location_ids }) => {
   const [locations, setLocations] = React.useState([]);
   // const [locations, setLocations] = React.useState(location_ids || []);
   const [editingIndex, setEditingIndex] = useState(null); // Track which location is being edited
@@ -471,7 +471,7 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
                 style={{ marginRight: "16px" }}
               />
             ) : (
-              <ListItemText style={{ marginRight: "16px" }}>
+              <ListItemText style={{ marginRight: "16px", color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>
                 {location.name || `${location.latitude}, ${location.longitude}`}
               </ListItemText>
             )}
@@ -480,6 +480,7 @@ const StoryMap = ({ mapContainerStyle, initialCenter, zoom, apiKey, onAddLocatio
               size="small"
               color="primary"
               onClick={() => (editingIndex === index ? handleSaveClick(index) : handleEditClick(index))}
+              style={{ marginRight: "10px" }}
             >
               {editingIndex === index ? 'Save' : 'Edit'}
             </Button>
