@@ -4,7 +4,7 @@ import { useParams,useNavigate } from 'react-router-dom';
 import styles from './SearchUserResults.module.css';
 
 
-function SearchUserResults() {
+function SearchUserResults({ currentTheme }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const { searchQuery } = useParams();
@@ -40,9 +40,9 @@ function SearchUserResults() {
 
   return (
     <div>
-      <h2>Search Results</h2>
+      <h2 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Search Results</h2>
       {loading ? (
-        <p>Loading...</p>
+        <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>Loading...</p>
       ) : (
         results.map(user => (
           <div key={user.id} onClick={() => handleUserClick(user.id)}>
