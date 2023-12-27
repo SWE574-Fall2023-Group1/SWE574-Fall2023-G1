@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import styles from "./Recommendations.module.css"; // Make sure to create this CSS file
+import styles from "./Recommendations.module.css";
 import locationIcon from "../../assets/images/location.png";
 import dateIcon from "../../assets/images/date.png";
 
 function Recommendations({ currentTheme }) {
   const [recommendedStories, setRecommendedStories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +20,9 @@ function Recommendations({ currentTheme }) {
         setRecommendedStories(response.data.recommendations);
       } catch (error) {
         console.error("Error fetching recommendations:", error);
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -88,7 +92,10 @@ function Recommendations({ currentTheme }) {
       <h1 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>
         Recommended for You
       </h1>
-      {recommendedStories.map((recommendation) => {
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+      recommendedStories.map((recommendation) => {
         const story = recommendation.story; // Access the nested story object
         return (
           <div key={story.id} className={styles.storyBox}>
@@ -141,7 +148,8 @@ function Recommendations({ currentTheme }) {
             </div>
           </div>
         );
-      })}
+      })
+    )}
     </div>
   );
 }
