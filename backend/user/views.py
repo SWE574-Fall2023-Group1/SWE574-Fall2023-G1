@@ -722,10 +722,11 @@ class SearchStoryView(views.APIView):
         time_type = request.query_params.get('time_type', '')
         time_value = request.query_params.get('time_value', '')
         location = request.query_params.get('location', '')
-        radius_diff = float(request.query_params.get('radius_diff', ''))
+        radius_diff = request.query_params.get('radius_diff')
         date_diff = float(request.query_params.get('date_diff', 2))
         wikidata_id = request.query_params.get('tag', '')
         tag_label_search = request.query_params.get('tag_label', '')
+        radius_diff = float(radius_diff) if radius_diff else 5
 
 
         sort_field = request.query_params.get('sort_field', 'extract_timestamp')  # Default to 'extract_timestamp'
