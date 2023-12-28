@@ -51,7 +51,4 @@ describe('TagSearch Component', () => {
             id: 'tag1'
         }));
     });
-
-
-
 });
