@@ -2,12 +2,10 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import axios from 'axios';
-import TagSearch from './TagSearch'; // Adjust the import path as necessary
+import TagSearch from './TagSearch';
 
-// Mocking axios
 jest.mock('axios');
 
-// Mocking the onTagSelect prop
 const mockOnTagSelect = jest.fn();
 
 describe('TagSearch Component', () => {
@@ -35,27 +33,22 @@ describe('TagSearch Component', () => {
         const labelInput = screen.getByLabelText('Label');
         const addButton = screen.getByText('Add Tag');
 
-        // Simulate user input for search
         fireEvent.change(searchInput, { target: { value: 'Sample' } });
         await waitFor(() => expect(axios.get).toHaveBeenCalled());
 
-        // Simulate selection from autocomplete
-        const option = await screen.findByText('Sample Tag'); // Assuming this is the text of the option
+        const option = await screen.findByText('Sample Tag');
         fireEvent.click(option);
 
-        // Simulate user input for label
         fireEvent.change(labelInput, { target: { value: 'User Label' } });
 
-        // Click the "Add Tag" button
         fireEvent.click(addButton);
 
-        // Wait for the async operations to complete
         await waitFor(() => expect(mockOnTagSelect).toHaveBeenCalledWith({
             name: 'Sample Tag',
             label: 'User Label',
             wikidata_id: 'tag1',
             description: 'Description for Sample Tag',
-            id: 'tag1' // Add the additional expected properties
+            id: 'tag1'
         }));
     });
 
