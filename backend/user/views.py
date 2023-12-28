@@ -618,13 +618,13 @@ class UserPhotoView(views.APIView):
         # Get the file from the request
         uploaded_file = request.FILES.get('profile_photo')
 
-         # Check the file size against the limit in settings
+        # Check the file size against the limit in settings
         max_size = getattr(settings, 'FILE_UPLOAD_MAX_MEMORY_SIZE', None)
         logger.warning(f"maxsize {max_size}")
         logger.warning(f"file {uploaded_file}")
         logger.warning(f"filesize {uploaded_file.size}")
         if max_size and uploaded_file.size > max_size:
-            return Response({'success': False, 'msg': 'File size exceeds limit'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': False, 'msg': 'Your photo is too big. Please use a smaller file.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if a file is provided
         if not isinstance(uploaded_file, InMemoryUploadedFile):
