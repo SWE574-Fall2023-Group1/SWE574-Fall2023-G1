@@ -422,7 +422,7 @@ useEffect(() => {
                 <>
                   <div className="storydetail-story-map">
                     <GoogleMap
-                      mapContainerStyle={{ "border-style": "solid", "border-radius": '10px', height: "400px", width: "80%" }}
+                      mapContainerStyle={{ borderStyle: "solid", borderRadius: '10px', height: "400px", width: "80%" }}
                       zoom={2}
                       center={{
                         lat: 0,
@@ -436,7 +436,7 @@ useEffect(() => {
                 </>
               )}
               <div className="author-date-container">
-              <div style={{ display: 'flex', "align-items": 'center'}}>
+              <div style={{ display: 'flex', alignItems: 'center'}}>
                 <Typography variant="subtitle1">Author‎  ‎</Typography>
                 <img
                   src={profilePhotoUrl}
@@ -451,7 +451,7 @@ useEffect(() => {
 
                 />
               </div>
-              <div style={{ display: 'flex', "align-items": 'center'}}>
+              <div style={{ display: 'flex', alignItems: 'center'}}>
                 <Typography variant="subtitle1">Posted On‎  ‎</Typography>
                 <Typography variant="body1" className="info-box">
                   {new Date(story.creation_date).toLocaleDateString()}
@@ -475,7 +475,7 @@ useEffect(() => {
                       onClick={() => setLiked(!liked)}
                     />
                   </Button>
-                  <Chip label={numLikes} style={{"font-size": "large"}}/>
+                  <Chip label={numLikes} style={{fontSize: "large"}}/>
                 </div>
               </div>
             </div>

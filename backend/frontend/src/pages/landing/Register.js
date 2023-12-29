@@ -57,15 +57,15 @@ function Register() {
   };
 
   return (
-    <div className="container" style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto"}}>
+    <div className="container" style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", margin: "auto"}}>
       {/* <form onSubmit={handleSubmit}> */}
-      <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: '100%', height: '100%', "flex-wrap": "wrap"}}>
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", margin: "auto", width: '100%', height: '100%', flexWrap: "wrap"}}>
         <div style={{height: "2em"}}></div>
-        <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", background: 'white', borderRadius: 40, "flex-wrap": "wrap", overflow: "auto", "min-width": "80%"}}>
+        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", margin: "auto", background: 'white', borderRadius: 40, flexWrap: "wrap", overflow: "auto", minWidth: "80%"}}>
         <div style={{height: "2em"}}></div>
-        <img style={{width: 449, display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}} src={mainPhoto} />
+        <img style={{width: 449, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center"}} src={mainPhoto} />
         <div style={{height: "2em"}}></div>
-            <div style={{width: 339, height: 53, color: '#2C2A2A', fontSize: 30, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '700', wordWrap: 'break-word', display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center"}}>Register</div>
+            <div style={{width: 339, height: 53, color: '#2C2A2A', fontSize: 30, fontFamily: "'Josefin Sans', sans-serif", fontWeight: '700', wordWrap: 'break-word', display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center"}}>Register</div>
             <div style={{height: "2em"}}></div>
             <div style={{ width: 473, height: 59, background: 'white', borderRadius: 8, padding: 8}}>
                 <TextField
@@ -166,10 +166,10 @@ function Register() {
                     borderRadius: 8,
                     gap: 10,
                     display: "flex",
-                    "flex-direction": "column",
-                    "justify-content": "center",
-                    "align-items": "center",
-                    "text-align": "center",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
                     cursor: 'pointer', // Add this to make it look clickable
                     fontSize: 16,
                     fontFamily: "'Josefin Sans', sans-serif",

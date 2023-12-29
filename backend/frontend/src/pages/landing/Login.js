@@ -54,17 +54,17 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
-    <div className="container" style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto"}}>
+    <div className="container" style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", margin: "auto"}}>
       {/* <form onSubmit={handleSubmit}> */}
-      <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: '100%', height: '100%', "flex-wrap": "wrap"}}>
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", margin: "auto", width: '100%', height: '100%', flexWrap: "wrap"}}>
       <div style={{height: "2em"}}></div>
-        <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", background: 'white', borderRadius: 40, "flex-wrap": "wrap", overflow: "auto", "min-width": "80%"}}>
+        <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", margin: "auto", background: 'white', borderRadius: 40, flexWrap: "wrap", overflow: "auto", minWidth: "80%"}}>
         <div style={{height: "2em"}}></div>
-        <img style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", width: 449}} src={mainPhoto} />
+        <img style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", width: 449}} src={mainPhoto} />
             <h2>Every Memory Counts:</h2>
             <h3>Write, Share, Relive.</h3>
                  {/* <button type="submit" className="btn btn-primary">Login</button> */}
-              <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", width: 473, height: 59, background: 'white', borderRadius: 8, padding: 8 }}>
+              <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", width: 473, height: 59, background: 'white', borderRadius: 8, padding: 8 }}>
                 {/* <label>Username:</label>
                   <input type="text" className="form-control" onChange={(e) => setUsername(e.target.value)} /> */}
                 <TextField
@@ -85,7 +85,7 @@ function Login({ onLoginSuccess }) {
                     }}
                 />
             </div>
-            <div style={{display: "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center", "text-align": "center", margin: "auto", width: 473, height: 59,background: 'white', borderRadius: 8, padding: 8}}>
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", margin: "auto", width: 473, height: 59,background: 'white', borderRadius: 8, padding: 8}}>
                     <TextField
                             id="login-password"
                             label="Password"

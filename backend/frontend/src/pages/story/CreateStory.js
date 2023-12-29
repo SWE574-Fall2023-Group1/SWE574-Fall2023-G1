@@ -259,11 +259,11 @@ function CreateStory() {
             <br/>
             <br/>
             <div className='tags-bar' id="tags-bar">
-              <TagSearch style={{"background-color": "rgb(240, 240, 240)"}} onTagSelect={addTag} />
+              <TagSearch style={{backgroundColor: "rgb(240, 240, 240)"}} onTagSelect={addTag} />
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
-                    style={{"background-color": "rgb(240, 240, 240)"}}
+                    style={{backgroundColor: "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
@@ -442,7 +442,7 @@ function CreateStory() {
           <div className='create-story-map'>
           <text>You can add locations by using the map or typing in the search bar.</text>
             <StoryMap
-                  mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
+                  mapContainerStyle={{ height: '400px', width: '100%', borderRadius: '10px', borderStyle: "solid" }}
                   initialCenter={mapCenter}
                   zoom={1}
                   apiKey={googleMapsApiKey}

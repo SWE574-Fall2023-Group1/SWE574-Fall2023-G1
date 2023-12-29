@@ -50,7 +50,7 @@ function TagSearch({ onTagSelect }) {
                     <TextField {...params}
                         label="Search tags"
                         variant="outlined"
-                        style={{"background-color": "rgb(240, 240, 240)"}}/>
+                        style={{backgroundColor: "rgb(240, 240, 240)"}}/>
                 )}
                 onInputChange={handleSearchChange}
                 onChange={(event, newValue) => {
@@ -78,7 +78,7 @@ function TagSearch({ onTagSelect }) {
                 variant="outlined"
                 value={userLabel}
                 onChange={(e) => setUserLabel(e.target.value)}
-                style={{ marginTop: '10px', "background-color": "rgb(240, 240, 240)"}}
+                style={{ marginTop: '10px', backgroundColor: "rgb(240, 240, 240)"}}
             />
             <Button onClick={handleAddTag} variant="contained" className="btn btn-primary middle" style={{ marginTop: '10px', borderRadius: 10, backgroundColor: "#7E49FF" }}>Add Tag</Button>
         </Box>
