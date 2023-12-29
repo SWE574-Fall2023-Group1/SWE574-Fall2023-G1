@@ -9,16 +9,17 @@ WORKDIR /backend
 COPY requirements.txt .
 
 RUN : \
-    && apt-get update -y \
+    && apt-get update -qqqy \
     && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -qqqy --no-install-recommends \
         binutils libproj-dev gdal-bin \
         gcc g++ \
+        > /dev/null \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    && python -m pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
+    && python -m pip install --no-cache-dir -qU pip \
+    && pip install --no-cache-dir -qr requirements.txt \
     && python -m nltk.downloader punkt averaged_perceptron_tagger wordnet stopwords \
     && :
 # Install system dependencies for NLTK and GDAL in the end

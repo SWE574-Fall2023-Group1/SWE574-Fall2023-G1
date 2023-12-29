@@ -25,10 +25,15 @@ function ResetPasswordRequest() {
     <div className="container">
       <form onSubmit={handleSubmit}>
         <h1>Reset Password</h1>
-        <div className="form-group">
-          <label>Email:</label>
-          <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} />
-        </div>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email" // Add an id to the input
+              className="form-control"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
         <button type="submit" className="btn btn-primary">Send Code</button>
         {showMessage && (
           <p className="mt-3">Open the link in your mail</p>

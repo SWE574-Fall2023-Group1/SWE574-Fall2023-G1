@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import locationIcon from '../../assets/images/location.png';
 import dateIcon from '../../assets/images/date.png';
 
-const SearchResults = () => {
+const SearchResults = ({ currentTheme }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const stories = location.state ? location.state.stories : [];
@@ -93,25 +93,25 @@ const SearchResults = () => {
           </div>
         ))
       ) : (
-        <p>No stories found.</p>
+        <p style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>No stories found.</p>
       )}
       <div className={styles.pagination}>
-        <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 1}>
+        {!(currentPage <= 1) && <Button variant="contained" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage <= 1}>
           Previous
-        </Button>
+        </Button>}
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
             variant="contained"
             key={index}
-            className={index + 1 === currentPage ? styles.activePageButton : styles.pageButton}
+            className={index + 1 === currentPage ? styles.active : null}
             onClick={() => handlePageChange(index + 1)}
           >
             {index + 1}
           </Button>
         ))}
-        <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages}>
+        {!(currentPage >= totalPages) && <Button variant="contained" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= totalPages}>
           Next
-        </Button>
+        </Button>}
       </div>
     </div>
   );
