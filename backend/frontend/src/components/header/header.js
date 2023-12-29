@@ -28,8 +28,9 @@ import LocationSearch from "../../pages/search/Timeline";
 import SearchResults from "../../pages/search/SearchResults";
 import ActivityStream from "../../pages/activity/ActivityStream";
 import Recommendations from "../../pages/recom/Recommendations";
+import Button from '@mui/material/Button'
 
-function Header() {
+function Header({ toggleTheme, currentTheme }) {
   console.log("Rendering Header");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,7 +60,7 @@ function Header() {
   return (
     <Router>
       <div className="container">
-        <nav className="navbar" style={{justifyContent: isLoggedIn ? "space-between" : "start"}}>
+        <nav className="navbar" style={{ justifyContent: isLoggedIn ? "space-between" : "start", backgroundColor: currentTheme === 'custom' ? '#3a3a3a' : '#8E8A8A' }}>
             {!isLoggedIn && (
               <>
                 <Link to="/" className="nav-item nav-link">
@@ -71,6 +72,7 @@ function Header() {
                 <Link to="/login" className="nav-item nav-link">
                   Login
                 </Link>
+                <Button style={{ marginRight: "25px", backgroundColor: currentTheme === 'custom' ? 'orange' : 'purple', color:'#ffffff' }} onClick={toggleTheme}> {currentTheme === 'custom' ? 'Light Mode' : 'Dark Mode'} </Button>
               </>
             )}
             {isLoggedIn && (
@@ -97,6 +99,7 @@ function Header() {
                 <Link to="/recommendation" className="nav-item nav-link">
                   Recommendations
                 </Link>
+                <Button style={{ marginRight: "25px", backgroundColor: currentTheme === 'custom' ? 'orange' : 'purple', color:'#ffffff' }} onClick={toggleTheme}> {currentTheme === 'custom' ? 'Light Mode' : 'Dark Mode'} </Button>
                 <UserSearch />
                 <LogoutButton />
               </>
@@ -141,31 +144,31 @@ function Header() {
 
             {isLoggedIn && (
               <>
-                <Route path="*" element={<Navigate to="/homepage" />} />
-                <Route path="/homepage" element={<StoryContainer />} />
-                <Route path="/create-story" element={<CreateStory />} />
-                <Route path="/story/:id" element={<StoryDetails />} />
-                <Route path="/user-profile" element={<UserProfile />} />
+                <Route path="*" element={<Navigate to="/homepage" currentTheme={currentTheme}/>} />
+                <Route path="/homepage" element={<StoryContainer currentTheme={currentTheme}/>} />
+                <Route path="/create-story" element={<CreateStory currentTheme={currentTheme}/>} />
+                <Route path="/story/:id" element={<StoryDetails currentTheme={currentTheme}/>} />
+                <Route path="/user-profile" element={<UserProfile currentTheme={currentTheme}/>} />
                 <Route
                   path="/user-profile/:id"
-                  element={<UserProfileOthers />}
+                  element={<UserProfileOthers currentTheme={currentTheme}/>}
                 />
                 <Route
                   path="/SearchUserResults/:searchQuery"
-                  element={<SearchUserResults />}
+                  element={<SearchUserResults currentTheme={currentTheme}/>}
                 />
-                <Route path="/story_search" element={<StorySearch />} />
+                <Route path="/story_search" element={<StorySearch currentTheme={currentTheme}/>} />
                 <Route
                   path="/timeline"
-                  element={<LocationSearch />}
+                  element={<LocationSearch currentTheme={currentTheme}/>}
                 />
                 <Route
                   path="/search-results"
-                  element={<SearchResults />}
+                  element={<SearchResults currentTheme={currentTheme}/>}
                 />
-                <Route path="/edit-story/:storyId" element={<EditStory />} />
-                <Route path="/activity-stream" element={<ActivityStream />} />
-                <Route path="/recommendation" element={<Recommendations />} />
+                <Route path="/edit-story/:storyId" element={<EditStory currentTheme={currentTheme}/>} />
+                <Route path="/activity-stream" element={<ActivityStream currentTheme={currentTheme}/>} />
+                <Route path="/recommendation" element={<Recommendations currentTheme={currentTheme}/>} />
               </>
             )}
           </Routes>

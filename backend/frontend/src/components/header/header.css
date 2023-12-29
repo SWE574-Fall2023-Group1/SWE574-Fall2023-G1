@@ -28,7 +28,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #8E8A8A;;
+    /* background-color: #3a3a3a;; */
     padding: 10px;
     max-width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

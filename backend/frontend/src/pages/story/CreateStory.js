@@ -11,10 +11,13 @@ import Quill from 'quill'
 import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { format, parseISO } from 'date-fns';
 
 let postHeader = null;
 
-function CreateStory() {
+function CreateStory({ currentTheme }) {
 
   const { storyId } = useParams(); // Get story ID from URL
   const isEditMode = storyId != null;
@@ -41,7 +44,6 @@ function CreateStory() {
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
   const [firstClick, setFirstClick] = useState(true);
   const [include_time, setIncludeTime] = useState(false);
-
   const [selectedTags, setSelectedTags] = useState([]);
 
   useEffect(() => {
@@ -185,8 +187,24 @@ function CreateStory() {
 
   const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
+  const convertUTCToLocalDate = (utcDateString) => {
+    if (!utcDateString) return null;
+
+    // Parse the ISO string to a Date object
+    const date = parseISO(utcDateString);
+
+    // Format the date to a string in the local timezone including timezone offset
+    // 'X' will give you the timezone offset in hours and minutes (e.g., -04, +03)
+    // 'XX' will give you the timezone offset with a colon (e.g., -04:00, +03:00)
+    return format(date, "yyyy-MM-dd'T'HH:mm:ssXX");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const localDate = convertUTCToLocalDate(date);
+    const localStartDate = convertUTCToLocalDate(start_date);
+    const localEndDate = convertUTCToLocalDate(end_date);
+
     const storyData = {
       title: title,
       content: content,
@@ -197,9 +215,9 @@ function CreateStory() {
       start_year: start_year,
       end_year: end_year,
       year: year,
-      date: date,
-      start_date: start_date,
-      end_date: end_date,
+      date: localDate,
+      start_date: localStartDate,
+      end_date: localEndDate,
       decade: decade,
       include_time: include_time
     };
@@ -218,13 +236,14 @@ function CreateStory() {
 
     } catch (error) {
       console.error('Error submitting story:', error);
+      toast.error('Please fill all fields correctly');
     }
   };
 
 
   return (
     <div>
-      <h1 className="big-heading" style={{ fontFamily: "'Josefin Sans', sans-serif" }}>
+      <h1 className="big-heading" style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>
         {postHeader}
       </h1>
     <div className='create-story-container'>
@@ -263,7 +282,7 @@ function CreateStory() {
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
-                    style={{backgroundColor: "rgb(240, 240, 240)"}}
+                    style={{margin: "1px", backgroundColor: "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
@@ -365,13 +384,16 @@ function CreateStory() {
                   className='date-box'
                   label="Date"
                   variant="outlined"
+                  timezone="Europe/Istanbul"
                   type={include_time ? "datetime-local" : "date"}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
                     />
@@ -387,6 +409,7 @@ function CreateStory() {
                   type={include_time ? "datetime-local" : "date"}
                   label="Start Date"
                   variant="outlined"
+                  timezone="Europe/Istanbul"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
@@ -395,12 +418,15 @@ function CreateStory() {
                   type={include_time ? "datetime-local" : "date"}
                   label="End Date"
                   variant="outlined"
+                  timezone="Europe/Istanbul"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
                     />
@@ -440,7 +466,7 @@ function CreateStory() {
             }
           <br/>
           <div className='create-story-map'>
-          <text>You can add locations by using the map or typing in the search bar.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>You can add locations by using the map or typing in the search bar.</text>
             <StoryMap
                   mapContainerStyle={{ height: '400px', width: '100%', borderRadius: '10px', borderStyle: "solid" }}
                   initialCenter={mapCenter}
@@ -449,19 +475,21 @@ function CreateStory() {
                   onAddLocation={handleAddLocation}
                   onRemoveLocation={handleRemoveLocation}
                   onUpdateLocations={handleUpdateLocations}
+                  currentTheme={currentTheme}
                 />
           </div>
           <br/>
           <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "8px 16px", fontSize: "16px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postHeader}</Button>
           <br/>
           <br/>
-          <text>You can edit your memory as many times as you want after posting.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} >You can edit your memory as many times as you want after posting.</text>
           <br/>
           <br/>
           </form>
           </div>
         </div>
         </div>
+        <ToastContainer position="bottom-right" autoClose={5000} />
     </div>
   );
 }

@@ -54,7 +54,7 @@ backend-test:
 	docker compose exec -T backend python manage.py test
 
 frontend-test:
-	docker compose exec -e CI=true -T frontend npm run test
+	docker compose exec -e CI=true -T frontend npm run test -- --coverage --watchAll=false
 
 local-frontend: down
 	docker compose up db backend -d --build

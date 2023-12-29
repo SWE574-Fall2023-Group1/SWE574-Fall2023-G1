@@ -11,9 +11,12 @@ import Quill from 'quill'
 import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { format, parseISO } from 'date-fns';
 
 
-function EditStory() {
+function EditStory({ currentTheme }) {
 
   const { storyId } = useParams(); // Get story ID from URL
   const isEditMode = storyId != null;
@@ -115,6 +118,8 @@ const parseLocation = (location) => {
           });
           setDateType(storyInfo.date_type);
           // eslint-disable-next-line default-case
+
+          // eslint-disable-next-line default-case
           switch(storyInfo.date_type) {
             case 'year':
                 setYear(storyInfo.year);
@@ -126,11 +131,11 @@ const parseLocation = (location) => {
                 setSeasonName(storyInfo.season_name);
                 break;
             case 'normal_date':
-                setDate(storyInfo.date);
+                setDate(convertUTCToLocalDate(storyInfo.date));
                 break;
             case 'interval_date':
-                setStartDate(storyInfo.start_date);
-                setEndDate(storyInfo.end_date);
+                setStartDate(convertUTCToLocalDate(storyInfo.start_date));
+                setEndDate(convertUTCToLocalDate(storyInfo.end_date));
                 break;
             case 'decade':
                 setDecade(storyInfo.decade);
@@ -289,9 +294,25 @@ const parseLocation = (location) => {
 
   const editorPlaceholder = firstClick ? 'Write down your memory here' : '';
 
+  const convertUTCToLocalDate = (utcDateString) => {
+    if (!utcDateString) return null;
+
+    // Parse the ISO string to a Date object
+    const date = parseISO(utcDateString);
+
+    // Format the date to a string in the local timezone including timezone offset
+    // 'X' will give you the timezone offset in hours and minutes (e.g., -04, +03)
+    // 'XX' will give you the timezone offset with a colon (e.g., -04:00, +03:00)
+    return format(date, "yyyy-MM-dd'T'HH:mm:ssXX");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const localDate = convertUTCToLocalDate(date);
+    const localStartDate = convertUTCToLocalDate(start_date);
+    const localEndDate = convertUTCToLocalDate(end_date);
+
     const prepareLocationData = (location) => {
     let preparedLocation = {
         id: location.id,
@@ -332,9 +353,9 @@ const parseLocation = (location) => {
       start_year: start_year,
       end_year: end_year,
       year: year,
-      date: date,
-      start_date: start_date,
-      end_date: end_date,
+      date: localDate,
+      start_date: localStartDate,
+      end_date: localEndDate,
       decade: decade,
       include_time: include_time
     };
@@ -346,6 +367,7 @@ const parseLocation = (location) => {
       navigate(`/story/${storyId}`);
     } catch (error) {
       console.error('Error submitting story:', error);
+      toast.error('Please fill all fields correctly');
     }
 };
 
@@ -353,7 +375,7 @@ const parseLocation = (location) => {
 
   return (
     <div>
-      <h1 className="big-heading">{postHeader}</h1>
+      <h1 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }} className="big-heading">{postHeader}</h1>
       <div className='create-story-container'>
       <div className="create-story-content">
         <div className="formBackground">
@@ -390,7 +412,7 @@ const parseLocation = (location) => {
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
-                    style={{backgroundColor: "rgb(240, 240, 240)"}}
+                    style={{margin: "1px", backgroundColor: "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
@@ -494,16 +516,18 @@ const parseLocation = (location) => {
                   className='date-box'
                   label="Date"
                   variant="outlined"
-                  value={include_time ? new Date(date).toISOString().slice(0, 16) : date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setDate(e.target.value)}
+                  {...(date ? { value: include_time ? date.slice(0, 16) : date.slice(0, 10) } : {})}
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                     />
                   }
                   label="Include time"
@@ -514,27 +538,29 @@ const parseLocation = (location) => {
               <div className='date-type'>
                 <TextField
                   className='date-box'
-                  value={include_time ? new Date(start_date).toISOString().slice(0, 16) : start_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="Start Date"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setStartDate(e.target.value)}
+                  {...(start_date ? { value: include_time ? start_date.slice(0, 16) : start_date.slice(0, 10) } : {})} // Conditionally add the value prop for start_date
                 />
                 <TextField
                   className='date-box'
-                  value={include_time ? new Date(end_date).toISOString().slice(0, 16) : end_date.slice(0, 10)}
                   type={include_time ? "datetime-local" : "date"}
                   label="End Date"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setEndDate(e.target.value)}
+                  {...(end_date ? { value: include_time ? end_date.slice(0, 16) : end_date.slice(0, 10) } : {})} // Conditionally add the value prop for end_date
                 />
                 <FormControlLabel
+                  style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                   control={
                     <Checkbox
                       checked={include_time}
                       onChange={(e) => setIncludeTime(e.target.checked)}
+                      style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}
                     />
                   }
                   label="Include time"
@@ -572,7 +598,7 @@ const parseLocation = (location) => {
             }
           <br/>
           <div className='create-story-map'>
-          <text>You can add locations by using the map or typing in the search bar.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>You can add locations by using the map or typing in the search bar.</text>
           <StoryMap
                     mapContainerStyle={{ height: '400px', width: '100%', borderRadius: '10px', borderStyle: "solid" }}
                     initialCenter={mapCenter}
@@ -582,19 +608,21 @@ const parseLocation = (location) => {
                     onAddLocation={handleAddLocation}
                     onRemoveLocation={handleRemoveLocation}
                     onUpdateLocations={handleUpdateLocations}
+                    currentTheme={currentTheme}
                 />
           </div>
           <br/>
           <Button style={{borderRadius: 10, backgroundColor: "#7E49FF", padding: "12px 28px", fontSize: "24px"}} variant="contained" onClick={handleSubmit} className="btn btn-primary middle">{postButton}</Button>
           <br/>
           <br/>
-          <text>You can edit your memory as many times as you want after posting.</text>
+          <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>You can edit your memory as many times as you want after posting.</text>
           <br/>
           <br/>
           </form>
           </div>
         </div>
         </div>
+        <ToastContainer position="bottom-right" autoClose={5000} />
     </div>
   );
 }

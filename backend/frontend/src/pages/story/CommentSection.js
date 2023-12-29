@@ -98,7 +98,7 @@ function CommentSection({ comments, setComments}) {
 
   return (
     <div>
-      <h2>Comments</h2>
+      <h2 style={{ color: "gray"}}>Comments</h2>
       {comments.length > 0 ? (
         comments.map((comment) => (
           <div key={comment.id} className="comment-container">
@@ -129,13 +129,13 @@ function CommentSection({ comments, setComments}) {
       )}
       {comments.length > 0 && (
       <div className="pagination">
-        <Button
+        {(hasPrevPage) && <Button
           variant="contained"
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={!hasPrevPage}
         >
           Previous
-        </Button>
+        </Button>}
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
             variant="contained"
@@ -146,13 +146,13 @@ function CommentSection({ comments, setComments}) {
             {index + 1}
           </Button>
         ))}
-        <Button
+        {(hasNextPage) && <Button
           variant="contained"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={!hasNextPage}
         >
           Next
-        </Button>
+        </Button>}
       </div>
       )}
       <Box
@@ -173,6 +173,7 @@ function CommentSection({ comments, setComments}) {
           onChange={(event) => setCommentText(event.target.value)}
           variant="outlined"
           fullWidth
+          style={{backgroundColor: "#ffffff", borderRadius: "10px"}}
         />
         <Button
           onClick={handleCommentSubmit}
