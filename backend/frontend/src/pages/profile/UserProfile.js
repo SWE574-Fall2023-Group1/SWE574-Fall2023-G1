@@ -223,7 +223,7 @@ const capitalizeFirstLetter = (str) => {
             className="profile-photo-add-button"
             onClick={() => document.getElementById('profile-photo-input').click()}
           >
-            <img src={addnewphoto} alt="Add New Photo Icon" />
+            <img style={{marginRight: "3px"}} src={addnewphoto} alt="Add New Photo Icon" />
             Add photo
           </button>
         )}
