@@ -386,17 +386,17 @@ const StorySearch = ({ currentTheme }) => {
     <h1 style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', fontFamily: "'Josefin Sans', sans-serif" }}>Advanced Search</h1>
     <div style={{
       "display": "flex",
-      "flex-wrap": "wrap",
-      "justify-content": "space-around",
-      "align-items": "flex-start",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      alignItems: "flex-start",
     }}>
       <div style={{
         width: "40%",
-        "background-color": "rgba(0, 0, 0, 0.2)",
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
         "padding": "1rem",
-        "justify-content": "center",
-        "align-items": "center",
-        "border-radius": "10px",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "10px",
       }}>
 
       <form onSubmit={handleSearch}>
@@ -406,7 +406,7 @@ const StorySearch = ({ currentTheme }) => {
               placeholder="Title"
               className='long-boxes-search'
               label="Search by Title"
-              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+              style={{width:"70%", borderRadius:"20px", backgroundColor:"rgb(240, 240, 240)"}}
               value={titleSearch}
               onChange={(e) => setTitleSearch(e.target.value)}
             />
@@ -417,7 +417,7 @@ const StorySearch = ({ currentTheme }) => {
               placeholder="Author"
               className='long-boxes-search'
               label="Search by Author"
-              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+              style={{width:"70%", borderRadius:"20px", backgroundColor:"rgb(240, 240, 240)"}}
               value={authorSearch}
               onChange={(e) => setAuthorSearch(e.target.value)}
             />
@@ -431,7 +431,7 @@ const StorySearch = ({ currentTheme }) => {
                   <TextField {...params}
                   label="Search Tags"
                   variant="outlined"
-                  style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+                  style={{width:"70%", borderRadius:"20px", backgroundColor:"rgb(240, 240, 240)"}}
                   />
                 )}
                 onInputChange={handleTagSearchChange}
@@ -453,7 +453,7 @@ const StorySearch = ({ currentTheme }) => {
                 placeholder="Tag Label"
                 className='long-boxes-search'
                 label="Search by Tag Label"
-                style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+                style={{width:"70%", borderRadius:"20px", backgroundColor:"rgb(240, 240, 240)"}}
                 value={tagLabelSearch}
                 onChange={(e) => setTagLabelSearch(e.target.value)}
               />
@@ -465,7 +465,7 @@ const StorySearch = ({ currentTheme }) => {
                   placeholder="Date Type"
                   id="date-type-search"
                   className='date-box-search'
-                  style={{"border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+                  style={{borderRadius:"20px", backgroundColor:"rgb(240, 240, 240)"}}
                   value={timeType}
                   onChange={(e) => setTimeType(e.target.value)}
                   label="Date Type"
@@ -495,7 +495,7 @@ const StorySearch = ({ currentTheme }) => {
               className='date-box-search'
               type="search"
               label="Location"
-              style={{"width":"70%", "border-radius":"20px", "background-color":"rgb(240, 240, 240)"}}
+              style={{width:"70%", borderRadius:"20px", backgroundColor:"rgb(240, 240, 240)"}}
               variant="outlined"
             />
 
@@ -520,8 +520,8 @@ const StorySearch = ({ currentTheme }) => {
             mapContainerStyle={{
               width: '100%',
               height: '400px',
-              "border-radius": '10px',
-              "border-style": "solid"
+              borderRadius: '10px',
+              borderStyle: "solid"
             }}
             zoom={2}
             center={markerPosition}
@@ -562,7 +562,7 @@ const StorySearch = ({ currentTheme }) => {
       </div>
       {stories.length > 0 && (
         <>
-          <div style={{"background-color":"rgba(0, 0, 0, 0.2)", "padding":"10px", "border-radius":"10px", width:"40%"}}>
+          <div style={{backgroundColor:"rgba(0, 0, 0, 0.2)", padding:"10px", borderRadius:"10px", width:"40%"}}>
             <h3>Search Results</h3>
             {stories.map(story => (
               <div key={story.id} className="story-box-search">
