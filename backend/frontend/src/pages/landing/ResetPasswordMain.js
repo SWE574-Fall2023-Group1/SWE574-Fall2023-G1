@@ -22,17 +22,24 @@ function ResetPasswordMain() {
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit}>
-        <h1>Enter New Password</h1>
-        <div className="form-group">
-          <label>New Password:</label>
-          <input type="password" className="form-control" onChange={(e) => setNewPassword(e.target.value)} />
-        </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
-        <ToastContainer position="bottom-right" />
-      </form>
-    </div>
-  );
+    <form onSubmit={handleSubmit}>
+      <h1>Enter New Password</h1>
+      <div className="form-group">
+        <label htmlFor="newPassword">New Password:</label>
+        <input
+          id="newPassword"
+          type="password"
+          className="form-control"
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        Submit
+      </button>
+      <ToastContainer position="bottom-right" />
+    </form>
+  </div>
+);
 }
 
 export default ResetPasswordMain;
