@@ -7,7 +7,7 @@ This repository contains Group 1's project for SWE574 - Software Development As 
 For further information and documentation, check our [wiki](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/wiki).
 
 ### Group 1 is comprised of:
-- [Ayhan Çavdar](https://github.com/ayhncvdr)
+- [Ayhan Çavdar](https://github.com/ayhncvdr2)
 - [Aykut Kantaş](https://github.com/aykutkantas)
 - [Deniz Baran Aslan](https://github.com/dbaslan)
 - [Kemal Caner Ertam](https://github.com/ckertam)
