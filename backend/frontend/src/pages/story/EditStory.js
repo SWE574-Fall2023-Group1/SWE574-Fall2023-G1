@@ -11,6 +11,8 @@ import Quill from 'quill'
 import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { format, parseISO } from 'date-fns';
 
 
@@ -365,6 +367,7 @@ const parseLocation = (location) => {
       navigate(`/story/${storyId}`);
     } catch (error) {
       console.error('Error submitting story:', error);
+      toast.error('Please fill all fields correctly');
     }
 };
 
@@ -619,6 +622,7 @@ const parseLocation = (location) => {
           </div>
         </div>
         </div>
+        <ToastContainer position="bottom-right" autoClose={5000} />
     </div>
   );
 }
