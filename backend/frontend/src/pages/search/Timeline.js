@@ -114,7 +114,7 @@ const LocationSearch = ({ currentTheme }) => {
         <span className="slider round"></span>
       </label>
       <span style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000', marginLeft: '10px', verticalAlign: "sub"}}>
-        {isDescOrder ? 'Descending Order' : 'Ascending Order'}
+        {isDescOrder ? 'Ascending Order' : 'Descending Order'}
       </span>
       <div className="timeline">
         {locationStories.map((story, index) => {
