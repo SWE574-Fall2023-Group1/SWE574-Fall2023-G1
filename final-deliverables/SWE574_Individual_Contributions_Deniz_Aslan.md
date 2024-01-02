@@ -26,14 +26,14 @@ The most significant feature I implemented in the project is the dark mode. As s
 |-|-|
 |F-1.4|The system shall display warning notifications when the user enters non-valid form inputs while registering.
 |F-2.9|The system shall allow users to edit their memories’ content.
-|F-2.17|The system shall allow users to edit their memories’ title.	
-|F-2.18|The system shall allow users to edit their memories’ time.	
-|F-2.19|The system shall allow users to edit their memories’ tag.	
-|F-2.20|The system shall allow users to edit their memories’ tag label.	
+|F-2.17|The system shall allow users to edit their memories’ title.
+|F-2.18|The system shall allow users to edit their memories’ time.
+|F-2.19|The system shall allow users to edit their memories’ tag.
+|F-2.20|The system shall allow users to edit their memories’ tag label.
 |F-2.21|The system shall allow users to edit their memories’ location.
 |F-6.15|The system shall allow users to see search results as a timeline by sorting ascending and descending
-|NF-2|	The system shall be available as a Web application.	
-|NF-3|	The system shall support web browsers such as Google Chrome, Microsoft Edge, and Mozilla Firefox.	
+|NF-2|	The system shall be available as a Web application.
+|NF-3|	The system shall support web browsers such as Google Chrome, Microsoft Edge, and Mozilla Firefox.
 |NF-4|	The system shall be available in English.
 |S-2.3|	The system shall have dark mode support.
 
