@@ -110,7 +110,7 @@ The current release addresses each requirement found in [**the requirements list
 
 #### Demo User Information:
 * Username: uskudarli
-* Password: uskudarli 
+* Password: uskudarli
 
 #### Test Results
 
@@ -127,11 +127,11 @@ The current release addresses each requirement found in [**the requirements list
 * [Individual Contributions](https://hackmd.io/@EUI-vAvBRayr2ycu3uY52Q/r1DIVWxda/edit)
 
 #### Aykut Kantaş
- 
+
 * [Individual Contrubutions](https://hackmd.io/@aykutkantas/Bk0qnnWOT)
 
 #### Kemal Caner Ertam
-    
+
 * [Individual Contrubutions](https://hackmd.io/@cano1496/B1bTtu6PT)
 
 #### Deniz Baran Aslan
@@ -143,9 +143,9 @@ The current release addresses each requirement found in [**the requirements list
 * [Individual Contrubutions](https://hackmd.io/@mertaydin/Sky0STe_6)
 
 #### Oğuzcan Senna
-    
+
 * [Individual Contrubutions](https://hackmd.io/@UnSi7TvNTlytuZcaAsl17g/B15lcuavT)
-   
+
 
 #### Sadık Kuzu
 
