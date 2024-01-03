@@ -11,8 +11,9 @@ import Quill from 'quill'
 import StoryMap from './StoryMap';
 import TagSearch from './TagSearch'; // Adjust the path as needed
 import Chip from '@mui/material/Chip';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { format, parseISO } from 'date-fns';
-
 
 let postHeader = null;
 
@@ -235,6 +236,7 @@ function CreateStory({ currentTheme }) {
 
     } catch (error) {
       console.error('Error submitting story:', error);
+      toast.error('Please fill all fields correctly');
     }
   };
 
@@ -276,11 +278,11 @@ function CreateStory({ currentTheme }) {
             <br/>
             <br/>
             <div className='tags-bar' id="tags-bar">
-              <TagSearch style={{"background-color": "rgb(240, 240, 240)"}} onTagSelect={addTag} />
+              <TagSearch style={{backgroundColor: "rgb(240, 240, 240)"}} onTagSelect={addTag} />
               <div>
                 {selectedTags.map((tag, index) => (
                   <Chip
-                    style={{margin: "1px", "background-color": "rgb(240, 240, 240)"}}
+                    style={{margin: "1px", backgroundColor: "rgb(240, 240, 240)"}}
                     key={index}
                     label={tag.label}
                     onDelete={() => removeTag(tag.wikidata_id)}
@@ -466,7 +468,7 @@ function CreateStory({ currentTheme }) {
           <div className='create-story-map'>
           <text style={{ color: currentTheme === 'custom' ? '#ffffff' : '#000000' }}>You can add locations by using the map or typing in the search bar.</text>
             <StoryMap
-                  mapContainerStyle={{ height: '400px', width: '100%', "border-radius": '10px', "border-style": "solid" }}
+                  mapContainerStyle={{ height: '400px', width: '100%', borderRadius: '10px', borderStyle: "solid" }}
                   initialCenter={mapCenter}
                   zoom={1}
                   apiKey={googleMapsApiKey}
@@ -487,6 +489,7 @@ function CreateStory({ currentTheme }) {
           </div>
         </div>
         </div>
+        <ToastContainer position="bottom-right" autoClose={5000} />
     </div>
   );
 }

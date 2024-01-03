@@ -19,6 +19,10 @@ For further information and documentation, check our [wiki](https://github.com/S
 
 Project URL: [Memories Website](http://34.66.132.236:3000/)
 
+### Video Demonstration
+
+Videos demonstrating the web and mobile app can be found on [YouTube](https://www.youtube.com/playlist?list=PLFAyGH65Rf12B6hPViqXUkUl65kThbaEs).
+
 ---
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/main.svg)](https://results.pre-commit.ci/latest/github/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/main)
