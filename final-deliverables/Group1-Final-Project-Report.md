@@ -1,9 +1,9 @@
 ## SWE 574 Fall 2023 - Final Milestone Report - Group 1
 # Project: MEMORIES
-* Deployment URL: http://34.66.132.236:3000/
-* GitHub URL: github.com/SWE574-Fall2023-Group1
-* Web Repository: https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1
-* Mobile Repository: https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile
+* Deployment URL: [**http://34.66.132.236:3000/**](http://34.66.132.236:3000/)
+* GitHub URL: [**github.com/SWE574-Fall2023-Group1**](https://github.com/SWE574-Fall2023-Group1)
+* Web Repository: [github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1)
+* Mobile Repository: [github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1-mobile)
 * [**QR Codes**](https://swe574-fall2023-group1.github.io/)
 * Release Version: [0.9](https://github.com/SWE574-Fall2023-Group1/SWE574-Fall2023-G1/releases/tag/0.9)
 * Due Date: 03 January 2024
