@@ -184,22 +184,18 @@ six==1.16.0
     #   python-dateutil
 soupsieve==2.5
     # via beautifulsoup4
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via
     #   -r requirements.in
     #   django
 tablib[html,ods,xls,xlsx,yaml]==3.5.0
-    # via
-    #   django-import-export
-    #   tablib
+    # via django-import-export
 tqdm==4.66.1
     # via nltk
 typing-extensions==4.8.0
     # via django-modeltranslation
 tzdata==2023.3
-    # via
-    #   -r requirements.in
-    #   django
+    # via -r requirements.in
 uritemplate==4.1.1
     # via
     #   coreapi
