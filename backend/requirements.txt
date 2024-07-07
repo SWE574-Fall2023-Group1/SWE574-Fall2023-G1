@@ -4,16 +4,16 @@
 #
 #    pip-compile
 #
-asgiref==3.7.2
+asgiref==3.8.1
     # via
     #   -r requirements.in
     #   django
     #   django-cors-headers
-beautifulsoup4==4.12.2
+beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.29.6
+boto3==1.34.140
     # via -r requirements.in
-botocore==1.32.6
+botocore==1.34.140
     # via
     #   boto3
     #   s3transfer
@@ -27,19 +27,21 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via nltk
+colorama==0.4.6
+    # via
+    #   click
+    #   tqdm
 coreapi==2.3.3
     # via
     #   django-rest-swagger
     #   openapi-codec
 coreschema==0.0.4
     # via coreapi
-cryptography==42.0.4
+cryptography==42.0.8
     # via -r requirements.in
-defusedxml==0.7.1
-    # via odfpy
 diff-match-patch==20230430
     # via django-import-export
-django==4.2.11
+django==5.0.6
     # via
     #   -r requirements.in
     #   django-ckeditor
@@ -54,9 +56,9 @@ django==4.2.11
     #   django-storages
     #   djangorestframework
     #   drf-yasg
-django-ckeditor==6.7.0
+django-ckeditor==6.7.1
     # via -r requirements.in
-django-cors-headers==4.3.1
+django-cors-headers==4.4.0
     # via -r requirements.in
 django-credit-cards==0.4.1
     # via -r requirements.in
@@ -66,15 +68,15 @@ django-elasticsearch-dsl-drf==0.22.5
     # via -r requirements.in
 django-environ==0.11.2
     # via -r requirements.in
-django-filter==23.4
+django-filter==24.2
     # via -r requirements.in
-django-import-export==3.3.3
+django-import-export==4.1.0
     # via -r requirements.in
-django-jazzmin==2.6.0
+django-jazzmin==3.0.0
     # via -r requirements.in
-django-js-asset==2.1.0
+django-js-asset==2.2.0
     # via django-ckeditor
-django-modeltranslation==0.18.11
+django-modeltranslation==0.19.5
     # via -r requirements.in
 django-nine==0.2.7
     # via django-elasticsearch-dsl-drf
@@ -82,7 +84,7 @@ django-resized==1.0.2
     # via -r requirements.in
 django-rest-swagger==2.2.0
     # via -r requirements.in
-django-storages==1.14.2
+django-storages==1.14.3
     # via -r requirements.in
 djangorestframework==3.15.2
     # via
@@ -97,21 +99,19 @@ djangorestframework-jwt==1.11.0
     # via -r requirements.in
 drf-yasg==1.21.7
     # via -r requirements.in
-elastic-transport==8.10.0
+elastic-transport==8.13.1
     # via elasticsearch
-elasticsearch==8.11.0
+elasticsearch==8.14.0
     # via
     #   django-elasticsearch-dsl-drf
     #   elasticsearch-dsl
-elasticsearch-dsl==8.11.0
+elasticsearch-dsl==8.14.0
     # via
     #   django-elasticsearch-dsl
     #   django-elasticsearch-dsl-drf
 environ==1.0
     # via -r requirements.in
-et-xmlfile==1.1.0
-    # via openpyxl
-flake8==6.1.0
+flake8==7.1.0
     # via -r requirements.in
 idna==3.7
     # via requests
@@ -125,53 +125,45 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-joblib==1.3.2
+joblib==1.4.2
     # via nltk
-markuppy==1.14
-    # via tablib
-markupsafe==2.1.3
+markupsafe==2.1.5
     # via jinja2
 mccabe==0.7.0
     # via flake8
 nltk==3.8.1
     # via -r requirements.in
-odfpy==1.4.1
-    # via tablib
 openapi-codec==1.3.2
     # via django-rest-swagger
-openpyxl==3.1.2
-    # via tablib
-packaging==23.2
+packaging==24.1
     # via
     #   django-nine
     #   drf-yasg
-pillow==10.3.0
+pillow==10.4.0
     # via -r requirements.in
 psycopg2-binary==2.9.9
     # via -r requirements.in
-pycodestyle==2.11.1
+pycodestyle==2.12.0
     # via flake8
-pycparser==2.21
+pycparser==2.22
     # via cffi
-pyflakes==3.1.0
+pyflakes==3.2.0
     # via flake8
 pyjwt==1.7.1
     # via djangorestframework-jwt
-python-dateutil==2.8.2
+python-dateutil==2.9.0.post0
     # via
     #   botocore
     #   elasticsearch-dsl
-pytz==2023.3.post1
+pytz==2024.1
     # via drf-yasg
 pyyaml==6.0.1
-    # via
-    #   drf-yasg
-    #   tablib
-regex==2023.10.3
+    # via drf-yasg
+regex==2024.5.15
     # via nltk
-requests==2.32.2
+requests==2.32.3
     # via coreapi
-s3transfer==0.7.0
+s3transfer==0.10.2
     # via boto3
 simplejson==3.19.2
     # via django-rest-swagger
@@ -186,24 +178,22 @@ sqlparse==0.5.0
     # via
     #   -r requirements.in
     #   django
-tablib[html,ods,xls,xlsx,yaml]==3.5.0
+tablib==3.5.0
     # via django-import-export
-tqdm==4.66.3
+tqdm==4.66.4
     # via nltk
-typing-extensions==4.8.0
-    # via django-modeltranslation
-tzdata==2023.3
-    # via -r requirements.in
+typing-extensions==4.12.2
+    # via elasticsearch-dsl
+tzdata==2024.1
+    # via
+    #   -r requirements.in
+    #   django
 uritemplate==4.1.1
     # via
     #   coreapi
     #   drf-yasg
-urllib3==2.0.7
+urllib3==2.2.2
     # via
     #   botocore
     #   elastic-transport
     #   requests
-xlrd==2.0.1
-    # via tablib
-xlwt==1.3.0
-    # via tablib
