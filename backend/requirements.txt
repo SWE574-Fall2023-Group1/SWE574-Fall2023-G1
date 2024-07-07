@@ -188,7 +188,7 @@ sqlparse==0.5.0
     #   django
 tablib[html,ods,xls,xlsx,yaml]==3.5.0
     # via django-import-export
-tqdm==4.66.1
+tqdm==4.66.3
     # via nltk
 typing-extensions==4.8.0
     # via django-modeltranslation
