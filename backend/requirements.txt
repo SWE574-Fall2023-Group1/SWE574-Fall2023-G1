@@ -27,10 +27,6 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via nltk
-colorama==0.4.6
-    # via
-    #   click
-    #   tqdm
 coreapi==2.3.3
     # via
     #   django-rest-swagger
@@ -185,9 +181,7 @@ tqdm==4.66.4
 typing-extensions==4.12.2
     # via elasticsearch-dsl
 tzdata==2024.1
-    # via
-    #   -r requirements.in
-    #   django
+    # via -r requirements.in
 uritemplate==4.1.1
     # via
     #   coreapi
