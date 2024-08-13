@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.34.158
+boto3==1.34.159
     # via -r requirements.in
-botocore==1.34.158
+botocore==1.34.159
     # via
     #   boto3
     #   s3transfer
@@ -72,7 +72,7 @@ django-jazzmin==3.0.0
     # via -r requirements.in
 django-js-asset==2.2.0
     # via django-ckeditor
-django-modeltranslation==0.19.6
+django-modeltranslation==0.19.7
     # via -r requirements.in
 django-nine==0.2.7
     # via django-elasticsearch-dsl-drf
@@ -95,13 +95,13 @@ djangorestframework-jwt==1.11.0
     # via -r requirements.in
 drf-yasg==1.21.7
     # via -r requirements.in
-elastic-transport==8.13.1
+elastic-transport==8.15.0
     # via elasticsearch
 elasticsearch==8.14.0
     # via
     #   django-elasticsearch-dsl-drf
     #   elasticsearch-dsl
-elasticsearch-dsl==8.14.0
+elasticsearch-dsl==8.15.0
     # via
     #   django-elasticsearch-dsl
     #   django-elasticsearch-dsl-drf
