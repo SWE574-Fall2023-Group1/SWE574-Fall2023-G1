@@ -65,7 +65,9 @@ django-elasticsearch-dsl-drf==0.22.5
 django-environ==0.11.2
     # via -r requirements.in
 django-filter==24.3
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   djangorestframework-gis
 django-import-export==4.1.1
     # via -r requirements.in
 django-jazzmin==3.0.0
@@ -89,7 +91,7 @@ djangorestframework==3.15.2
     #   django-rest-swagger
     #   djangorestframework-gis
     #   drf-yasg
-djangorestframework-gis==1.0
+djangorestframework-gis==1.1
     # via -r requirements.in
 djangorestframework-jwt==1.11.0
     # via -r requirements.in
