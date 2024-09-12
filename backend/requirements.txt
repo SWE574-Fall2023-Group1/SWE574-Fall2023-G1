@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.35.16
+boto3==1.35.17
     # via -r requirements.in
-botocore==1.35.16
+botocore==1.35.17
     # via
     #   boto3
     #   s3transfer
@@ -153,11 +153,11 @@ python-dateutil==2.9.0.post0
     # via
     #   botocore
     #   elasticsearch-dsl
-pytz==2024.1
+pytz==2024.2
     # via drf-yasg
 pyyaml==6.0.2
     # via drf-yasg
-regex==2024.7.24
+regex==2024.9.11
     # via nltk
 requests==2.32.3
     # via coreapi
