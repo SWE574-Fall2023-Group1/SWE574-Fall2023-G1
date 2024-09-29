@@ -51,6 +51,7 @@ django==5.1.1
     #   django-nine
     #   django-storages
     #   djangorestframework
+    #   djangorestframework-simplejwt
     #   drf-yasg
 django-ckeditor==6.7.1
     # via -r requirements.in
@@ -90,10 +91,11 @@ djangorestframework==3.15.2
     #   django-elasticsearch-dsl-drf
     #   django-rest-swagger
     #   djangorestframework-gis
+    #   djangorestframework-simplejwt
     #   drf-yasg
 djangorestframework-gis==1.1
     # via -r requirements.in
-djangorestframework-jwt==1.11.0
+djangorestframework-simplejwt==5.3.1
     # via -r requirements.in
 drf-yasg==1.21.7
     # via -r requirements.in
@@ -147,8 +149,8 @@ pycparser==2.22
     # via cffi
 pyflakes==3.2.0
     # via flake8
-pyjwt==1.7.1
-    # via djangorestframework-jwt
+pyjwt==2.9.0
+    # via djangorestframework-simplejwt
 python-dateutil==2.9.0.post0
     # via
     #   botocore
@@ -183,7 +185,9 @@ tqdm==4.66.5
 typing-extensions==4.12.2
     # via elasticsearch-dsl
 tzdata==2024.2
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   django
 uritemplate==4.1.1
     # via
     #   coreapi

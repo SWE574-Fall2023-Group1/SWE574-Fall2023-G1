@@ -6,7 +6,7 @@ sqlparse
 tzdata
 djangorestframework
 django-filter
-djangorestframework-jwt
+djangorestframework-simplejwt
 django-jazzmin
 django-import-export
 django-resized
