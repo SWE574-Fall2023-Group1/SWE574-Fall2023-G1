@@ -13,7 +13,7 @@ class UserTest(TestCase):
 
     def test_email_field(self):
         user = User.objects.get(username='testuser')
-        self.assertEquals(user.email, 'user@example.com')
+        self.assertEqual(user.email, 'user@example.com')
 
     def test_creation_date_auto_now_add(self):
         user = User.objects.get(username='testuser')
@@ -32,7 +32,7 @@ class LocationTest(TestCase):
 
     def test_location_with_point(self):
         location = Location.objects.get(name="Test Location Point")
-        self.assertEquals(str(location), 'Test Location Point')
+        self.assertEqual(str(location), 'Test Location Point')
         self.assertIsNotNone(location.point)
         self.assertIsNone(location.line)
         self.assertIsNone(location.polygon)
@@ -41,7 +41,7 @@ class LocationTest(TestCase):
 
     def test_location_with_line(self):
         location = Location.objects.get(name="Test Location Line")
-        self.assertEquals(str(location), 'Test Location Line')
+        self.assertEqual(str(location), 'Test Location Line')
         self.assertIsNone(location.point)
         self.assertIsNotNone(location.line)
         self.assertIsNone(location.polygon)
@@ -50,7 +50,7 @@ class LocationTest(TestCase):
 
     def test_location_with_polygon(self):
         location = Location.objects.get(name="Test Location Polygon")
-        self.assertEquals(str(location), 'Test Location Polygon')
+        self.assertEqual(str(location), 'Test Location Polygon')
         self.assertIsNone(location.point)
         self.assertIsNone(location.line)
         self.assertIsNotNone(location.polygon)
@@ -59,7 +59,7 @@ class LocationTest(TestCase):
 
     def test_location_with_circle_and_radius(self):
         location = Location.objects.get(name="Test Location Circle")
-        self.assertEquals(str(location), 'Test Location Circle')
+        self.assertEqual(str(location), 'Test Location Circle')
         self.assertIsNone(location.point)
         self.assertIsNone(location.line)
         self.assertIsNone(location.polygon)
@@ -95,13 +95,13 @@ class StoryTest(TestCase):
 
     def test_story_creation(self):
         story = Story.objects.get(title='Test Story')
-        self.assertEquals(story.content, 'This is a test story content.')
+        self.assertEqual(story.content, 'This is a test story content.')
 
-        self.assertEquals(story.story_tags.count(), 2)
+        self.assertEqual(story.story_tags.count(), 2)
         self.assertTrue(story.story_tags.filter(name='Adventure').exists())
         self.assertTrue(story.story_tags.filter(name='History').exists())
 
-        self.assertEquals(story.location_ids.count(), 2)
+        self.assertEqual(story.location_ids.count(), 2)
         self.assertTrue(story.location_ids.filter(name='Location 1').exists())
         self.assertTrue(story.location_ids.filter(name='Location 2').exists())
 
@@ -126,19 +126,19 @@ class TagTest(TestCase):
 
     def test_tag_str(self):
         tag = Tag.objects.get(name='Adventure')
-        self.assertEquals(str(tag), 'Adventure')
+        self.assertEqual(str(tag), 'Adventure')
 
     def test_wikidata_id(self):
         tag = Tag.objects.get(name='Adventure')
-        self.assertEquals(tag.wikidata_id, 'Q123456')
+        self.assertEqual(tag.wikidata_id, 'Q123456')
 
     def test_description(self):
         tag = Tag.objects.get(name='Adventure')
-        self.assertEquals(tag.description, 'A genre of exciting and often risky activity.')
+        self.assertEqual(tag.description, 'A genre of exciting and often risky activity.')
 
     def test_label(self):
         tag = Tag.objects.get(name='Adventure')
-        self.assertEquals(tag.label, 'Adventure Genre')
+        self.assertEqual(tag.label, 'Adventure Genre')
 
     def test_wikidata_id_format(self):
         tag = Tag.objects.get(name='Adventure')
@@ -161,7 +161,7 @@ class CommentTest(TestCase):
 
     def test_comment_content(self):
         comment = Comment.objects.get(text='Nice story!')
-        self.assertEquals(comment.text, 'Nice story!')
+        self.assertEqual(comment.text, 'Nice story!')
 
 
 
@@ -173,7 +173,7 @@ class ActivityTest(TestCase):
 
     def test_activity_creation(self):
         activity = Activity.objects.get(user__username='active_user')
-        self.assertEquals(activity.activity_type, 'new_story')
+        self.assertEqual(activity.activity_type, 'new_story')
 
 
 
@@ -193,4 +193,4 @@ class StoryRecommendationTest(TestCase):
 
     def test_recommendation_creation(self):
         recommendation = StoryRecommendation.objects.get(user__username='recommender')
-        self.assertEquals(recommendation.story.title, 'Story to Recommend')
+        self.assertEqual(recommendation.story.title, 'Story to Recommend')
