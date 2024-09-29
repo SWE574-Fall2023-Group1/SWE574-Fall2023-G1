@@ -34,7 +34,7 @@ jobs:
             node -e "const deers = require('deers'); console.log(deers()[new Date().getMinutes()]);" || true
             make
             docker --version
-            docker-compose --version
+            docker compose version
             make env-files
             docker compose up -d --build --quiet-pull --remove-orphans
             docker compose ps
