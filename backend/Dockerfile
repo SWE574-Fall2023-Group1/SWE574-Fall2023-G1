@@ -1,4 +1,4 @@
-FROM python:3.11-slim-buster
+FROM python:3.12-bookworm
 
 LABEL maintainer="SWE 574 - Fall 2023 - Group 1"
 
@@ -19,6 +19,7 @@ RUN : \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && python -m pip install --no-cache-dir -qU pip \
+    && pip install --no-cache-dir -q setuptools==75.1.0 \
     && pip install --no-cache-dir -qr requirements.txt \
     && python -m nltk.downloader punkt averaged_perceptron_tagger wordnet stopwords \
     && :
