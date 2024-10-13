@@ -54,7 +54,7 @@ django==5.1.2
     #   drf-yasg
 django-ckeditor==6.7.1
     # via -r requirements.in
-django-cors-headers==4.4.0
+django-cors-headers==4.5.0
     # via -r requirements.in
 django-credit-cards==0.4.1
     # via -r requirements.in
