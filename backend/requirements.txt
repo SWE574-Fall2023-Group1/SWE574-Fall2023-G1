@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.35.39
+boto3==1.35.40
     # via -r requirements.in
-botocore==1.35.39
+botocore==1.35.40
     # via
     #   boto3
     #   s3transfer
@@ -78,7 +78,7 @@ django-modeltranslation==0.19.9
     # via -r requirements.in
 django-nine==0.2.7
     # via django-elasticsearch-dsl-drf
-django-resized==1.0.2
+django-resized==1.0.3
     # via -r requirements.in
 django-rest-swagger==2.2.0
     # via -r requirements.in
