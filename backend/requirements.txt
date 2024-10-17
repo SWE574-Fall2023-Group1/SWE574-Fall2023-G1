@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.35.41
+boto3==1.35.42
     # via -r requirements.in
-botocore==1.35.41
+botocore==1.35.42
     # via
     #   boto3
     #   s3transfer
@@ -139,7 +139,7 @@ packaging==24.1
     #   drf-yasg
 pillow==11.0.0
     # via -r requirements.in
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.10
     # via -r requirements.in
 pycodestyle==2.12.1
     # via flake8
