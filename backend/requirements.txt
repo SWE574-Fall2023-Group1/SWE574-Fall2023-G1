@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.35.29
+boto3==1.35.44
     # via -r requirements.in
-botocore==1.35.29
+botocore==1.35.44
     # via
     #   boto3
     #   s3transfer
@@ -23,7 +23,7 @@ certifi==2024.8.30
     #   requests
 cffi==1.17.1
     # via cryptography
-charset-normalizer==3.3.2
+charset-normalizer==3.4.0
     # via requests
 click==8.1.7
     # via nltk
@@ -33,11 +33,11 @@ coreapi==2.3.3
     #   openapi-codec
 coreschema==0.0.4
     # via coreapi
-cryptography==43.0.1
+cryptography==43.0.3
     # via -r requirements.in
 diff-match-patch==20230430
     # via django-import-export
-django==5.1.1
+django==5.1.2
     # via
     #   -r requirements.in
     #   django-ckeditor
@@ -54,7 +54,7 @@ django==5.1.1
     #   drf-yasg
 django-ckeditor==6.7.1
     # via -r requirements.in
-django-cors-headers==4.4.0
+django-cors-headers==4.5.0
     # via -r requirements.in
 django-credit-cards==0.4.1
     # via -r requirements.in
@@ -70,15 +70,15 @@ django-filter==24.3
     #   djangorestframework-gis
 django-import-export==4.1.1
     # via -r requirements.in
-django-jazzmin==3.0.0
+django-jazzmin==3.0.1
     # via -r requirements.in
 django-js-asset==2.2.0
     # via django-ckeditor
-django-modeltranslation==0.19.9
+django-modeltranslation==0.19.10
     # via -r requirements.in
 django-nine==0.2.7
     # via django-elasticsearch-dsl-drf
-django-resized==1.0.2
+django-resized==1.0.3
     # via -r requirements.in
 django-rest-swagger==2.2.0
     # via -r requirements.in
@@ -95,15 +95,15 @@ djangorestframework-gis==1.1
     # via -r requirements.in
 djangorestframework-jwt==1.11.0
     # via -r requirements.in
-drf-yasg==1.21.7
+drf-yasg==1.21.8
     # via -r requirements.in
-elastic-transport==8.15.0
+elastic-transport==8.15.1
     # via elasticsearch
 elasticsearch==8.15.1
     # via
     #   django-elasticsearch-dsl-drf
     #   elasticsearch-dsl
-elasticsearch-dsl==8.15.3
+elasticsearch-dsl==8.15.4
     # via
     #   django-elasticsearch-dsl
     #   django-elasticsearch-dsl-drf
@@ -125,7 +125,7 @@ jmespath==1.0.1
     #   botocore
 joblib==1.4.2
     # via nltk
-markupsafe==2.1.5
+markupsafe==3.0.2
     # via jinja2
 mccabe==0.7.0
     # via flake8
@@ -137,9 +137,9 @@ packaging==24.1
     # via
     #   django-nine
     #   drf-yasg
-pillow==10.4.0
+pillow==11.0.0
     # via -r requirements.in
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.10
     # via -r requirements.in
 pycodestyle==2.12.1
     # via flake8
@@ -161,7 +161,7 @@ regex==2024.9.11
     # via nltk
 requests==2.32.3
     # via coreapi
-s3transfer==0.10.2
+s3transfer==0.10.3
     # via boto3
 simplejson==3.19.3
     # via django-rest-swagger
