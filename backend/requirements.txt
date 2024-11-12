@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.35.57
+boto3==1.35.58
     # via -r requirements.in
-botocore==1.35.57
+botocore==1.35.58
     # via
     #   boto3
     #   s3transfer
@@ -68,13 +68,13 @@ django-filter==24.3
     # via
     #   -r requirements.in
     #   djangorestframework-gis
-django-import-export==4.2.0
+django-import-export==4.2.1
     # via -r requirements.in
 django-jazzmin==3.0.1
     # via -r requirements.in
 django-js-asset==2.2.0
     # via django-ckeditor
-django-modeltranslation==0.19.10
+django-modeltranslation==0.19.11
     # via -r requirements.in
 django-nine==0.2.7
     # via django-elasticsearch-dsl-drf
