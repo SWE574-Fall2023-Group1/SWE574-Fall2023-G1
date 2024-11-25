@@ -180,7 +180,7 @@ sqlparse==0.5.2
     #   django
 tablib==3.7.0
     # via django-import-export
-tqdm==4.67.0
+tqdm==4.67.1
     # via nltk
 typing-extensions==4.12.2
     # via elasticsearch-dsl
