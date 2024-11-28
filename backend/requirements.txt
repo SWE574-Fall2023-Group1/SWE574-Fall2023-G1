@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.35.70
+boto3==1.35.71
     # via -r requirements.in
-botocore==1.35.70
+botocore==1.35.71
     # via
     #   boto3
     #   s3transfer
@@ -33,7 +33,7 @@ coreapi==2.3.3
     #   openapi-codec
 coreschema==0.0.4
     # via coreapi
-cryptography==43.0.3
+cryptography==44.0.0
     # via -r requirements.in
 diff-match-patch==20241021
     # via django-import-export
