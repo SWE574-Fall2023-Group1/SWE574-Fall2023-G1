@@ -37,7 +37,7 @@ cryptography==43.0.3
     # via -r requirements.in
 diff-match-patch==20230430
     # via django-import-export
-django==5.1.2
+django==5.1.4
     # via
     #   -r requirements.in
     #   django-ckeditor
