@@ -11,9 +11,9 @@ asgiref==3.8.1
     #   django-cors-headers
 beautifulsoup4==4.12.3
     # via -r requirements.in
-boto3==1.35.99
+boto3==1.36.0
     # via -r requirements.in
-botocore==1.35.99
+botocore==1.36.0
     # via
     #   boto3
     #   s3transfer
@@ -68,7 +68,7 @@ django-filter==24.3
     # via
     #   -r requirements.in
     #   djangorestframework-gis
-django-import-export==4.3.3
+django-import-export==4.3.4
     # via -r requirements.in
 django-jazzmin==3.0.1
     # via -r requirements.in
@@ -163,7 +163,7 @@ regex==2024.11.6
     # via nltk
 requests==2.32.3
     # via coreapi
-s3transfer==0.10.4
+s3transfer==0.11.0
     # via boto3
 simplejson==3.19.3
     # via django-rest-swagger
