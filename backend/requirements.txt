@@ -9,7 +9,7 @@ asgiref==3.8.1
     #   -r requirements.in
     #   django
     #   django-cors-headers
-beautifulsoup4==4.12.3
+beautifulsoup4==4.13.0
     # via -r requirements.in
 boto3==1.36.11
     # via -r requirements.in
@@ -183,7 +183,9 @@ tablib==3.8.0
 tqdm==4.67.1
     # via nltk
 typing-extensions==4.12.2
-    # via elasticsearch-dsl
+    # via
+    #   beautifulsoup4
+    #   elasticsearch-dsl
 tzdata==2025.1
     # via -r requirements.in
 uritemplate==4.1.1
