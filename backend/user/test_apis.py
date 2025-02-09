@@ -48,7 +48,7 @@ class CreateStoryTest(APITestCase):
         self.user = User.objects.create_user(username='author', email='author@example.com', password='testpassword')
 
         # Create a token for the user
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
 
         # Set up the client and authenticate
         self.client = APIClient()
@@ -83,7 +83,7 @@ class CreateStoryTest(APITestCase):
 class CreateCommentTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='commenter', email='commenter@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
 
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -112,7 +112,7 @@ class CreateCommentTest(APITestCase):
 class UpdateStoryTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='author', email='author@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
 
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -154,7 +154,7 @@ class UpdateStoryTest(APITestCase):
 class LikeStoryTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='liker', email='liker@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
 
         self.author = User.objects.create_user(username='author', email='author@example.com', password='testpassword')
         self.story = Story.objects.create(author=self.author, title='A Story', content='Story content', year=2020)
@@ -194,7 +194,7 @@ class StoryDetailViewTest(APITestCase):
         self.story.story_tags.add(self.tag1, self.tag2)
         self.story.location_ids.add(self.location1, self.location2)
 
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
         self.client.cookies['refreshToken'] = self.refresh_token
         self.client.force_authenticate(user=self.user)
 
@@ -215,7 +215,7 @@ class StoryDetailViewTest(APITestCase):
 class UserLogoutTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='logouttest', email='logouttest@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
         self.client.cookies['refreshToken'] = self.refresh_token
         self.client.force_authenticate(user=self.user)
 
@@ -231,7 +231,7 @@ class FollowUserViewTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='follower', email='follower@example.com', password='testpassword')
         self.target_user = User.objects.create_user(username='targetuser', email='targetuser@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
         self.client.cookies['refreshToken'] = self.refresh_token
         self.client.force_authenticate(user=self.user)
 
@@ -244,7 +244,7 @@ class FollowUserViewTest(APITestCase):
 class UserDetailsViewTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='detailviewuser', email='detailviewuser@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
         self.client.cookies['refreshToken'] = self.refresh_token
         self.client.force_authenticate(user=self.user)
 
@@ -257,7 +257,7 @@ class UserDetailsViewTest(APITestCase):
 class UserBiographyUpdateTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='biographer', email='bio@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)  # Create a JWT refresh token
+        self.refresh_token = create_refresh_token(self.user)  # Create a JWT refresh token
         self.client.cookies['refreshToken'] = self.refresh_token  # Set the refresh token in the cookies
         self.client.force_authenticate(user=self.user)  # Authenticate the user for this test
 
@@ -280,7 +280,7 @@ class UserBiographyUpdateTest(APITestCase):
 class ActivityStreamViewTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='activeuser', email='active@example.com', password='testpassword')
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
         self.client.cookies['refreshToken'] = self.refresh_token
         self.client.force_authenticate(user=self.user)
 
@@ -334,7 +334,7 @@ class SearchStoryViewTest(APITestCase):
         self.story2.location_ids.add(self.location_sea)
 
         # Authenticate
-        self.refresh_token = create_refresh_token(self.user.id)
+        self.refresh_token = create_refresh_token(self.user)
         self.client.cookies['refreshToken'] = self.refresh_token
         self.client.force_authenticate(user=self.user)
 

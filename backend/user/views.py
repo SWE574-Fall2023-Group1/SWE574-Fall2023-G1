@@ -95,8 +95,8 @@ class UserLoginView(views.APIView):
         if user is None:
             return Response({'success':False ,'msg': 'Invalid username or password'}, status=status.HTTP_400_BAD_REQUEST)
 
-        access_token = create_access_token(user.id)
-        refresh_token = create_refresh_token(user.id)
+        access_token = create_access_token(user)
+        refresh_token = create_refresh_token(user)
         response = Response(status=status.HTTP_201_CREATED)
 
         response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
