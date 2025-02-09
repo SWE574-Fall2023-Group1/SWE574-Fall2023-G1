@@ -161,12 +161,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_TOKEN_CLASS': 'myapp.custom_token.CustomToken',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',  # Optional
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 1000,
 }
+# # REST_FRAMEWORK = {
+# #     'DEFAULT_AUTHENTICATION_CLASSES': [
+# #         'rest_framework.authentication.TokenAuthentication',
+# #         #'rest_framework.authentication.SessionAuthentication',
+# #     ],
+# #     'DEFAULT_TOKEN_CLASS': 'myapp.custom_token.CustomToken',
+# # }
 # REST_FRAMEWORK = {
 #     "DEFAULT_AUTHENTICATION_CLASSES": (
 #         "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
@@ -178,13 +186,23 @@ REST_FRAMEWORK = {
 #     "PAGE_SIZE": 1000,
 # }
 
-JWT_AUTH = {
-    "JWT_EXPIRATION_DELTA": datetime.timedelta(seconds=500),
-    "JWT_ALLOW_REFRESH": True,
-    # 3 days
-    "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(seconds=500),
-    "JWT_AUTH_COOKIE": "JWT",
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(seconds=500),  # JWT_EXPIRATION_DELTA
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(seconds=500),  # JWT_REFRESH_EXPIRATION_DELTA
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'AUTH_COOKIE': 'JWT',  # JWT_AUTH_COOKIE eşdeğeri
 }
+# # JWT_AUTH = {
+# #     "JWT_EXPIRATION_DELTA": datetime.timedelta(seconds=500),
+# #     "JWT_ALLOW_REFRESH": True,
+# #     # 3 days
+# #     "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(seconds=500),
+# #     "JWT_AUTH_COOKIE": "JWT",
+# # }
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
