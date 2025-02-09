@@ -95,7 +95,7 @@ djangorestframework==3.15.2
     #   drf-yasg
 djangorestframework-gis==1.1
     # via -r requirements.in
-djangorestframework-simplejwt==5.3.1
+djangorestframework-simplejwt==5.4.0
     # via -r requirements.in
 drf-yasg==1.21.8
     # via -r requirements.in
@@ -151,7 +151,7 @@ pycparser==2.22
     # via cffi
 pyflakes==3.2.0
     # via flake8
-pyjwt==2.9.0
+pyjwt==2.10.1
     # via djangorestframework-simplejwt
 python-dateutil==2.9.0.post0
     # via
