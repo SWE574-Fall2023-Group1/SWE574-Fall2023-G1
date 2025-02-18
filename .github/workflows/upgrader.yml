@@ -1,0 +1,47 @@
+name: Upgrade python and pre-commit dependencies
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  pip-compile:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: dev
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+        cache: pip
+
+    - name: Run pip-compile, install requirements, and pre-commit autoupdate
+      run: |
+        cd ./backend
+        python -m pip install --upgrade pip
+        pip install pip-tools pre-commit
+        pip-compile -vU
+        pip install -r requirements.txt
+        cd ..
+        pre-commit autoupdate
+
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "Upgrade dependencies"
+        branch: dev
+        commit_user_name: Upgrader
+        commit_user_email: sadikkuzu@hotmail.com
+        commit_author: Upgrader <sadikkuzu@hotmail.com>
